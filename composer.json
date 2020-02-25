@@ -1,0 +1,15 @@
+{
+    "name": "james/fyp_ms",
+    "description": "my final year project",
+    "type": "project",
+    "require": {
+        "phpunit/phpunit": "^8.5"
+    },
+    "license": "ICS",
+    "authors": [
+        {
+            "name": "james-muriithi",
+            "email": "muriithijames556@gmail.com"
+        }
+    ]
+}
