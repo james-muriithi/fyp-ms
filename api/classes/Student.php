@@ -1,5 +1,5 @@
 <?php
-namespace doo\dd;
+include_once 'UserInterface.php';
 
 class Student implements UserInterface
 {
@@ -69,7 +69,48 @@ class Student implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
+    public function saveUser($reg_no, $full_name, $email, $phone_no, $password, $year = '2019-2020'):bool
+    {
+        $query = 'INSERT INTO `student`(
+                    `reg_no`,
+                    `full_name`,
+                    `email`,
+                    `phone_no`,
+                    `year_of_study`,
+                    `password`,
+                    `token`
+                )
+                VALUES(
+                       :reg_no,
+                       :full_name,
+                       :email,
+                       :phone_no,
+                       :year,
+                       :pass,
+                       :token
+                )';
 
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        $token = self::generateToken();
+        $password = password_hash($password, PASSWORD_BCRYPT);
+
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':reg_no', $reg_no);
+        $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':phone_no', $phone_no);
+        $stmt->bindParam(':pass', $password);
+        $stmt->bindParam(':year', $year);
+        $stmt->bindParam(':token', $token);
+
+        return $stmt->execute();
+    }
+
+    private function generateToken():String
+    {
+        return bin2hex(random_bytes(32));
+    }
 
     /*
      * Get User Details
