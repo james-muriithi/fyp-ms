@@ -1,5 +1,5 @@
 <?php
-
+namespace doo\dd;
 
 class Student implements UserInterface
 {
