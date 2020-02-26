@@ -4,6 +4,10 @@ include_once 'UserInterface.php';
 class Student implements UserInterface
 {
     private $email, $regNo, $password, $token;
+
+    /**
+     * @var PDO
+     */
     public $conn;
     public function __construct($conn)
     {
@@ -18,11 +22,10 @@ class Student implements UserInterface
     {
         if (isset($this->regNo)) {
             return $this->verifyUserWithReg($this->regNo);
-        }elseif (isset($this->email)){
+        }elseif (isset($this->email)) {
             return $this->verifyUserWithEmail($this->email);
-        }else{
-            return false;
         }
+        return false;
     }
 
     private function verifyUserWithEmail(String $email) : bool
@@ -115,14 +118,37 @@ class Student implements UserInterface
     /*
      * Get User Details
      * */
-    public function getUser()
+    public function getUser():array
     {
-        // TODO: Implement getUser() method.
+        $query = 'SELECT
+                    s.reg_no,
+                    s.full_name,
+                    s.email,
+                    s.phone_no,
+                    s.school,
+                    s.department,
+                    s.course,
+                    s.profile,
+                    s.year_of_study,
+                    s.created_at
+                FROM
+                    student s 
+                WHERE
+                    reg_no = :reg_no';
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':reg_no', $this->regNo);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     public function getToken()
     {
-        // TODO: Implement getToken() method.
+        $query = "";
     }
 
     /**
