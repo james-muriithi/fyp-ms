@@ -21,27 +21,23 @@ class Student implements UserInterface
     public function verifyUser() :bool
     {
         if (isset($this->regNo)) {
-            return $this->verifyUserWithReg($this->regNo);
+            return $this->regExists($this->regNo) && password_verify($this->password, $this->getDbPass());
         }elseif (isset($this->email)) {
-            return $this->verifyUserWithEmail($this->email);
+            return $this->emailExists($this->email) && password_verify($this->password, $this->getDbPass());
         }
         return false;
     }
 
-    private function verifyUserWithEmail(String $email) : bool
+    private function emailExists(String $email) : bool
     {
         //sql query
-        $query = 'SELECT student_id FROM student WHERE email = :email AND password = :password';
+        $query = 'SELECT student_id FROM student WHERE email = :email';
 
         //prepare the query
         $stmt = $this->conn->prepare($query);
 
-        // hash the password before saving to database
-        $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
-
         //bind the values
         $stmt->bindParam(':name', $email);
-        $stmt->bindParam(':password', $password_hash);
 
         // execute the query
         $stmt->execute();
@@ -50,26 +46,59 @@ class Student implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
-    private function verifyUserWithReg(String $reg_no) : bool
+    private function regExists(String $reg_no) : bool
     {
         //sql query
-        $query = 'SELECT student_id FROM student WHERE reg_no = :reg_no AND password = :password';
+        $query = "SELECT student_id FROM student WHERE reg_no = :reg_no";
 
         //prepare the query
         $stmt = $this->conn->prepare($query);
 
-        // hash the password before saving to database
-        $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
-
         //bind the values
         $stmt->bindParam(':reg_no', $reg_no);
-        $stmt->bindParam(':password', $password_hash);
 
         // execute the query
         $stmt->execute();
 
         // return
         return $stmt->rowCount() > 0;
+    }
+
+    private function getDbPass():String
+    {
+        $query = "SELECT password FROM student WHERE ";
+        if (isset($this->email)) {
+            $query .= "email = :email";
+            //prepare the query
+            $stmt = $this->conn->prepare($query);
+
+
+            //bind the values
+            $stmt->bindParam(':email', $this->email);
+
+            // execute the query
+            $stmt->execute();
+
+            // return
+            return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password'];
+        }elseif (isset($this->regNo)){
+            $query .= "reg_no = :reg_no";
+            //prepare the query
+            $stmt = $this->conn->prepare($query);
+
+
+            //bind the values
+            $stmt->bindParam(':reg_no', $this->regNo);
+
+            // execute the query
+            $stmt->execute();
+
+            // return
+            return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password'];
+        }else{
+            return '';
+        }
+
     }
 
     public function saveUser($reg_no, $full_name, $email, $phone_no, $password, $year = '2019-2020'):bool
