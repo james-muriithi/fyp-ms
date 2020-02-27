@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 25, 2020 at 11:02 PM
+-- Generation Time: Feb 27, 2020 at 11:47 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -25,33 +25,73 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin`
+-- Table structure for table `category`
 --
 
-CREATE TABLE `admin` (
-  `admin_id` int(11) NOT NULL,
-  `full_name` varchar(60) NOT NULL,
-  `email` varchar(60) NOT NULL,
-  `phone_no` varchar(15) NOT NULL,
-  `designation` varchar(20) NOT NULL DEFAULT 'supervisor',
-  `password` varchar(120) NOT NULL,
-  `token` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
-  `profile` varchar(15) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE `category` (
+  `category_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups`
+-- Table structure for table `coordinator`
 --
 
-CREATE TABLE `groups` (
-  `group_id` int(11) NOT NULL,
-  `group_name` varchar(50) NOT NULL,
-  `supervisor` int(11) NOT NULL,
-  `year` varchar(10) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE `coordinator` (
+  `emp_id` varchar(10) NOT NULL,
+  `academic_year` varchar(9) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Triggers `coordinator`
+--
+DELIMITER $$
+CREATE TRIGGER `coordinator_AFTER_INSERT` AFTER INSERT ON `coordinator` FOR EACH ROW BEGIN
+	UPDATE user SET level = 1 WHERE username = NEW.emp_id;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lecturer`
+--
+
+CREATE TABLE `lecturer` (
+  `emp_id` varchar(10) NOT NULL,
+  `full_name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone_no` varchar(15) NOT NULL,
+  `expertise` varchar(105) NOT NULL,
+  `profile` varchar(15) DEFAULT NULL,
+  `created_at` timestamp(6) NULL DEFAULT CURRENT_TIMESTAMP(6)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Triggers `lecturer`
+--
+DELIMITER $$
+CREATE TRIGGER `lecturer_AFTER_INSERT` AFTER INSERT ON `lecturer` FOR EACH ROW BEGIN
+	INSERT INTO user set username = NEW.emp_id,level = 2,status =1;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification`
+--
+
+CREATE TABLE `notification` (
+  `id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `message` varchar(1000) NOT NULL,
+  `user` varchar(30) NOT NULL,
+  `read` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -61,12 +101,22 @@ CREATE TABLE `groups` (
 --
 
 CREATE TABLE `project` (
-  `project_id` int(11) NOT NULL,
-  `project_title` varchar(100) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  `description` varchar(500) NOT NULL,
-  `status` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `category` int(11) NOT NULL,
+  `student` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_categories`
+--
+
+CREATE TABLE `project_categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -76,107 +126,200 @@ CREATE TABLE `project` (
 --
 
 CREATE TABLE `student` (
-  `student_id` int(11) NOT NULL,
-  `reg_no` varchar(20) NOT NULL,
-  `full_name` varchar(60) NOT NULL,
+  `reg_no` varchar(30) NOT NULL,
+  `full_name` varchar(50) NOT NULL,
   `email` varchar(60) NOT NULL,
   `phone_no` varchar(15) NOT NULL,
-  `course` varchar(30) NOT NULL DEFAULT 'Bsc Computer Science',
-  `school` varchar(70) NOT NULL DEFAULT 'School of Pure and Applied Sciences',
-  `department` varchar(50) NOT NULL DEFAULT 'Maths and Computer Science',
-  `year_of_study` varchar(10) NOT NULL,
-  `password` varchar(128) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
-  `token` varchar(32) NOT NULL,
+  `course` varchar(50) NOT NULL DEFAULT 'Bsc. Computer Science',
+  `school` varchar(50) NOT NULL DEFAULT 'School of Pure And Applied Sciences',
+  `department` varchar(45) NOT NULL DEFAULT 'Mathematics and Computer Science',
   `profile` varchar(15) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_tab` timestamp(6) NULL DEFAULT CURRENT_TIMESTAMP(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `student`
+-- Triggers `student`
+--
+DELIMITER $$
+CREATE TRIGGER `student_AFTER_INSERT` AFTER INSERT ON `student` FOR EACH ROW BEGIN
+	INSERT INTO user set username = NEW.reg_no,level = 3,status =1;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_assignment`
 --
 
-INSERT INTO `student` (`student_id`, `reg_no`, `full_name`, `email`, `phone_no`, `course`, `school`, `department`, `year_of_study`, `password`, `token`, `profile`, `created_at`) VALUES
-(1, 'SB30/PU/41760/16', 'JAMES MURIITHI', 'muriithijames556@gmail.com', '0746792699', 'Bsc Computer Science', 'School of Pure and Applied Sciences', 'Maths and Computer Science', '2019-2020', '$2y$10$xxn63Qa9b3YdkjF9647mMOUbdj/eeaBHDTMFZfBnBUopMwA/pOqXq', '86ff023a2fcd113760ef73e7432ab848', NULL, '2020-02-25 22:00:45');
+CREATE TABLE `tbl_assignment` (
+  `student_regno` varchar(30) NOT NULL,
+  `supervisor` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `upload`
+--
+
+CREATE TABLE `upload` (
+  `id` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `project_id` int(11) NOT NULL,
+  `upload_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `username` varchar(30) NOT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `level` int(11) NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `admin`
+-- Indexes for table `category`
 --
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`admin_id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `token` (`token`);
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`category_id`);
 
 --
--- Indexes for table `groups`
+-- Indexes for table `coordinator`
 --
-ALTER TABLE `groups`
-  ADD PRIMARY KEY (`group_id`),
-  ADD UNIQUE KEY `group_name` (`group_name`),
-  ADD KEY `supervisor` (`supervisor`);
+ALTER TABLE `coordinator`
+  ADD KEY `emp_id_idx` (`emp_id`);
+
+--
+-- Indexes for table `lecturer`
+--
+ALTER TABLE `lecturer`
+  ADD PRIMARY KEY (`emp_id`),
+  ADD UNIQUE KEY `emp_id_UNIQUE` (`emp_id`);
+
+--
+-- Indexes for table `notification`
+--
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username_idx` (`user`);
 
 --
 -- Indexes for table `project`
 --
 ALTER TABLE `project`
-  ADD PRIMARY KEY (`project_id`),
-  ADD UNIQUE KEY `project title` (`project_title`),
-  ADD KEY `student_id` (`student_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `title_UNIQUE` (`title`),
+  ADD KEY `reg_no_idx` (`student`),
+  ADD KEY `id_idx` (`category`);
+
+--
+-- Indexes for table `project_categories`
+--
+ALTER TABLE `project_categories`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
-  ADD PRIMARY KEY (`student_id`),
-  ADD UNIQUE KEY `registration number` (`reg_no`),
-  ADD UNIQUE KEY `token` (`token`);
+  ADD PRIMARY KEY (`reg_no`);
+
+--
+-- Indexes for table `tbl_assignment`
+--
+ALTER TABLE `tbl_assignment`
+  ADD PRIMARY KEY (`student_regno`,`supervisor`),
+  ADD KEY `empid_idx` (`supervisor`);
+
+--
+-- Indexes for table `upload`
+--
+ALTER TABLE `upload`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_UNIQUE` (`id`),
+  ADD KEY `id_idx` (`project_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`username`),
+  ADD UNIQUE KEY `username_UNIQUE` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `admin`
+-- AUTO_INCREMENT for table `notification`
 --
-ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `groups`
---
-ALTER TABLE `groups`
-  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `notification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `student`
+-- AUTO_INCREMENT for table `project_categories`
 --
-ALTER TABLE `student`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `project_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `upload`
+--
+ALTER TABLE `upload`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `groups`
+-- Constraints for table `coordinator`
 --
-ALTER TABLE `groups`
-  ADD CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`supervisor`) REFERENCES `admin` (`admin_id`);
+ALTER TABLE `coordinator`
+  ADD CONSTRAINT `employee_id` FOREIGN KEY (`emp_id`) REFERENCES `lecturer` (`emp_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `username` FOREIGN KEY (`user`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `project`
 --
 ALTER TABLE `project`
-  ADD CONSTRAINT `project_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`);
+  ADD CONSTRAINT `id` FOREIGN KEY (`category`) REFERENCES `project_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `reg_no` FOREIGN KEY (`student`) REFERENCES `student` (`reg_no`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `tbl_assignment`
+--
+ALTER TABLE `tbl_assignment`
+  ADD CONSTRAINT `empid` FOREIGN KEY (`supervisor`) REFERENCES `lecturer` (`emp_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `sregno` FOREIGN KEY (`student_regno`) REFERENCES `student` (`reg_no`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `upload`
+--
+ALTER TABLE `upload`
+  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
