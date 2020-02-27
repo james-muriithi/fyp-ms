@@ -3,7 +3,7 @@ include_once 'UserInterface.php';
 
 class Student implements UserInterface
 {
-    private $email, $regNo, $password, $token;
+    private $email, $userName, $password;
 
     /**
      * @var PDO
@@ -14,24 +14,25 @@ class Student implements UserInterface
         $this->conn = $conn;
     }
 
-    /*
-     * Verify Student Details
-     * */
-
+    /**
+     * @return bool
+     */
     public function verifyUser() :bool
     {
-        if (isset($this->regNo)) {
-            return $this->regExists($this->regNo) && password_verify($this->password, $this->getDbPass());
-        }elseif (isset($this->email)) {
-            return $this->emailExists($this->email) && password_verify($this->password, $this->getDbPass());
+        if (isset($this->userName)) {
+            return $this->userExists($this->userName) && password_verify($this->password, $this->getDbPass());
         }
         return false;
     }
 
-    private function emailExists(String $email) : bool
+    /**
+     * @param String $email
+     * @return bool
+     */
+    public function emailExists(String $email) : bool
     {
         //sql query
-        $query = 'SELECT student_id FROM student WHERE email = :email';
+        $query = 'SELECT * FROM student WHERE email = :email';
 
         //prepare the query
         $stmt = $this->conn->prepare($query);
@@ -46,10 +47,14 @@ class Student implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
-    private function regExists(String $reg_no) : bool
+    /**
+     * @param String $reg_no
+     * @return bool
+     */
+    public function regExists(String $reg_no) : bool
     {
         //sql query
-        $query = "SELECT student_id FROM student WHERE reg_no = :reg_no";
+        $query = 'SELECT * FROM student WHERE reg_no = :reg_no';
 
         //prepare the query
         $stmt = $this->conn->prepare($query);
@@ -64,81 +69,89 @@ class Student implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
+    /**
+     * @param String $username
+     * @return bool
+     */
+    public function userExists(String $username) : bool
+    {
+        //sql query
+        $query = 'SELECT username FROM user WHERE username = :username';
+
+        //prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        //bind the values
+        $stmt->bindParam(':username', $username);
+
+        // execute the query
+        $stmt->execute();
+
+        // return
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * @return String
+     */
     private function getDbPass():String
     {
-        $query = "SELECT password FROM student WHERE ";
-        if (isset($this->email)) {
-            $query .= "email = :email";
-            //prepare the query
-            $stmt = $this->conn->prepare($query);
+        $query = 'SELECT password FROM user WHERE username = :username';
+
+        //prepare the query
+        $stmt = $this->conn->prepare($query);
 
 
-            //bind the values
-            $stmt->bindParam(':email', $this->email);
+        //bind the values
+        $stmt->bindParam(':username', $this->userName);
 
-            // execute the query
-            $stmt->execute();
+        // execute the query
+        $stmt->execute();
 
-            // return
-            return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password'];
-        }elseif (isset($this->regNo)){
-            $query .= "reg_no = :reg_no";
-            //prepare the query
-            $stmt = $this->conn->prepare($query);
-
-
-            //bind the values
-            $stmt->bindParam(':reg_no', $this->regNo);
-
-            // execute the query
-            $stmt->execute();
-
-            // return
-            return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password'];
-        }else{
-            return '';
-        }
+        // return
+        return strval($stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password']);
 
     }
 
-    public function saveUser($reg_no, $full_name, $email, $phone_no, $password, $year = '2019-2020'):bool
+    /**
+     * @param $reg_no
+     * @param $full_name
+     * @param $email
+     * @param $phone_no
+     * @return bool
+     * @throws Exception
+     */
+    public function saveUser($reg_no, $full_name, $email, $phone_no):bool
     {
         $query = 'INSERT INTO `student`(
                     `reg_no`,
                     `full_name`,
                     `email`,
-                    `phone_no`,
-                    `year_of_study`,
-                    `password`,
-                    `token`
+                    `phone_no`
                 )
                 VALUES(
                        :reg_no,
                        :full_name,
                        :email,
-                       :phone_no,
-                       :year,
-                       :pass,
-                       :token
+                       :phone_no
                 )';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
-        $token = self::generateToken();
-        $password = password_hash($password, PASSWORD_BCRYPT);
 
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':reg_no', $reg_no);
         $stmt->bindParam(':full_name', $full_name);
         $stmt->bindParam(':phone_no', $phone_no);
-        $stmt->bindParam(':pass', $password);
-        $stmt->bindParam(':year', $year);
-        $stmt->bindParam(':token', $token);
 
         return $stmt->execute();
     }
 
+    /**
+     * @return String
+     * @throws Exception
+     */
     private function generateToken():String
     {
         return bin2hex(random_bytes(32));
@@ -147,6 +160,9 @@ class Student implements UserInterface
     /*
      * Get User Details
      * */
+    /**
+     * @return array
+     */
     public function getUser():array
     {
         $query = 'SELECT
@@ -158,7 +174,6 @@ class Student implements UserInterface
                     s.department,
                     s.course,
                     s.profile,
-                    s.year_of_study,
                     s.created_at
                 FROM
                     student s 
@@ -168,16 +183,11 @@ class Student implements UserInterface
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':reg_no', $this->regNo);
+        $stmt->bindParam(':reg_no', $this->userName);
 
         $stmt->execute();
 
         return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
-    }
-
-    public function getToken()
-    {
-        $query = "";
     }
 
     /**
@@ -201,7 +211,7 @@ class Student implements UserInterface
      */
     public function getRegNo()
     {
-        return $this->regNo;
+        return $this->userName;
     }
 
     /**
@@ -209,7 +219,7 @@ class Student implements UserInterface
      */
     public function setRegNo($regNo)
     {
-        $this->regNo = $regNo;
+        $this->userName = $regNo;
     }
 
     /**
