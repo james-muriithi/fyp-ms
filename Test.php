@@ -8,4 +8,5 @@ $student = new Student($conn);
 //var_dump($student->saveUser('SB30/PU/41760/16','JAMES MURIITHI','muriithijames556@gmail.com','0746792699','0000'));
 $student->setRegNo('SB30/PU/41760/16');
 //echo json_encode($student->getUser());
-$student->setPassword('0000');
+$student->setPassword('0900');
+var_dump($student->verifyUser());
