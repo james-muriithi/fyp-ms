@@ -148,6 +148,24 @@ class Student implements UserInterface
         return $stmt->execute();
     }
 
+    public function signUp($password):array
+    {
+        $password = password_hash($password,PASSWORD_BCRYPT);
+        $token = $this->generateToken();
+
+        $query = 'UPDATE user SET password = :pass, token = :token';
+
+       $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':pass', $password);
+        $stmt->bindParam(':token', $token);
+        if ($stmt->execute()){
+            return array('token'=>$token);
+        }
+        return array('token'=>'');
+    }
+
+
     /**
      * @return String
      * @throws Exception
@@ -187,13 +205,26 @@ class Student implements UserInterface
 
         $stmt->execute();
 
-        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getToken(){
+        $reg_no = strval($this->getRegNo());
+
+        $query = 'SELECT token FROM user WHERE username = :reg_no';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':reg_no', $reg_no);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
     /**
      * @return String
      */
-    public function getEmail()
+    public function getEmail():string
     {
         return $this->email;
     }
@@ -201,7 +232,7 @@ class Student implements UserInterface
     /**
      * @param String $email
      */
-    public function setEmail($email)
+    public function setEmail($email):void
     {
         $this->email = $email;
     }
@@ -209,7 +240,7 @@ class Student implements UserInterface
     /**
      * @return String
      */
-    public function getRegNo()
+    public function getRegNo():string
     {
         return $this->userName;
     }
@@ -217,7 +248,7 @@ class Student implements UserInterface
     /**
      * @param String $regNo
      */
-    public function setRegNo($regNo)
+    public function setRegNo($regNo):void
     {
         $this->userName = $regNo;
     }
@@ -225,7 +256,7 @@ class Student implements UserInterface
     /**
      * @return String
      */
-    public function getPassword()
+    public function getPassword():string
     {
         return $this->password;
     }
@@ -233,7 +264,7 @@ class Student implements UserInterface
     /**
      * @param String $password
      */
-    public function setPassword($password)
+    public function setPassword($password):void
     {
         $this->password = $password;
     }
