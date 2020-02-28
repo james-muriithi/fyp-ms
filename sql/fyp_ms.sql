@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2020 at 11:47 PM
+-- Generation Time: Feb 28, 2020 at 11:36 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -134,8 +134,15 @@ CREATE TABLE `student` (
   `school` varchar(50) NOT NULL DEFAULT 'School of Pure And Applied Sciences',
   `department` varchar(45) NOT NULL DEFAULT 'Mathematics and Computer Science',
   `profile` varchar(15) DEFAULT NULL,
-  `created_tab` timestamp(6) NULL DEFAULT CURRENT_TIMESTAMP(6)
+  `created_at` timestamp(6) NULL DEFAULT CURRENT_TIMESTAMP(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `student`
+--
+
+INSERT INTO `student` (`reg_no`, `full_name`, `email`, `phone_no`, `course`, `school`, `department`, `profile`, `created_at`) VALUES
+('SB30/PU/41760/16', 'JAMES MURIITHI', 'muriithijames556@gmail.com', '0746792699', 'Bsc. Computer Science', 'School of Pure And Applied Sciences', 'Mathematics and Computer Science', NULL, '2020-02-28 10:10:42.270780');
 
 --
 -- Triggers `student`
@@ -168,7 +175,21 @@ CREATE TABLE `upload` (
   `id` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
+  `category` int(11) NOT NULL,
   `upload_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `upload_category`
+--
+
+CREATE TABLE `upload_category` (
+  `id` int(11) NOT NULL,
+  `name` varchar(65) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -180,9 +201,17 @@ CREATE TABLE `upload` (
 CREATE TABLE `user` (
   `username` varchar(30) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `token` varchar(32) NOT NULL,
   `level` int(11) NOT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`username`, `password`, `token`, `level`, `status`) VALUES
+('SB30/PU/41760/16', '$2y$10$1IEGBlK5hQXo71FXzm3Oku4th18FX40w9opqp1silflX/xzzz39fG', '73954dc1f18e8e4ad0ea117d8d66f74e', 3, 1);
 
 --
 -- Indexes for dumped tables
@@ -246,16 +275,23 @@ ALTER TABLE `tbl_assignment`
 -- Indexes for table `upload`
 --
 ALTER TABLE `upload`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id`,`category`),
   ADD UNIQUE KEY `id_UNIQUE` (`id`),
   ADD KEY `id_idx` (`project_id`);
+
+--
+-- Indexes for table `upload_category`
+--
+ALTER TABLE `upload_category`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`username`),
-  ADD UNIQUE KEY `username_UNIQUE` (`username`);
+  ADD UNIQUE KEY `username_UNIQUE` (`username`),
+  ADD UNIQUE KEY `token` (`token`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -319,7 +355,8 @@ ALTER TABLE `tbl_assignment`
 -- Constraints for table `upload`
 --
 ALTER TABLE `upload`
-  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `upload_cat` FOREIGN KEY (`id`) REFERENCES `upload_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
