@@ -102,14 +102,100 @@ class Lecturer implements UserInterface
 
     }
 
-    public function getUser()
+    public function getUser() : array
     {
-        // TODO: Implement getUser() method.
+        $query = 'SELECT
+                    l.emp_id,
+                    l.full_name,
+                    l.email,
+                    l.phone_no,
+                    l.expertise,
+                    user.level,
+                    l.profile,
+                    l.created_at
+                FROM
+                    lecturer l
+                LEFT JOIN user on user.username = l.emp_id
+                WHERE
+                    l.emp_id = :empid';
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':empid', $this->userName);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getToken()
+    public function getToken() : string
     {
-        // TODO: Implement getToken() method.
+        $username = strval($this->getUserName());
+
+        $query = 'SELECT token FROM user WHERE username = :username';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':username', $username);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+    /**
+     * @param $empId string
+     * @param $full_name string
+     * @param $email string
+     * @param $phone_no string
+     * @param $expertise string
+     * @throws Exception PDOException
+     * @return bool
+     */
+    public function saveUser($empId, $full_name, $email, $phone_no, $expertise):bool
+    {
+        $query = 'INSERT INTO lecturer(
+                    `emp_id`,
+                    `full_name`,
+                    `email`,
+                    `phone_no`,
+                     `expertise`
+                )
+                VALUES(
+                       :emp_id,
+                       :full_name,
+                       :email,
+                       :phone_no,
+                       :expertise
+                )';
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':emp_id', $reg_no);
+        $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':phone_no', $phone_no);
+        $stmt->bindParam(':expertise', $expertise);
+
+
+        return $stmt->execute();
+    }
+
+    public function updatePassword(string $newPass): bool
+    {
+        $query = 'UPDATE user SET password = :password WHERE username =: username';
+
+        $stmt = $this->conn->prepare($query);
+
+        $newPass = password_hash($newPass, PASSWORD_BCRYPT);
+
+        $stmt->bindParam(':password', $newPass);
+        $stmt->bindParam(':username', $this->userName);
+
+        return $stmt->execute();
     }
 
     /**
