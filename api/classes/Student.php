@@ -91,6 +91,20 @@ class Student implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
+    public function updatePassword(string $newPass): bool
+    {
+        $query = 'UPDATE user SET password = :password WHERE username =: username';
+
+        $stmt = $this->conn->prepare($query);
+
+        $newPass = password_hash($newPass, PASSWORD_BCRYPT);
+
+        $stmt->bindParam(':password', $newPass);
+        $stmt->bindParam(':username', $this->userName);
+
+        return $stmt->execute();
+    }
+
     /**
      * @return String
      */
