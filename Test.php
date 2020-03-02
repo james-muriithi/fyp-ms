@@ -7,7 +7,7 @@ $student = new Student($conn);
 //$conn->beginTransaction();
 //var_dump($student->saveUser('SB30/PU/41760/16','JAMES MURIITHI','muriithijames556@gmail.com','0746792699'));
 $student->setRegNo('SB30/PU/41760/16');
-
+//var_dump($student->regExists($student->getRegNo()));
 if ($student->userExists($student->getRegNo())){
 //    var_dump($student->getToken());
     if (!isset($student->getToken()['token'])){

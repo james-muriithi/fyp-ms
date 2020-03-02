@@ -25,7 +25,7 @@ class Project extends Student
         $this->conn = $conn;
     }
 
-    public function addProject($category, $title = '', String $description = '')
+    public function addProject($category, $title = '', string $description = '')
     {
         $title = !isset($this->title) ? $title :$this->title;
         $description = !isset($this->description) ? $description :$this->description;
