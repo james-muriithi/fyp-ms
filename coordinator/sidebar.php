@@ -7,14 +7,14 @@
                     <ul class="metismenu list-unstyled" id="side-menu">
                         <li class="menu-title">Main</li>
                         <li>
-                            <a href="index.html" class="waves-effect">
+                            <a href="index.php" class="waves-effect">
                                 <i class="ti-dashboard"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         <li class="menu-title">Users</li>
                         <li>
-                            <a href="calendar.html" class="waves-effect">
+                            <a href="assign-students.php" class="waves-effect">
                                 <i class="ti-calendar"></i>
                                 <span class="badge badge-pill badge-danger float-right">6</span>
                                 <span>Assign Students</span>
