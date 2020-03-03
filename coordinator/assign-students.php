@@ -4,6 +4,8 @@ include_once 'head.php'; ?>
 <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
+<link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css">
+
 <body data-sidebar="dark">
     <!-- Begin page -->
     <div id="layout-wrapper">
@@ -37,7 +39,7 @@ include_once 'head.php'; ?>
 
                                         <h4 class="card-title">Available Supervisors</h4>
 
-                                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <table id="datatable-buttons" class="table table-striped table-bordered display nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr>
                                                 <th>Employee Id</th>
@@ -59,7 +61,7 @@ include_once 'head.php'; ?>
                                                     <td>john@doe.com</td>
                                                     <td>
                                                         <div class="text-center">
-                                                            <button class="btn btn-sm btn-success">
+                                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal" id="btn-assign">
                                                                 Assign
                                                             </button>
                                                         </div>
@@ -111,6 +113,39 @@ include_once 'head.php'; ?>
     </div> <!-- end slimscroll-menu-->
     </div>
     <!-- /Right-bar -->
+    <!-- sample modal content -->
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="myModalLabel">
+                        Assign Students to: <span class="lec-name"></span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="assign-form">
+                        <select id="students" multiple name="sel">
+                          <optgroup label="JavaScript">
+                            <option value="value 1">Angular</option>
+                            <option value="value 2">React</option>
+                            <option value="value 3">Vue</option>
+                          </optgroup>
+                          <optgroup label="CSS">
+                            <option value="value 4">Bootstrap</option>
+                            <option value="value 5">Foundation</option>
+                            <option value="value 6">Bulma</option>
+                          </optgroup>
+                        </select> 
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success waves-effect waves-light" form="assign-form">Assign</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <!-- Right bar overlay-->
     <div class="rightbar-overlay"></div>
     <!-- JAVASCRIPT -->
@@ -137,9 +172,17 @@ include_once 'head.php'; ?>
     <script src="../assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
     <!-- Datatable init js -->
-    <script src="../assets/js/pages/datatables.init.js"></script> 
+    <script src="../assets/js/pages/datatables.init.js"></script>
+    
+    <!-- Sweet Alerts js -->
+    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script> 
+
+    <!-- slimselect -->
+    <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
     <script src="../assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
+
 
 </html>

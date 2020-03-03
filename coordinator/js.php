@@ -5,6 +5,8 @@
     <script src="../assets/libs/node-waves/waves.min.js"></script>
     <!-- Peity chart-->
     <script src="../assets/libs/peity/jquery.peity.min.js"></script>
+    <!-- Sweet Alerts js -->
+    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <!-- Plugin Js-->
     <script src="../assets/libs/chartist/chartist.min.js"></script>
     <script src="../assets/libs/chartist-plugin-tooltips/chartist-plugin-tooltip.min.js"></script>
