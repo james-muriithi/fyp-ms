@@ -42,26 +42,28 @@ header .navbar-header button.noti-icon span.badge {
 
 
 /*datatables custom style*/
-.dataTables_wrapper {
-    padding-top: 10px;
-}
-
 .dt-buttons {
     display: inline-block;
     margin-bottom: 15px;
     padding-top: 5px;
 }
 
-.dt-buttons .dt-button {
-    background: #1976d2 none repeat scroll 0 0!important;
-    border-radius: 4px;
-    color: #ffffff;
+.dt-buttons button {
+    background: #1976d2 none repeat scroll 0 0;
+    color: #fff;
+    border-radius: 5px!important;
     margin-right: 3px;
-    padding: 5px 15px;
+    margin-bottom: 3px;
+    padding: 7px 15px;
 }
 
-.dt-buttons .dt-button:hover {
+.dt-buttons button:hover {
     background: #2f3d4a none repeat scroll 0 0;
+    color: #fff;
+}
+
+.dataTables_wrapper {
+    padding-top: 10px;
 }
 
 .dataTables_info,
@@ -71,25 +73,6 @@ header .navbar-header button.noti-icon span.badge {
 
 .dataTables_length {
     margin-top: 10px;
-}
-
-.dataTables_length select {
-    background-color: transparent;
-    background-image: linear-gradient(#1976d2, #1976d2), linear-gradient(#b1b8bb, #b1b8bb);
-    background-position: center bottom, center calc(99%);
-    background-repeat: no-repeat;
-    background-size: 0 2px, 100% 1px;
-    border: 0 none;
-    padding-bottom: 5px;
-    transition: background 0s ease-out 0s;
-}
-
-.dataTables_length select:focus {
-    background-image: linear-gradient(#1976d2, #1976d2), linear-gradient(#b1b8bb, #b1b8bb);
-    background-size: 100% 2px, 100% 1px;
-    box-shadow: none;
-    outline: medium none;
-    transition-duration: 0.3s;
 }
 
 .dataTables_filter {

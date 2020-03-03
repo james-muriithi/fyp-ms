@@ -1,6 +1,7 @@
 $(document).ready(function() {
     $("#datatable").DataTable(), $("#datatable-buttons").DataTable({
         lengthChange: !1,
+        "scrollX": true,
         buttons: [{
                 extend: 'excel',
                 text: '<i class="fa fa-file-excel"></i> Excel',
@@ -10,7 +11,7 @@ $(document).ready(function() {
                 }
             }, {
                 extend: 'pdf',
-                text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                text: '<i class="mdi mdi-file-pdf"></i> PDF',
                 title: "Available Supervisors",
                 exportOptions: {
                     columns: 'th:not(:last-child)'
