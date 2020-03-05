@@ -26,8 +26,8 @@
                                 <span>Students</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="email-inbox.html">Add Student</a></li>
-                                <li><a href="email-read.html">View Students</a></li>
+                                <li><a href="add-student.php">Add Student</a></li>
+                                <li><a href="view-students.php">View Students</a></li>
                             </ul>
                         </li>
                         <li>

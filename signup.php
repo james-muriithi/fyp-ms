@@ -8,7 +8,11 @@
         font-family: sans-serif;
     }
 </style>
-<body>
+<body onload="preloader();">
+
+    <!-- preloader -->
+    <div class="la-anim-1"></div>
+
 	<div class="account-pages my-5 pt-5">
 	    <div class="container">
 	        <div class="row justify-content-center">
@@ -36,7 +40,7 @@
 
 	                                <div class="form-group">
 	                                    <label for="useremail">Username</label>
-	                                    <input type="email" class="form-control" id="username" placeholder="Enter username" name="username">
+	                                    <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
 	                                </div>
 	        
 	                                <div class="form-group row  mb-0">
@@ -73,6 +77,29 @@
 
 <script src="assets/js/app.js"></script>
 <script type="text/javascript">
+	let inProgress = false;
+
+    let preloader = function() {
+        if (inProgress) return false;
+        inProgress = true;
+        $('.account-pages').css({
+            'opacity': '0.5',
+            'pointer-events': 'none'
+        });
+
+        $('.account-pages').addClass('disabled');
+        $('.la-anim-1').addClass('la-animate')
+        setTimeout(function() {
+            $('.account-pages').css({
+                opacity: '1',
+                'pointer-events': 'auto'
+            });
+            $('.account-pages').removeClass('disabled');
+            $('.la-anim-1').removeClass('la-animate');
+            inProgress = false;
+        }, 1800);
+    }
+
 	$(document).ready(function() {
         $('.signup-form').on('submit', function(event) {
             event.preventDefault();
@@ -94,8 +121,12 @@
                         }
                     }
                 }            },
-            onSuccess: function (data) {
+            onSuccess: function (e,data) {
                 alert("message");
+                $form = $(e.target);
+	            $form
+	                .bootstrapValidator('disableSubmitButtons', false)
+	                .bootstrapValidator('resetForm', true);
             }
         });
     }).on('status.field.bv', function(e, data) {

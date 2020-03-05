@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $("#datatable").DataTable(), $("#datatable-buttons").DataTable({
-        lengthChange: !1,
+        dom: 'Bfrtip',
         "scrollX": true,
         buttons: [{
                 extend: 'excel',

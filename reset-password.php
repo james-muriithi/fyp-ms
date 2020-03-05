@@ -8,7 +8,10 @@
         font-family: sans-serif;
     }
 </style>
-<body>
+<body onload="preloader();">
+
+    <!-- preloader -->
+    <div class="la-anim-1"></div>
 
     <div class="account-pages my-5 pt-5">
         <div class="container">
@@ -77,6 +80,28 @@
 
 </html>
 <script type="text/javascript">
+    let inProgress = false;
+
+    let preloader = function() {
+        if (inProgress) return false;
+        inProgress = true;
+        $('.account-pages').css({
+            'opacity': '0.5',
+            'pointer-events': 'none'
+        });
+
+        $('.account-pages').addClass('disabled');
+        $('.la-anim-1').addClass('la-animate')
+        setTimeout(function() {
+            $('.account-pages').css({
+                opacity: '1',
+                'pointer-events': 'auto'
+            });
+            $('.account-pages').removeClass('disabled');
+            $('.la-anim-1').removeClass('la-animate');
+            inProgress = false;
+        }, 1800);
+    }
     $(document).ready(function() {
         $('.password-form').on('submit', function(event) {
             event.preventDefault();
@@ -105,6 +130,9 @@
                 'repeat-password':{
                     excluded: 'false',
                     validators:{
+                        notEmpty: {
+                            message: 'Please provide a password to login.'
+                        },
                         identical: {
                             field: 'password',
                             message: 'The two passwords are not the same'

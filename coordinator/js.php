@@ -12,3 +12,27 @@
     <script src="../assets/libs/chartist-plugin-tooltips/chartist-plugin-tooltip.min.js"></script>
     <script src="../assets/js/pages/dashboard.init.js"></script>
     <script src="../assets/js/app.js"></script>
+    <script type="text/javascript">
+        let inProgress = false;
+
+        let preloader = function() {
+            if (inProgress) return false;
+            inProgress = true;
+            $('#layout-wrapper').css({
+                'opacity': '0.5',
+                'pointer-events': 'none'
+            });
+
+            $('#layout-wrapper').addClass('disabled');
+            $('.la-anim-1').addClass('la-animate bg-warning')
+            setTimeout(function() {
+                $('#layout-wrapper').css({
+                    opacity: '1',
+                    'pointer-events': 'auto'
+                });
+                $('#layout-wrapper').removeClass('disabled');
+                $('.la-anim-1').removeClass('la-animate');
+                inProgress = false;
+            }, 1800);
+        }
+    </script>

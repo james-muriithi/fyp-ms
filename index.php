@@ -8,7 +8,10 @@
         font-family: sans-serif;
     }
 </style>
-<body>
+<body onload="preloader();">
+
+    <!-- preloader -->
+    <div class="la-anim-1"></div>
 
     <div class="account-pages mt-5 m-b-12">
         <div class="container">
@@ -47,7 +50,7 @@
                                             </div>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <button class="btn btn-primary w-md waves-effect waves-light p-b-8 p-t-8" type="submit">Log In</button>
+                                            <button class="btn btn-primary w-md waves-effect waves-light p-b-8 p-t-8" type="submit">Log In <i class="p-l-2 mdi mdi-login"></i></button>
                                         </div>
                                     </div>
 
@@ -119,11 +122,40 @@
                     }
                 }
             },
-            onSuccess: function (data) {
+            onSuccess: function (e,data) {
                 alert("message");
+
+
+                $form = $(e.target);
+                $form
+                    .bootstrapValidator('disableSubmitButtons', false)
+                    .bootstrapValidator('resetForm', true);
             }
         });
     }).on('status.field.bv', function(e, data) {
       data.bv.disableSubmitButtons(false);
     });
+
+    let inProgress = false;
+
+    let preloader = function() {
+        if (inProgress) return false;
+        inProgress = true;
+        $('.account-pages').css({
+            'opacity': '0.5',
+            'pointer-events': 'none'
+        });
+
+        $('.account-pages').addClass('disabled');
+        $('.la-anim-1').addClass('la-animate')
+        setTimeout(function() {
+            $('.account-pages').css({
+                opacity: '1',
+                'pointer-events': 'auto'
+            });
+            $('.account-pages').removeClass('disabled');
+            $('.la-anim-1').removeClass('la-animate');
+            inProgress = false;
+        }, 1800);
+    }
 </script>

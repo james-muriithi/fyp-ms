@@ -2,7 +2,9 @@
 include_once 'head.php'; ?>
 
 
-<body data-sidebar="dark">
+<body data-sidebar="dark" onload="preloader()">
+    <!-- preloader -->
+    <div class="la-anim-1"></div>
     <!-- Begin page -->
     <div id="layout-wrapper">
         <?php include_once 'header.php'; ?>
@@ -20,7 +22,7 @@ include_once 'head.php'; ?>
                         <div class="col-sm-12 p-t-15">
                             <ul class=" breadcrumb breadcrumb-title float-right bg-transparent">
                                 <li class="breadcrumb-item">
-                                    <a href="index-2.html"><i class="mdi mdi-home"></i></a>
+                                    <a href="index.php"><i class="mdi mdi-home"></i></a>
                                 </li>
                                 <li class="breadcrumb-item"><a href="#!">Dashboard</a> </li>
                             </ul>

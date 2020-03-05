@@ -4,6 +4,9 @@ include_once 'head.php'; ?>
 <link href="../assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="../assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
+<!-- Responsive datatable examples -->
+<link href="assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />  
+
 <link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css">
 
 <body data-sidebar="dark">
@@ -26,7 +29,8 @@ include_once 'head.php'; ?>
                                 <li class="breadcrumb-item">
                                     <a href="index.php"><i class="mdi mdi-home"></i></a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">Assign Students</a> </li>
+                                <li class="breadcrumb-item"><a href="#!">Students</a> </li>
+                                <li class="breadcrumb-item"><a href="#!">View Students</a> </li>
                             </ul>
                         </div>
                     </div>
@@ -37,28 +41,37 @@ include_once 'head.php'; ?>
                                 <div class="card">
                                     <div class="card-body">
 
-                                        <h4 class="card-title">Available Supervisors</h4>
+                                        <h4 class="card-title">Students</h4>
+                                        <div class="dropdown-divider"></div>
 
                                         <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr>
-                                                <th>Employee Id</th>
+                                                <th>Reg No</th>
                                                 <th>Name</th>
-                                                <th>Expertise</th>
-                                                <th>Assigned Students</th>
+                                                <th>Project</th>
+                                                <th>Assigned Lecturer</th>
                                                 <th>Phone No</th>
                                                 <th>Email</th>
+                                                <th>Uploads</th>
+                                                <th>status</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>34r55</td>
+                                                    <td>sb30/pu/41760/16</td>
                                                     <td>John Doe</td>
-                                                    <td>Database management</td>
-                                                    <td>4</td>
+                                                    <td>School management system</td>
+                                                    <td>John Msagha</td>
                                                     <td>0712345678</td>
                                                     <td>john@doe.com</td>
+                                                    <td>4</td>
+                                                    <td>
+                                                        <span class="badge badge-warning">
+                                                            pending
+                                                        </span>
+                                                    </td>
                                                     <td>
                                                         <div class="text-center">
                                                             <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal" id="btn-assign">
@@ -158,7 +171,6 @@ include_once 'head.php'; ?>
     <!-- Required datatable js -->
     <script src="../assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="../assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-    
     <!-- Buttons examples -->
     <script src="../assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
@@ -178,6 +190,8 @@ include_once 'head.php'; ?>
     <!-- Sweet Alerts js -->
     <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script> 
 
+    <!-- slimselect -->
+    <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
     <script src="../assets/js/app.js"></script>
     <script type="text/javascript" src="assets/js/app.js"></script>
