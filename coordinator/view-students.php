@@ -1,13 +1,10 @@
 <?php
 include_once 'head.php'; ?>
 <!-- DataTables -->
-<link href="../assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-<link href="../assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
 
-<!-- Responsive datatable examples -->
-<link href="assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />  
 
-<link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css">
+<link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css"/>
 
 <body data-sidebar="dark">
     <!-- Begin page -->
@@ -44,7 +41,7 @@ include_once 'head.php'; ?>
                                         <h4 class="card-title">Students</h4>
                                         <div class="dropdown-divider"></div>
 
-                                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsives nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr>
                                                 <th>Reg No</th>
@@ -74,9 +71,13 @@ include_once 'head.php'; ?>
                                                     </td>
                                                     <td>
                                                         <div class="text-center">
-                                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal" id="btn-assign">
-                                                                Assign
+                                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
+                                                                <i class="mdi mdi-pencil"></i>
                                                             </button>
+                                                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -167,22 +168,10 @@ include_once 'head.php'; ?>
     <script src="../assets/libs/metismenu/metisMenu.min.js"></script>
     <script src="../assets/libs/simplebar/simplebar.min.js"></script>
     <script src="../assets/libs/node-waves/waves.min.js"></script>
+    <script src="../assets/js/app.js" type="text/javascript" ></script>
 
     <!-- Required datatable js -->
-    <script src="../assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="../assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <!-- Buttons examples -->
-    <script src="../assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-    <script src="../assets/libs/jszip/jszip.min.js"></script>
-    <script src="../assets/libs/pdfmake/build/pdfmake.min.js"></script>
-    <script src="../assets/libs/pdfmake/build/vfs_fonts.js"></script>
-    <script src="../assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="../assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="../assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-    <!-- Responsive examples -->
-    <script src="../assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="../assets/libs/DataTables/datatables.min.js"></script>
 
     <!-- Datatable init js -->
     <script src="../assets/js/pages/datatables.init.js"></script>
@@ -193,9 +182,7 @@ include_once 'head.php'; ?>
     <!-- slimselect -->
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
-    <script src="../assets/js/app.js"></script>
+    
     <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
-
-
 </html>

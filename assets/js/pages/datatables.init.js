@@ -2,6 +2,7 @@ $(document).ready(function() {
     $("#datatable").DataTable(), $("#datatable-buttons").DataTable({
         dom: 'Bfrtip',
         "scrollX": true,
+        fixedHeader: false,
         buttons: [{
                 extend: 'excel',
                 text: '<i class="fa fa-file-excel"></i> Excel',
