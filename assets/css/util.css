@@ -2240,6 +2240,7 @@
 .text-left {text-align: left;}
 .text-right {text-align: right;}
 .text-middle {vertical-align: middle;}
+.text-underline{text-decoration: underline!important;}
 
 /* ------------------------------------ */
 .lh-1-0 {line-height: 1.0;}

@@ -33,8 +33,8 @@ include_once 'head.php'; ?>
                                 <li class="breadcrumb-item">
                                     <a href="index.php"><i class="mdi mdi-home"></i></a>
                                 </li>
-                                <li class="breadcrumb-item"><a href="#!">Students</a> </li>
-                                <li class="breadcrumb-item"><a href="#">Add Students</a> </li>
+                                <li class="breadcrumb-item"><a href="#!">Lecturers</a> </li>
+                                <li class="breadcrumb-item"><a href="#">Add Lecturer</a> </li>
                             </ul>
                         </div>
                     </div>
@@ -44,14 +44,14 @@ include_once 'head.php'; ?>
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Student Details</h4>
+                                    <h4 class="card-title">Lecturer Details</h4>
                                     <div class="dropdown-divider"></div>
 
-                                    <form class="add-student-form">
+                                    <form class="add-lecturer-form">
                                         <div class="form-group form-row">
                                             <div class="col-sm-6">
-                                                <label for="regno">Reg No: </label>
-                                                <input type="text" class="form-control" id="regno" placeholder="Enter registration number" name="regno">
+                                                <label for="empid">Employee Id: </label>
+                                                <input type="text" class="form-control" id="empid" placeholder="Enter employee Id" name="empid">
                                             </div>
                                             <div class="col-sm-6">
                                                 <label for="name">Full Name:</label>
@@ -71,23 +71,9 @@ include_once 'head.php'; ?>
                                         </div>
 
                                         <div class="form-group form-row">
-                                            <div class="col-sm-4">
-                                                <label for="school">School: </label>
-                                                <select name="school" class="wide" id="school">
-                                                    <option value="spas" selected>SPAS</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="department">Department: </label>
-                                                <select name="department" class="wide" id="department">
-                                                    <option value="mac" selected>Maths and Computer Science</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="course">Course: </label>
-                                                <select name="course" class="wide" id="course">
-                                                    <option value="cs" selected>Computer Science</option>
-                                                </select>
+                                            <div class="col-sm-6">
+                                                <label for="expertise">Expertise:</label>
+                                                <input type="text" class="form-control" id="expertise" placeholder="Database Management" name="expertise">
                                             </div>
                                         </div>
 
@@ -159,7 +145,7 @@ include_once 'head.php'; ?>
         event.preventDefault();
     });
 
-    $('.add-student-form').bootstrapValidator({
+    $('.add-lecturer-form').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {
                 valid: 'fa fa-check',
@@ -167,16 +153,16 @@ include_once 'head.php'; ?>
                 validating: 'fa fa-refresh'
             },
             fields:{
-                'regno' : {
+                'empid' : {
                     validators: {
                         //when empty it will bring this error message
                         notEmpty: {
                             message: 'The registration number is required and cannot be empty'
                         },
                         //this is a regular expression to validate registration number
-                        regexp: {
-                            regexp: /^([a-z0-9]{4})+\/pu+\/(\d{4,5})+\/(\d{2})$/i,
-                            message: 'Please provide a valid registration number'
+                        stringLength: {
+                            min: 3,
+                            message: 'Please provide an employee id of 3 or more characters'
                         }
                     }
                 },
@@ -217,6 +203,14 @@ include_once 'head.php'; ?>
                         regexp: {
                             regexp: /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i,
                             message: 'Please provide a valid email address'
+                        }
+                    }
+                },
+                'expertise' : {
+                    message: 'The expertise is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'The expertise is required and cannot be empty'
                         }
                     }
                 }

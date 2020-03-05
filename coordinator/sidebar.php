@@ -36,8 +36,8 @@
                                 <span>Lecturers</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="email-inbox.html">Add Lecturer</a></li>
-                                <li><a href="email-read.html">View Lecturers</a></li>
+                                <li><a href="add-lecturer.php">Add Lecturer</a></li>
+                                <li><a href="view-lecturer.php">View Lecturers</a></li>
                             </ul>
                         </li>
                         <li class="menu-title">Projects</li>
