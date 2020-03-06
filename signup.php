@@ -20,7 +20,7 @@
 	                <div class="card overflow-hidden">
 	                    <div class="bg-primary">
 	                        <div class="text-primary text-center p-4">
-	                            <h5 class="text-white font-size-20 p-2">Signup</h5>
+	                            <h5 class="text-white font-size-20 p-2">Sign Up</h5>
 	                            <a href="index.html" class="logo logo-admin">
 	                                <img src="assets/images/logo-sm.png" height="70" alt="logo">
 	                            </a>
@@ -31,7 +31,7 @@
 	                        
 	                        <div class="p-3">
 
-	                            <div class="alert alert-success mt-5" role="alert">
+	                            <div class="alert alert-success mt-4" role="alert">
 	                                Enter your username to continue (Registration number or employee id).
 	                            </div>
 
@@ -122,8 +122,23 @@
                     }
                 }            },
             onSuccess: function (e,data) {
-                alert("message");
                 $form = $(e.target);
+                $name = $.trim($('input[name="username"]').val())
+                $.post('api/signup/', {name: $name}, function(data, textStatus, xhr) {
+                    console.log(data);
+                }).fail(function(data){
+                    let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
+                    Swal.fire({ 
+                        title: "Sorry!",
+                        text: message,
+                        showClass: {popup: 'animated fadeInDown faster'},
+                        hideClass: {popup: 'animated fadeOutUp faster'},
+                        icon: "error",
+                        confirmButtonColor: "#025", 
+                      })
+                });
+
+
 	            $form
 	                .bootstrapValidator('disableSubmitButtons', false)
 	                .bootstrapValidator('resetForm', true);

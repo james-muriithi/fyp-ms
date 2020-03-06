@@ -1,4 +1,6 @@
-<?php include_once 'head.php'; ?>
+<?php include_once 'head.php'; 
+session_start();
+?>
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <style type="text/css">
     .form-control {
@@ -9,11 +11,30 @@
     }
 </style>
 <body onload="preloader();">
+    <?php 
+    if (!isset($_GET['t']) || empty($_GET['t'])) {
+        $prevUrl = empty($_SERVER['HTTP_REFERER']) ? 'index.php' : $_SERVER['HTTP_REFERER'];
+    //    $_SESSION['error'] = 'Please login';
+    //    header('Location: '.$prevUrl);
+    }else {
+        $token = $_GET['t'];
+        include_once 'api/config/database.php';
+        include_once 'api/classes/User.php';
+
+        $conn = Database::getInstance();
+
+        $user = new User($conn);
+        $user->setToken($token);
+        if (!$user->verifyToken()){
+            echo 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error vero, voluptatem placeat, ipsum itaque illo molestiae eveniet aliquid dolorum tenetur, officia sapiente alias ab atque? Error quae, sit non aspernatur.';
+        }
+    }
+    ?>
 
     <!-- preloader -->
     <div class="la-anim-1"></div>
 
-    <div class="account-pages my-5 pt-5">
+    <div class="account-pages mt-5 pt-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">

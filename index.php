@@ -1,5 +1,6 @@
 <?php include_once 'head.php'; ?>
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-validator/css/bootstrapValidator.css">
+<link rel="stylesheet" type="text/css" href="assets/libs/sweetalert2/sweetalert2.min.css">
 <style type="text/css">
     .form-control {
         height: 42px;
@@ -88,6 +89,8 @@
 
     <script src="assets/js/app.js"></script>
 
+    <script type="text/javascript" src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
 </body>
 
 </html>
@@ -123,10 +126,24 @@
                 }
             },
             onSuccess: function (e,data) {
-                alert("message");
-
-
+                // alert("message");
                 $form = $(e.target);
+                $name = $.trim($('input[name="username"]').val())
+                $password = $.trim($('input[name="password"]').val())
+                $.post('api/Auth/', {name: $name, password: $password}, function(data, textStatus, xhr) {
+                    console.log(data);
+                }).fail(function(data){
+                    let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
+                    Swal.fire({ 
+                        title: "Sorry!",
+                        text: message,
+                        showClass: {popup: 'animated fadeInDown faster'},
+                        hideClass: {popup: 'animated fadeOutUp faster'},
+                        icon: "error",
+                        confirmButtonColor: "#025", 
+                      })
+                });
+                
                 $form
                     .bootstrapValidator('disableSubmitButtons', false)
                     .bootstrapValidator('resetForm', true);

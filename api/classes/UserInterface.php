@@ -7,7 +7,7 @@ interface UserInterface
 
     public function getUser();
 
-    public function getToken();
+    public function verifyToken();
 
     public function userExists(String $username);
 }
