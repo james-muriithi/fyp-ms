@@ -64,7 +64,7 @@ session_start();
                                         <label for="otp">OTP Code</label>
                                         <input type="text" class="form-control" id="otp" name="otp"placeholder="Enter the code sent to your phone number">
                                         <div class="text-right">
-                                            <a href="#" class="text-underline" onclick="sendMsg()">resend code</a>
+                                            <a href="#" class="text-underline" onclick="">resend code</a>
                                         </div>
                                     </div>
 
@@ -80,7 +80,7 @@ session_start();
 
                                     <div class="form-group row mb-0">
                                         <div class="col-12 text-right">
-                                            <button class="btn btn-primary w-md waves-effect waves-light p-b-8 p-t-8" type="submit">Save Password</button>
+                                            <button class="btn btn-primary w-md waves-effect waves-light p-b-8 p-t-8" type="submit" id="btn-save">Save Password</button>
                                         </div>
                                     </div>
 
@@ -145,8 +145,8 @@ session_start();
         }, 1800);
     }
 
-    function sendMsg(){
-            $.post('api/sendMessage/', {phone: '<?php echo $phone  ?>',message: 'Your one time password is <?php echo $user->generateOTP()["otp"]  ?>'},
+    function sendMsg(otp){
+            $.post('api/sendMessage/', {phone: '<?php echo $phone  ?>',message: `Your one time password is ${otp}`},
              function(data, textStatus, xhr) {
                 data = JSON.parse(data);
                 console.log(data.sent);
@@ -214,11 +214,39 @@ session_start();
                     }
                 }
             },
-            onSuccess: function (data) {
-                
+            onSuccess: function (e,data) {
+                $form = $(e.target);
+                $('#btn-save').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...')
+
+                $form = $(e.target);
+                $pass = $.trim($('input[name="password"]').val())
+                $otp = $.trim($('input[name="otp"]').val())
+                $token = '<?php echo $token ?>';
+                $.post('api/ResetPassword/', {token: $token,otp: $otp,password: $pass}, function(data, textStatus, xhr) {
+                    if (typeof data.success.message != 'undefined') {
+                        Lobibox.notify('success', {
+                            position: 'top right',
+                            // delayIndicator: false,
+                            icon: 'fa fa-check',
+                            msg: data.success.message
+                        });
+                        }
+                }).fail(function(data){
+                    console.log(data);
+                    let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
+                    Lobibox.notify('error', {
+                            position: 'top right',
+                            // delayIndicator: false,
+                            icon: 'fa fa-times',
+                            msg: message
+                        });
+                }).always(()=>{$('#btn-cont').prop('disabled', false).html('Save Password')});
+                $form
+                    .bootstrapValidator('disableSubmitButtons', false)
+                    .bootstrapValidator('resetForm', true);
             }
-        });
-    }).on('status.field.bv', function(e, data) {
-      data.bv.disableSubmitButtons(false);
+        }).on('status.field.bv', function(e, data) {
+              data.bv.disableSubmitButtons(false);
+            });
     });
 </script>

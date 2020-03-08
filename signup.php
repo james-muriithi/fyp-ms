@@ -153,8 +153,8 @@
 	                .bootstrapValidator('disableSubmitButtons', false)
 	                .bootstrapValidator('resetForm', true);
             }
+        }).on('status.field.bv', function(e, data) {
+          data.bv.disableSubmitButtons(false);
         });
-    }).on('status.field.bv', function(e, data) {
-      data.bv.disableSubmitButtons(false);
     });
 </script>
