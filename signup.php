@@ -1,5 +1,6 @@
 <?php include_once 'head.php'; ?>
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-validator/css/bootstrapValidator.css">
+<link rel="stylesheet" type="text/css" href="assets/libs/sweetalert2/sweetalert2.min.css">
 <style type="text/css">
     .form-control {
         height: 42px;
@@ -45,7 +46,7 @@
 	        
 	                                <div class="form-group row  mb-0">
 	                                    <div class="col-12 text-right">
-	                                        <button class="btn btn-primary w-md waves-effect waves-light p-b-8 p-t-8" type="submit">Continue</button>
+	                                        <button class="btn btn-primary w-md waves-effect waves-light p-b-8 p-t-8" id="btn-cont" type="submit">Continue</button>
 	                                    </div>
 	                                </div>
 
@@ -74,6 +75,7 @@
 <script src="assets/libs/metismenu/metisMenu.min.js"></script>
 <script src="assets/libs/simplebar/simplebar.min.js"></script>
 <script src="assets/libs/node-waves/waves.min.js"></script>
+<script type="text/javascript" src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
 
 <script src="assets/js/app.js"></script>
 <script type="text/javascript">
@@ -122,11 +124,17 @@
                     }
                 }            },
             onSuccess: function (e,data) {
+                $('#btn-cont').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...')
+
                 $form = $(e.target);
                 $name = $.trim($('input[name="username"]').val())
                 $.post('api/signup/', {name: $name}, function(data, textStatus, xhr) {
-                    console.log(data);
+                    if (typeof data['success']['message'] != 'undefined') {
+                        let token = data['success']['message']
+                        location.href = `reset-password.php?t=${token}`
+                    }
                 }).fail(function(data){
+                    console.log(data);
                     let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
                     Swal.fire({ 
                         title: "Sorry!",
@@ -136,6 +144,8 @@
                         icon: "error",
                         confirmButtonColor: "#025", 
                       })
+                }).always(()=>{
+                    $('#btn-cont').prop('disabled', false).html('Continue')
                 });
 
 
