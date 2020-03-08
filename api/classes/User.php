@@ -8,7 +8,7 @@ class User implements UserInterface
      * @var PDO
      */
     public $conn;
-    private $username, $password,$token;
+    private $username, $password,$token, $level;
 
     /**
      * @return string
@@ -40,6 +40,57 @@ class User implements UserInterface
         return bin2hex(random_bytes(32));
     }
 
+    public function generateOTP() :array
+    {
+        // Create random password
+         $alphabets = '0123456789';
+        $count = strlen($alphabets) - 1;
+        $pass = '';
+        for ($i = 0; $i < 6; $i++) {
+            try {
+                $pass .= $alphabets[random_int(0, $count)];
+            } catch (Exception $e) {
+                return [
+                    'otp' => ''
+                ];
+            }
+        }
+
+        // Database entry
+        $query = 'UPDATE user SET otp = :otp WHERE username =:username';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':username', $this->username);
+        $stmt->bindParam(':otp', $pass);
+        $ok = $stmt->execute();
+
+        // Result
+        return [
+            'otp' => $ok ? $pass : ''
+        ];
+    }
+
+    public function saveToken():array
+    {
+        try {
+            $token = $this->generateToken();
+        } catch (Exception $e) {
+            return array('token'=>'');
+        }
+
+        $query = 'UPDATE user SET token = :token WHERE username =:username';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':username', $this->username);
+        $stmt->bindParam(':token', $token);
+
+        if ( $stmt->execute()){
+            return array('token'=> $token);
+        }
+        return array('token'=> $token);
+    }
 
 
     /**
@@ -59,28 +110,20 @@ class User implements UserInterface
     public function getUser() : array
     {
         $query = 'SELECT
-                    l.emp_id,
-                    l.full_name,
-                    l.email,
-                    l.phone_no,
-                    l.expertise,
-                    user.level,
-                    l.profile,
-                    l.created_at
+                    *
                 FROM
-                    lecturer l
-                LEFT JOIN user on user.username = l.emp_id
+                    user 
                 WHERE
-                    l.emp_id = :empid';
+                    username= :username';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':empid', $this->username);
+        $stmt->bindParam(':username', $this->username);
 
         $stmt->execute();
 
-        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     /**
@@ -159,6 +202,9 @@ class User implements UserInterface
     public function setUsername($username): void
     {
         $this->username = $username;
+        if ($this->userExists($username)){
+            $this->level = $this->getUser()['level'];
+        }
     }
 
     /**
@@ -179,7 +225,7 @@ class User implements UserInterface
 
     public function verifyToken() :bool
     {
-        $query = 'SELECT token FROM user WHERE token = :token';
+        $query = 'SELECT username, level FROM user WHERE token = :token';
 
         $stmt = $this->conn->prepare($query);
 
@@ -187,6 +233,28 @@ class User implements UserInterface
 
         $stmt->execute();
 
+        if ($stmt->rowCount() > 0){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->username = $row['username'];
+            $this->level = $row['level'];
+            return true;
+        }
         return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLevel() :string
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param string $level
+     */
+    public function setLevel($level): void
+    {
+        $this->level = $level;
     }
 }

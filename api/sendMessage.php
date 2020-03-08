@@ -15,7 +15,13 @@ $data = $_POST;
 if (isset($data['phone'], $data['message']) && !empty($data['phone']) && !empty($data['message'])) {
     $phone = $data['phone'];
     $message = $data['message'];
-
+    if (!@fsockopen('www.google.com',80)){
+        echo json_response(['sent'=> false]);
+    }else{
+        sendMsg($phone,$message);
+        echo json_encode(['sent'=> true]);
+    }
+    die();
 }
 //sendMsg('0746792699', 'hello there your code is 12345');
 function sendMsg($phone, $msg){
@@ -42,5 +48,5 @@ function sendMsg($phone, $msg){
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
     $curl_response = curl_exec($curl);
-//    print_r($curl_response);
+    return true;
 }

@@ -219,7 +219,7 @@ class Student implements UserInterface
 
         $stmt->execute();
 
-        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     public function getToken(){
@@ -281,5 +281,10 @@ class Student implements UserInterface
     public function setPassword($password):void
     {
         $this->password = $password;
+    }
+
+    public function verifyToken()
+    {
+        // TODO: Implement verifyToken() method.
     }
 }
