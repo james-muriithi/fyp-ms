@@ -242,6 +242,32 @@ class User implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
+    public function verifyOTP($otp):bool
+    {
+        $query = 'SELECT username FROM user WHERE otp = :otp';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':otp', $otp);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public function updatePassword($newPass):bool
+    {
+        $query = 'UPDATE user SET password = :newpass where username=:username';
+
+        $stmt = $this->conn->prepare($query);
+        $newPass = password_hash($newPass, PASSWORD_BCRYPT);
+
+        $stmt->bindParam(':newpass', $newPass);
+        $stmt->bindParam(':username', $this->username);
+
+        return $stmt->execute();
+    }
+
     /**
      * @return string
      */
