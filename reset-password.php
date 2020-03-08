@@ -2,6 +2,7 @@
 session_start();
 ?>
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-validator/css/bootstrapValidator.css">
+<link rel="stylesheet" type="text/css" href="assets/libs/lobibox/css/lobibox.min.css">
 <style type="text/css">
     .form-control {
         height: 42px;
@@ -20,13 +21,19 @@ session_start();
         $token = $_GET['t'];
         include_once 'api/config/database.php';
         include_once 'api/classes/User.php';
+        include_once 'api/classes/Student.php';
 
         $conn = Database::getInstance();
 
         $user = new User($conn);
         $user->setToken($token);
-        if (!$user->verifyToken()){
-            echo 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error vero, voluptatem placeat, ipsum itaque illo molestiae eveniet aliquid dolorum tenetur, officia sapiente alias ab atque? Error quae, sit non aspernatur.';
+        $phone = '';
+        if ($user->verifyToken()){
+            if ($user->getLevel() == 3) {
+                $student = new Student($conn);
+                $student->setRegNo($user->getUsername());
+                $phone = $student->getUser()['phone_no'];
+            }
         }
     }
     ?>
@@ -34,7 +41,7 @@ session_start();
     <!-- preloader -->
     <div class="la-anim-1"></div>
 
-    <div class="account-pages mt-5 pt-5">
+    <div class="account-pages mt-3 pt-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
@@ -42,7 +49,7 @@ session_start();
                         <div class="bg-primary">
                             <div class="text-primary text-center p-4">
                                 <h5 class="text-white font-size-20">Set Password</h5>
-                                <p class="text-white-50">Hello Smith, enter your new password!</p>
+                                <p class="text-white-50">Hello <?= $user->getUsername(); ?>, enter your new password!</p>
                                 <a href="javascript:void(0)" class="logo logo-admin">
                                     <img src="assets/images/users/user-6.jpg" class="rounded-circle" height="70" alt="logo">
                                 </a>
@@ -51,7 +58,15 @@ session_start();
 
                         <div class="card-body p-4">
                             <div class="p-3">
-                                <form class="form-horizontal mt-4 password-form">
+                                <form class="form-horizontal mt-3 password-form">
+
+                                    <div class="form-group">
+                                        <label for="otp">OTP Code</label>
+                                        <input type="text" class="form-control" id="otp" name="otp"placeholder="Enter the code sent to your phone number">
+                                        <div class="text-right">
+                                            <a href="#" class="text-underline" onclick="sendMsg()">resend code</a>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="userpassword">Password</label>
@@ -94,7 +109,7 @@ session_start();
     <script src="assets/libs/metismenu/metisMenu.min.js"></script>
     <script src="assets/libs/simplebar/simplebar.min.js"></script>
     <script src="assets/libs/node-waves/waves.min.js"></script>
-
+    <script type="text/javascript" src="assets/libs/lobibox/js/lobibox.min.js"></script>
     <script src="assets/js/app.js"></script>
 
 </body>
@@ -121,8 +136,38 @@ session_start();
             $('.account-pages').removeClass('disabled');
             $('.la-anim-1').removeClass('la-animate');
             inProgress = false;
+            Lobibox.notify('success', {
+                position: 'top right',
+                // delayIndicator: false,
+                icon: 'fa fa-check',
+                msg: 'Your code was successfully sent to <?php echo $phone ?>'
+            });
         }, 1800);
     }
+
+    function sendMsg(){
+            $.post('api/sendMessage/', {phone: '<?php echo $phone  ?>',message: 'Your one time password is <?php echo $user->generateOTP()["otp"]  ?>'},
+             function(data, textStatus, xhr) {
+                data = JSON.parse(data);
+                console.log(data.sent);
+                if (data['sent'] == true) {
+                    Lobibox.notify('success', {
+                        position: 'top right',
+                        // delayIndicator: false,
+                        icon: 'fa fa-check',
+                        msg: 'Your code was successfully sent to <?php echo $phone ?>'
+                    });
+                }else{
+                    Lobibox.notify('error', {
+                        position: 'top right',
+                        // delayIndicator: false,
+                        icon: 'fa fa-check',
+                        msg: 'An unexpected error occurred while re-sending the code.'
+                    });
+                }
+            });
+        }
+
     $(document).ready(function() {
         $('.password-form').on('submit', function(event) {
             event.preventDefault();
@@ -136,6 +181,14 @@ session_start();
                 validating: 'fa fa-refresh'
             },
             fields:{
+                'otp':{
+                    excluded: 'false',
+                    validators:{
+                        notEmpty: {
+                            message: 'Please provide a code sent to your phone.'
+                        }
+                    }
+                },
                 'password':{
                     excluded: 'false',
                     validators:{
@@ -162,7 +215,7 @@ session_start();
                 }
             },
             onSuccess: function (data) {
-                alert("message");
+                
             }
         });
     }).on('status.field.bv', function(e, data) {
