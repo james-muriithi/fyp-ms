@@ -11,6 +11,9 @@ header .navbar-header button.noti-icon span.badge {
     -webkit-transform: translateY(50px);
     transform: translateY(50px);
 }
+label{
+    font-weight: bold!important;
+}
 
 .notification-show:before {
     content: "";
