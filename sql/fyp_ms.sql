@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2020 at 11:36 PM
+-- Generation Time: Mar 09, 2020 at 11:27 AM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -176,6 +176,7 @@ CREATE TABLE `upload` (
   `name` varchar(45) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `category` int(11) NOT NULL,
+  `approved` int(11) NOT NULL DEFAULT '0',
   `upload_time` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -201,7 +202,8 @@ CREATE TABLE `upload_category` (
 CREATE TABLE `user` (
   `username` varchar(30) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `token` varchar(32) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `otp` varchar(6) DEFAULT NULL,
   `level` int(11) NOT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -210,8 +212,8 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`username`, `password`, `token`, `level`, `status`) VALUES
-('SB30/PU/41760/16', '$2y$10$1IEGBlK5hQXo71FXzm3Oku4th18FX40w9opqp1silflX/xzzz39fG', '73954dc1f18e8e4ad0ea117d8d66f74e', 3, 1);
+INSERT INTO `user` (`username`, `password`, `token`, `otp`, `level`, `status`) VALUES
+('SB30/PU/41760/16', '$2y$10$WSdHCVgJeDAFnKdatmKQzeV/IjgkBEE4OGPDiDQyP5LyAkx4HI4/C', '6bd564a49393317fcc7354f4399803cd68e8d518409ba44d64ffd9ac3a5a169c', '052535', 3, 1);
 
 --
 -- Indexes for dumped tables
