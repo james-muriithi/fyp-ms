@@ -64,7 +64,7 @@ session_start();
                                         <label for="otp">OTP Code</label>
                                         <input type="text" class="form-control" id="otp" name="otp"placeholder="Enter the code sent to your phone number">
                                         <div class="text-right">
-                                            <a href="#" class="text-underline" onclick="">resend code</a>
+                                            <a href="javascript:void(0)" class="text-underline" onclick="sendMsg()">resend code</a>
                                         </div>
                                     </div>
 
@@ -91,7 +91,7 @@ session_start();
 
                     </div>
 
-                    <div class="mt-5 text-center">
+                    <div class="mt-3 text-center">
                         <p>Not you ? return <a href="index.php" class="font-weight-medium text-primary"> Sign In </a> </p>
                         <p class="mb-0 text-success">© <script>document.write(new Date().getFullYear())</script> FYPMS.
                     </div>
@@ -145,27 +145,37 @@ session_start();
         }, 1800);
     }
 
-    function sendMsg(otp){
-            $.post('api/sendMessage/', {phone: '<?php echo $phone  ?>',message: `Your one time password is ${otp}`},
-             function(data, textStatus, xhr) {
-                data = JSON.parse(data);
-                console.log(data.sent);
-                if (data['sent'] == true) {
-                    Lobibox.notify('success', {
-                        position: 'top right',
-                        // delayIndicator: false,
-                        icon: 'fa fa-check',
-                        msg: 'Your code was successfully sent to <?php echo $phone ?>'
-                    });
-                }else{
-                    Lobibox.notify('error', {
-                        position: 'top right',
-                        // delayIndicator: false,
-                        icon: 'fa fa-check',
-                        msg: 'An unexpected error occurred while re-sending the code.'
-                    });
-                }
-            });
+    function sendMsg(){
+            $('#btn-save').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...')
+
+                $name = '<?= $user->getUsername(); ?>'
+                $.post('api/signup/', {name: $name}, function(data, textStatus, xhr) {
+                    console.log(data);
+                    if (typeof data['success']['message'] != 'undefined') {
+                        let token = data['success']['message']
+                        if (token != '') {
+                            Lobibox.notify('success', {
+                                position: 'top right',
+                                // delayIndicator: false,
+                                icon: 'fa fa-check',
+                                msg: 'Your code was successfully sent to your phone number and email'
+                            });
+                        }
+                    }
+                }).fail(function(data){
+                    console.log(data);
+                    let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
+                    Swal.fire({ 
+                        title: "Sorry!",
+                        text: message,
+                        showClass: {popup: 'animated fadeInDown faster'},
+                        hideClass: {popup: 'animated fadeOutUp faster'},
+                        icon: "error",
+                        confirmButtonColor: "#025", 
+                      })
+                }).always(()=>{
+                    $('#btn-save').prop('disabled', false).html('Save Password')
+                });
         }
 
     $(document).ready(function() {
@@ -240,7 +250,7 @@ session_start();
                             icon: 'fa fa-times',
                             msg: message
                         });
-                }).always(()=>{$('#btn-cont').prop('disabled', false).html('Save Password')});
+                }).always(()=>{$('#btn-save').prop('disabled', false).html('Save Password')});
                 $form
                     .bootstrapValidator('disableSubmitButtons', false)
                     .bootstrapValidator('resetForm', true);

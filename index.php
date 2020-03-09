@@ -57,7 +57,7 @@
 
                                     <div class="form-group mt-2 mb-0 row">
                                         <div class="col-12 mt-4">
-                                            <a href="pages-recoverpw.html"><i class="mdi mdi-lock"></i> Forgot your password?</a>
+                                            <a href="confirm-username.php"><i class="mdi mdi-lock"></i> Forgot your password?</a>
                                         </div>
                                     </div>
 
@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="m-t-5 text-center">
-                        <p>Don't have an account ? <a href="signup.php" class="font-weight-medium text-primary"> Signup now </a> </p>
+                        <p>Don't have an account ? <a href="confirm-username.php" class="font-weight-medium text-primary"> Signup now </a> </p>
                         <p class="mb-0 text-success">© <script>document.write(new Date().getFullYear())</script> FYPMS.
                     </div>
 

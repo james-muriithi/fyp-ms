@@ -1,6 +1,7 @@
 <?php
 require_once 'api/config/database.php';
 require_once 'api/classes/User.php';
+require_once 'api/sendMessage.php';
 
 $conn = Database::getInstance();
 //$student = new Student($conn);
@@ -21,6 +22,7 @@ $conn = Database::getInstance();
 //var_dump($student->verifyUser());
 $user = new User($conn);
 $user->setUsername('SB30/PU/41760/16');
-print_r($user->getLevel());
+//print_r($user->getLevel());
 //print_r($user->generateOTP());
-var_dump(@fsockopen('www.google.com',80));
+//var_dump(@fsockopen('www.google.com',80));
+var_dump(sendMail('muriithijames556@gmail.com','Your one time password is ','Password Reset Code'));
