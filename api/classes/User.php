@@ -129,7 +129,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getDbToken() : string
+    public function getDbToken() : array
 {
     $username = strval($this->getUserName());
 

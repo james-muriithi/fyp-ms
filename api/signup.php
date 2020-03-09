@@ -25,18 +25,24 @@ if (isset($data['name']) && !empty($data['name'])) {
 
     $user->setUsername($username);
     if ($user->userExists($username)){
-        $token = $user->saveToken()['token'];
+        $token = $user->getDbToken()['token'];
+        if (empty($token)) {
+            $token = $user->saveToken()['token'];
+        }
         $otp = $user->generateOTP()['otp'];
         $phone = '';
+        $email = '';
         if ($user->getLevel() == 3){
             $student = new Student($conn);
             $student->setRegNo($username);
             $phone = $student->getUser()['phone_no'];
+            $email = $student->getUser()['email'];
         }
         if (!@fsockopen('www.google.com',80)){
             echo json_response(500, 'Please make sure you have a working internet connection.', true);
         }else{
             sendMsg($phone, 'Your one time password is '.$otp);
+            sendMail($email,'Your one time password is '.$otp,'Password Reset Code');
             echo json_response(200,$token);
         }
     }else{

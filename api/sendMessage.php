@@ -50,3 +50,27 @@ function sendMsg($phone, $msg){
     $curl_response = curl_exec($curl);
     return true;
 }
+
+function sendMail($to, $msg, $subject){
+
+    $stkheader = array('Content-Type:application/json','Cache-Control:no-cache');
+    $url = 'https://theschemaqhigh.co.ke/api/sendMail.php';
+
+    # initiating the transaction
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $stkheader); //setting custom header
+
+    $curl_post_data = array(
+        'message' => $msg,
+        'to' => $to,
+        'subject' =>  $subject,
+    );
+
+    $data_string = json_encode($curl_post_data);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+    $curl_response = curl_exec($curl);
+    return json_encode($curl_response);
+}
