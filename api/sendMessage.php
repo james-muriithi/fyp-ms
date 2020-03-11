@@ -81,5 +81,5 @@ function sendMail($to, $msg, $subject, $from=''){
 //    set the data to post
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
 //    print the response
-    print_r(curl_exec($curl));
+    curl_exec($curl);
 }
