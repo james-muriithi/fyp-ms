@@ -129,6 +129,7 @@
                 $form = $(e.target);
                 $name = $.trim($('input[name="username"]').val())
                 $.post('api/signup/', {name: $name}, function(data, textStatus, xhr) {
+                    console.log(data);
                     if (typeof data['success']['message'] != 'undefined') {
                         let token = data['success']['message']
                         location.href = `reset-password.php?t=${token}`

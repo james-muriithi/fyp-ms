@@ -1,7 +1,7 @@
 <?php
+include_once 'User.php';
 
-
-class Lecturer implements UserInterface
+class Lecturer extends User
 {
     /**
      * @var PDO
@@ -11,15 +11,8 @@ class Lecturer implements UserInterface
 
     public function __construct($conn)
     {
+        parent::__construct($conn);
         $this->conn = $conn;
-    }
-
-    public function verifyUser()
-    {
-        if (isset($this->userName)) {
-            return $this->userExists($this->userName) && password_verify($this->password, $this->getDbPass());
-        }
-        return false;
     }
 
     /**
@@ -62,45 +55,6 @@ class Lecturer implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
-    public function userExists(String $username) :bool
-    {
-        //sql query
-        $query = 'SELECT username FROM user WHERE username = :username';
-
-        //prepare the query
-        $stmt = $this->conn->prepare($query);
-
-        //bind the values
-        $stmt->bindParam(':username', $username);
-
-        // execute the query
-        $stmt->execute();
-
-        // return
-        return $stmt->rowCount() > 0;
-    }
-
-    /**
-     * @return String
-     */
-    private function getDbPass():String
-    {
-        $query = 'SELECT password FROM user WHERE username = :username';
-
-        //prepare the query
-        $stmt = $this->conn->prepare($query);
-
-
-        //bind the values
-        $stmt->bindParam(':username', $this->userName);
-
-        // execute the query
-        $stmt->execute();
-
-        // return
-        return strval($stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password']);
-
-    }
 
     public function getUser() : array
     {
@@ -123,21 +77,6 @@ class Lecturer implements UserInterface
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':empid', $this->userName);
-
-        $stmt->execute();
-
-        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getToken() : string
-    {
-        $username = strval($this->getUserName());
-
-        $query = 'SELECT token FROM user WHERE username = :username';
-
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(':username', $username);
 
         $stmt->execute();
 
@@ -184,19 +123,6 @@ class Lecturer implements UserInterface
         return $stmt->execute();
     }
 
-    public function updatePassword(string $newPass): bool
-    {
-        $query = 'UPDATE user SET password = :password WHERE username =: username';
-
-        $stmt = $this->conn->prepare($query);
-
-        $newPass = password_hash($newPass, PASSWORD_BCRYPT);
-
-        $stmt->bindParam(':password', $newPass);
-        $stmt->bindParam(':username', $this->userName);
-
-        return $stmt->execute();
-    }
 
     /**
      * @return string
@@ -245,4 +171,5 @@ class Lecturer implements UserInterface
     {
         $this->password = $password;
     }
+
 }
