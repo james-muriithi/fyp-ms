@@ -153,6 +153,7 @@ include_once 'head.php'; ?>
     <script src="../assets/libs/metismenu/metisMenu.min.js"></script>
     <script src="../assets/libs/simplebar/simplebar.min.js"></script>
     <script src="../assets/libs/node-waves/waves.min.js"></script>
+    <script src="../assets/js/app.js"></script>
 
     <!-- Required datatable js -->
     <script type="text/javascript" src="../assets/libs/DataTables/datatables.min.js"></script>
@@ -165,8 +166,8 @@ include_once 'head.php'; ?>
 
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
-    <script src="../assets/js/app.js"></script>
     <script type="text/javascript" src="assets/js/app.js"></script>
+
 </body>
 
 

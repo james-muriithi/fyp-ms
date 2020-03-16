@@ -1,5 +1,5 @@
 <?php
-include_once 'User.ph';
+include_once 'User.php';
 
 class Student extends User
 {
