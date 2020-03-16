@@ -4,7 +4,7 @@ header('Access-Control-Allow-Methods: POST');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+session_start();
 
 include_once 'config/database.php';
 include_once 'classes/User.php';
@@ -26,7 +26,10 @@ if (isset($data['name'], $data['password']) && !empty($data['name']) && !empty($
     $user->setPassword($password);
 
     if ($user->verifyUser()){
-        echo json_response(200, 'successful login');
+        echo json_response(200, 'successful login',false,$user->getUser());
+        $_SESSION['login'] = 1;
+        $_SESSION['username'] = $username;
+        $_SESSION['level'] = $user->getUser()['level'];
     }else{
         echo json_response(404, 'User does not exist!',true);
     }
@@ -40,7 +43,7 @@ else{
     echo json_response(400, 'username and password was not provided',true);
 }
 
-function json_response($code = 200, $message = null, $error = false)
+function json_response($code = 200, $message = null, $error = false, $args = [])
 {
     // clear the old headers
     header_remove();
@@ -66,8 +69,10 @@ function json_response($code = 200, $message = null, $error = false)
             'error' => array('errorCode'=>0,'message' => $message)
         ));
     }
-    return json_encode(array(
-        'success' => array('message' => $message)
-    ));
+    $payload = array('success' => array('message' => $message));
+    if (count($args) != 0){
+        $payload['payload'] = $args;
+    }
+    return json_encode($payload);
 }
 
