@@ -110,8 +110,8 @@ if (isset($data['name']) && !empty($data['name'])) {
         if (!@fsockopen('www.google.com',80)){
             echo json_response(500, 'Please make sure you have a working internet connection.', true);
         }else{
-            sendMsg($phone, $msg);
-            sendMail($email,$msg,'Password Reset Code');
+            sendMsg($phone, 'Your one time password is '.$otp);
+            sendMail($email,$msg,'Password Reset', 'FYPMS');
             echo json_response(200,$token);
         }
     }else{

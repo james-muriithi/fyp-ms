@@ -15,8 +15,8 @@ session_start();
     <?php 
     if (!isset($_GET['t']) || empty($_GET['t'])) {
         $prevUrl = empty($_SERVER['HTTP_REFERER']) ? 'index.php' : $_SERVER['HTTP_REFERER'];
-    //    $_SESSION['error'] = 'Please login';
-    //    header('Location: '.$prevUrl);
+        $_SESSION['error'] = 'Please login';
+        header('Location: '.$prevUrl);
     }else {
         $token = $_GET['t'];
         include_once 'api/config/database.php';

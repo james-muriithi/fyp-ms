@@ -82,6 +82,9 @@ function sendMail($to, $msg, $subject, $from=''){
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
 //    print the response
     curl_exec($curl);
+<<<<<<< HEAD
 
     return true;
+=======
+>>>>>>> 4858ef919ca323ac1da0e8b53f08348f559ba98f
 }
