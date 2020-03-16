@@ -1,6 +1,7 @@
-<?php include_once 'head.php'; ?>
+<?php include_once 'head.php'; session_start(); ?>
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="assets/libs/sweetalert2/sweetalert2.min.css">
+<link rel="stylesheet" type="text/css" href="assets/libs/lobibox/css/lobibox.min.css">
 <style type="text/css">
     .form-control {
         height: 42px;
@@ -90,9 +91,26 @@
     <script src="assets/js/app.js"></script>
 
     <script type="text/javascript" src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="assets/libs/lobibox/js/lobibox.min.js"></script>
 
 </body>
-
+<?php
+if (isset($_SESSION['error'])){
+    echo 'lorem';
+    echo '<script>
+            Lobibox.notify(\'error\', {
+                sound: false,
+                showClass: \'animated slideInDown\',
+                hideClass: \'animated slideOutRight\',
+                position: \'top right\',
+                delayIndicator: false,
+                icon: \'fa fa-times\',
+                msg: "'.$_SESSION['error'].'"
+            });
+        </script>';
+    unset($_SESSION['error']);
+}
+?>
 </html>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -131,17 +149,26 @@
                 $name = $.trim($('input[name="username"]').val())
                 $password = $.trim($('input[name="password"]').val())
                 $.post('api/Auth/', {name: $name, password: $password}, function(data, textStatus, xhr) {
+                    // data = JSON.parse(data)
                     console.log(data);
+                    if(typeof data.payload.level != 'undefined'){
+                        let level = data.payload.level;
+                        if (Number(level) == 2 || Number(level) == 1) {
+                            location.href = 'coordinator/'
+                        }
+                    }
                 }).fail(function(data){
                     let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
-                    Swal.fire({ 
-                        title: "Sorry!",
-                        text: message,
-                        showClass: {popup: 'animated fadeInDown faster'},
-                        hideClass: {popup: 'animated fadeOutUp faster'},
-                        icon: "error",
-                        confirmButtonColor: "#025", 
-                      })
+                    Lobibox.notify('error', {
+                        sound: false,
+                        showClass: 'animated slideInDown',
+                        hideClass: 'animated slideOutRight',
+                        position: 'top right',
+                        delayIndicator: false,
+                        icon: 'fa fa-times',
+                        rounded: true,
+                        msg: message,
+                    });
                 });
                 
                 $form
