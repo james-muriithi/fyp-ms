@@ -1,10 +1,25 @@
 <?php
 session_start();
+include_once '../api/config/database.php';
+include_once '../api/classes/Lecturer.php';
+include_once '../api/classes/User.php';
+
+$conn = Database::getInstance();
+
 if (!isset($_SESSION['login'],$_SESSION['username'], $_SESSION['level'])) {
-    $_SESSION['error'] = 'You are not authorized to access. Please login';
+    $_SESSION['error'] = 'You are not authorized to access that page. Please login';
     header('Location: ../index.php');
     die();
 }
+
+$user = new User($conn);
+
+if (!$user->userExists($_SESSION['username'])){
+    $_SESSION['error'] = 'You are not authorized to access that page. Please login';
+    header('Location: ../index.php');
+    die();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
