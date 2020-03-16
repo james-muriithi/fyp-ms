@@ -4,18 +4,6 @@ include_once 'User.php';
 class Lecturer extends User
 {
     /**
-     * @var PDO
-     */
-    public $conn;
-    private $email, $userName, $password;
-
-    public function __construct($conn)
-    {
-        parent::__construct($conn);
-        $this->conn = $conn;
-    }
-
-    /**
      * @param String $email
      * @return bool
      */
@@ -76,7 +64,7 @@ class Lecturer extends User
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':empid', $this->userName);
+        $stmt->bindParam(':empid', $this->username);
 
         $stmt->execute();
 
@@ -121,55 +109,6 @@ class Lecturer extends User
 
 
         return $stmt->execute();
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getEmail():string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName():string
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param string $userName
-     */
-    public function setUserName(string $userName): void
-    {
-        $this->userName = $userName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword():string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     */
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
     }
 
 }

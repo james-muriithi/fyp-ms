@@ -1,29 +1,8 @@
 <?php
-include_once 'UserInterface.php';
+include_once 'User.ph';
 
-class Student implements UserInterface
+class Student extends User
 {
-    private $email, $userName, $password;
-
-    /**
-     * @var PDO
-     */
-    public $conn;
-    public function __construct($conn)
-    {
-        $this->conn = $conn;
-    }
-
-    /**
-     * @return bool
-     */
-    public function verifyUser() :bool
-    {
-        if (isset($this->userName)) {
-            return $this->userExists($this->userName) && password_verify($this->password, $this->getDbPass());
-        }
-        return false;
-    }
 
     /**
      * @param String $email
@@ -69,63 +48,6 @@ class Student implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
-    /**
-     * @param String $username
-     * @return bool
-     */
-    public function userExists(String $username) : bool
-    {
-        //sql query
-        $query = 'SELECT username FROM user WHERE username = :username';
-
-        //prepare the query
-        $stmt = $this->conn->prepare($query);
-
-        //bind the values
-        $stmt->bindParam(':username', $username);
-
-        // execute the query
-        $stmt->execute();
-
-        // return
-        return $stmt->rowCount() > 0;
-    }
-
-    public function updatePassword(string $newPass): bool
-    {
-        $query = 'UPDATE user SET password = :password WHERE username =: username';
-
-        $stmt = $this->conn->prepare($query);
-
-        $newPass = password_hash($newPass, PASSWORD_BCRYPT);
-
-        $stmt->bindParam(':password', $newPass);
-        $stmt->bindParam(':username', $this->userName);
-
-        return $stmt->execute();
-    }
-
-    /**
-     * @return String
-     */
-    private function getDbPass():String
-    {
-        $query = 'SELECT password FROM user WHERE username = :username';
-
-        //prepare the query
-        $stmt = $this->conn->prepare($query);
-
-
-        //bind the values
-        $stmt->bindParam(':username', $this->userName);
-
-        // execute the query
-        $stmt->execute();
-
-        // return
-        return strval($stmt->fetchAll(PDO::FETCH_ASSOC)[0]['password']);
-
-    }
 
     /**
      * @param $reg_no
@@ -162,36 +84,7 @@ class Student implements UserInterface
         return $stmt->execute();
     }
 
-    public function signUp($password):array
-    {
-        $password = password_hash($password,PASSWORD_BCRYPT);
-        $token = $this->generateToken();
 
-        $query = 'UPDATE user SET password = :pass, token = :token';
-
-       $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(':pass', $password);
-        $stmt->bindParam(':token', $token);
-        if ($stmt->execute()){
-            return array('token'=>$token);
-        }
-        return array('token'=>'');
-    }
-
-
-    /**
-     * @return String
-     * @throws Exception
-     */
-    private function generateToken():String
-    {
-        return bin2hex(random_bytes(32));
-    }
-
-    /*
-     * Get User Details
-     * */
     /**
      * @return array
      */
@@ -215,40 +108,11 @@ class Student implements UserInterface
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':reg_no', $this->userName);
+        $stmt->bindParam(':reg_no', $this->username);
 
         $stmt->execute();
 
         return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
-    }
-
-    public function getToken(){
-        $reg_no = strval($this->getRegNo());
-
-        $query = 'SELECT token FROM user WHERE username = :reg_no';
-
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(':reg_no', $reg_no);
-
-        $stmt->execute();
-
-        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
-    }
-    /**
-     * @return String
-     */
-    public function getEmail():string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param String $email
-     */
-    public function setEmail($email):void
-    {
-        $this->email = $email;
     }
 
     /**
@@ -256,7 +120,7 @@ class Student implements UserInterface
      */
     public function getRegNo():string
     {
-        return $this->userName;
+        return $this->username;
     }
 
     /**
@@ -264,27 +128,6 @@ class Student implements UserInterface
      */
     public function setRegNo($regNo):void
     {
-        $this->userName = $regNo;
-    }
-
-    /**
-     * @return String
-     */
-    public function getPassword():string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param String $password
-     */
-    public function setPassword($password):void
-    {
-        $this->password = $password;
-    }
-
-    public function verifyToken()
-    {
-        // TODO: Implement verifyToken() method.
+        $this->username = $regNo;
     }
 }

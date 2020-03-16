@@ -8,7 +8,9 @@ class User implements UserInterface
      * @var PDO
      */
     public $conn;
-    private $username, $password,$token, $level;
+    private $token;
+    protected $password;
+    public $username, $level;
 
     /**
      * @return string
@@ -110,7 +112,7 @@ class User implements UserInterface
     public function getUser() : array
     {
         $query = 'SELECT
-                    *
+                    username, level, status, token
                 FROM
                     user 
                 WHERE
