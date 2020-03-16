@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['login'],$_SESSION['username'], $_SESSION['level'])) {
+    $_SESSION['error'] = 'You are not authorized to access. Please login';
+    header('Location: ../index.php');
+    die();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
