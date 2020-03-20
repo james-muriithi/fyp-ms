@@ -13,6 +13,7 @@ if (!isset($_SESSION['login'],$_SESSION['username'], $_SESSION['level'])) {
 }
 
 $lec = new Lecturer($conn);
+$lec->setUsername($_SESSION['username']);
 
 if (!$lec->userExists($_SESSION['username'])){
     $_SESSION['error'] = 'You are not authorized to access that page. Please login';
