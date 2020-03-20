@@ -126,9 +126,13 @@
                             </div>
                         </div>
                     </div>
+                    <?php
+                    $profile = 'assets/images/users/';
+                    $profile = empty($lecDetails['profile']) ? $profile.'user-4.jpg' : $profile.$lecDetails['profile'];
+                    ?>
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="rounded-circle header-profile-user" src="assets/images/users/user-4.jpg" alt="Header Avatar">
+                            <img class="rounded-circle header-profile-user" src="<?= $profile ?>" alt="Header Avatar">
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
@@ -136,7 +140,7 @@
                             <a class="dropdown-item d-block" href="#"><span class="badge badge-success float-right">11</span><i class="mdi mdi-settings font-size-17 align-middle mr-1"></i> Settings</a>
                             <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline font-size-17 align-middle mr-1"></i> Change Password</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="bx bx-power-off font-size-17 align-middle mr-1 text-danger"></i> Logout</a>
+                            <a class="dropdown-item text-danger" href="logout.php"><i class="bx bx-power-off font-size-17 align-middle mr-1 text-danger"></i> Logout</a>
                         </div>
                     </div>
                     <div class="dropdown d-inline-block">
