@@ -10,4 +10,6 @@ interface UserInterface
     public function verifyToken();
 
     public function userExists(String $username);
+
+    public function getAllUsers();
 }

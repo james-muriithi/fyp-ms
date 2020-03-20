@@ -115,6 +115,23 @@ class Student extends User
         return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
+    public function getAllUsers():array
+    {
+        $query = 'SELECT
+                    *
+                FROM
+                    student ';
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':username', $this->username);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /**
      * @return String
      */
