@@ -38,7 +38,13 @@ include_once 'head.php'; ?>
                                             <img src="assets/images/services-icon/lecturer.svg" alt="lecturer" width="70">
                                         </div>
                                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Lecturers</h5>
-                                        <h4 class="font-weight-medium font-size-24">7</h4>
+                                        <h4 class="font-weight-medium font-size-24">
+                                            <?php
+                                            $lecturers = $lec->getAllUsers();
+                                            $totalLecturers = count($lecturers);
+                                            ?>
+                                            <span class="people_in info-box-number" data-counter="counterup" data-value="<?= $totalLecturers ?>">0</span>
+                                        </h4>
                                         <!-- <div class="mini-stat-label bg-secondary">
                                             <p class="mb-0">+ 12%</p>
                                         </div> -->
@@ -60,7 +66,14 @@ include_once 'head.php'; ?>
                                             <img src="assets/images/services-icon/student.svg" alt="student" width="70">
                                         </div>
                                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Students</h5>
-                                        <h4 class="font-weight-medium font-size-24">68</h4>
+                                        <h4 class="font-weight-medium font-size-24">
+                                            <?php
+                                            $student = new Student($conn);
+                                            $students = $student->getAllUsers();
+                                            $totalStudents = count($students);
+                                            ?>
+                                            <span class="people_in info-box-number" data-counter="counterup" data-value="<?= $totalStudents ?>">0</span>
+                                        </h4>
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
@@ -120,21 +133,24 @@ include_once 'head.php'; ?>
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title mb-4">Project Categories</h4>
-                                    <div id="ct-donut" class="ct-chart wid"></div>
+                                    <div class="chart-container" style="position: relative; height:33vh;">
+                                        <canvas  id="ct-donut"></canvas>
+                                    </div>
+
                                     <div class="mt-4">
                                         <table class="table mb-0">
                                             <tbody>
                                                 <tr>
                                                     <td><span class="badge badge-primary">Desktop Apps</span></td>
-                                                    <td class="text-right">54.5%</td>
+                                                    <td class="text-right d-app">54.5%</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="badge badge-success">Android Apps</span></td>
-                                                    <td class="text-right">28.0%</td>
+                                                    <td class="text-right a-app">28.0%</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="badge badge-warning">Web Apps</span></td>
-                                                    <td class="text-right">17.5%</td>
+                                                    <td class="text-right w-app">17.5%</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -300,3 +316,19 @@ include_once 'head.php'; ?>
 </body>
 
 </html>
+<script>
+    $(document).ready(function() {
+        /************** Handles counterup plugin wrapper ****************/
+        let handleCounterup = function() {
+            if (!$().counterUp) {
+                return;
+            }
+
+            $("[data-counter='counterup']").counterUp({
+                delay: 10,
+                time: 1000
+            });
+        };
+        handleCounterup()
+    });
+</script>

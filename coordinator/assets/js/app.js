@@ -1,4 +1,17 @@
 $(document).ready(function() {
+    /************** Handles counterup plugin wrapper ****************/
+    let handleCounterup = function() {
+        if (!$().counterUp) {
+            return;
+        }
+
+        $("[data-counter='counterup']").counterUp({
+            delay: 10,
+            time: 1000
+        });
+    };
+    handleCounterup()
+
     let select = new SlimSelect({
         select: '#students',
         closeOnSelect: false,

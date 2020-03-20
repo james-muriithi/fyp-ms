@@ -2,6 +2,7 @@
 session_start();
 include_once '../api/config/database.php';
 include_once '../api/classes/Lecturer.php';
+include_once '../api/classes/Student.php';
 include_once '../api/classes/User.php';
 
 $conn = Database::getInstance();

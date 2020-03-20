@@ -8,9 +8,11 @@
     <!-- Sweet Alerts js -->
     <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <!-- Plugin Js-->
-    <script src="../assets/libs/chartist/chartist.min.js"></script>
-    <script src="../assets/libs/chartist-plugin-tooltips/chartist-plugin-tooltip.min.js"></script>
+    <script src="../assets/libs/counterup/jquery.waypoints.min.js"></script>
+    <script src="../assets/libs/counterup/jquery.counterup.min.js"></script>
+    <script src="../assets/libs/chart.js/Chart.bundle.min.js"></script>
     <script src="../assets/js/pages/dashboard.init.js"></script>
+
     <script src="../assets/js/app.js"></script>
     <script type="text/javascript">
         let inProgress = false;
