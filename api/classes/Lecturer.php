@@ -111,4 +111,22 @@ class Lecturer extends User
         return $stmt->execute();
     }
 
+    public function userExists(String $employeeId): bool
+    {
+        //sql query
+        $query = 'SELECT emp_id FROM lecturer WHERE emp_id = :empid';
+
+        //prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        //bind the values
+        $stmt->bindParam(':empid', $employeeId);
+
+        // execute the query
+        $stmt->execute();
+
+        // return
+        return $stmt->rowCount() > 0;
+    }
+
 }

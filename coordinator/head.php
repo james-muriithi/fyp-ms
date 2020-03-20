@@ -12,13 +12,14 @@ if (!isset($_SESSION['login'],$_SESSION['username'], $_SESSION['level'])) {
     die();
 }
 
-$user = new User($conn);
+$lec = new Lecturer($conn);
 
-if (!$user->userExists($_SESSION['username'])){
+if (!$lec->userExists($_SESSION['username'])){
     $_SESSION['error'] = 'You are not authorized to access that page. Please login';
     header('Location: ../index.php');
     die();
 }
+$lecDetails = $lec->getUser();
 
 ?>
 <!DOCTYPE html>
