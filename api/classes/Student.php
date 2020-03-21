@@ -118,9 +118,23 @@ class Student extends User
     public function getAllUsers():array
     {
         $query = 'SELECT
-                    *
+                    student.*,
+                    CONCAT("pid-",p.id) as project_id,
+                    p.title,
+                    p.description,
+                    pc.name as category,
+                    l.full_name AS supervisor,
+                    ifnull(nou.no_of_uploads,0) as no_of_uploads,
+                    p.approved
                 FROM
-                    student ';
+                    student 
+                LEFT JOIN project p on student.reg_no = p.student
+                LEFT JOIN project_categories pc on p.category = pc.id
+                LEFT JOIN lecturer l on p.supervisor = l.emp_id
+                LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
+                ON nou.project_id = p.id
+                ORDER BY 1
+                ';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
