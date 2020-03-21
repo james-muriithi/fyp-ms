@@ -1,5 +1,8 @@
 <?php
-include_once 'head.php'; ?>
+include_once 'head.php';
+$student = new Student($conn);
+$studentArray = $student->getAllUsers();
+?>
 <!-- DataTables -->
 <link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
 
@@ -56,31 +59,35 @@ include_once 'head.php'; ?>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>sb30/pu/41760/16</td>
-                                                    <td>John Doe</td>
-                                                    <td>School management system</td>
-                                                    <td>John Msagha</td>
-                                                    <td>0712345678</td>
-                                                    <td>john@doe.com</td>
-                                                    <td>4</td>
-                                                    <td>
+                                                <?php
+                                                foreach ($studentArray as $row){ ?>
+                                                    <tr>
+                                                        <td><?= $row['reg_no'] ?></td>
+                                                        <td><?= $row['full_name'] ?></td>
+                                                        <td><?= $row['title'] ?></td>
+                                                        <td><?= $row['supervisor'] ?></td>
+                                                        <td><?= $row['phone_no'] ?></td>
+                                                        <td><?= $row['email'] ?></td>
+                                                        <td><?= $row['no_of_uploads'] ?></td>
+                                                        <td>
                                                         <span class="badge badge-warning">
                                                             pending
                                                         </span>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
-                                                                <i class="mdi mdi-pencil"></i>
-                                                            </button>
-                                                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-center">
+                                                                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
+                                                                    <i class="mdi mdi-pencil"></i>
+                                                                </button>
+                                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
 
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                               <?php }
+                                                ?>
                                             </tbody>
                                         </table>
                                     </div>
