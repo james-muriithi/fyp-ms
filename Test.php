@@ -1,10 +1,11 @@
 <?php
 require_once 'api/config/database.php';
-require_once 'api/classes/User.php';
+require_once 'api/classes/Student.php';
 require_once 'api/sendMessage.php';
 
 $conn = Database::getInstance();
-//$student = new Student($conn);
+$student = new Student($conn);
+echo json_encode($student->getAllUsers());
 //$conn->beginTransaction();
 //var_dump($student->saveUser('SB30/PU/41760/16','JAMES MURIITHI','muriithijames556@gmail.com','0746792699'));
 //$student->setRegNo('SB30/PU/41760/16');
@@ -20,8 +21,8 @@ $conn = Database::getInstance();
 //echo json_encode($student->getUser());
 //$student->setPassword('0000');
 //var_dump($student->verifyUser());
-$user = new User($conn);
-$user->setUsername('SB30/PU/41760/16');
+//$user = new User($conn);
+//$user->setUsername('SB30/PU/41760/16');
 //print_r($user->getLevel());
 //print_r($user->generateOTP());
 //var_dump(@fsockopen('www.google.com',80));
@@ -88,4 +89,4 @@ $msg = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.
     </table>
     </body>
     </html>';
-sendMail('muriithijames556@gmail.com',$msg, 'Password Reset', 'FYPMS');
+//sendMail('muriithijames556@gmail.com',$msg, 'Password Reset', 'FYPMS');
