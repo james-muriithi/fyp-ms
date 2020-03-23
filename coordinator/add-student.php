@@ -61,7 +61,7 @@ include_once 'head.php'; ?>
 
                                         <div class="form-group form-row">
                                             <div class="col-sm-6">
-                                                <label for="regno">Email: </label>
+                                                <label for="email">Email: </label>
                                                 <input type="email" class="form-control" id="email" placeholder="john@doe.com" name="email">
                                             </div>
                                             <div class="col-sm-6">
@@ -222,11 +222,44 @@ include_once 'head.php'; ?>
                 }
 
             },
-            onSuccess: function (e,data) {
-                alert("message");
-
-
+            onSuccess: function (e) {
                 $form = $(e.target);
+                let formData = {}
+                    $form.serializeArray().map((v)=> formData[v.name] = v.value)
+
+                $.post('../api/student/',{...formData},(data)=>{
+                    console.log(data)
+                    Lobibox.notify('success', {
+                        sound: false,
+                        showClass: 'animated slideInDown',
+                        hideClass: 'animated slideOutRight',
+                        position: 'top right',
+                        delayIndicator: false,
+                        icon: 'fa fa-times',
+                        rounded: true,
+                        msg: data.success.message,
+                    });
+                }).fail((data)=>{
+                    console.log(data)
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    Lobibox.notify('error', {
+                        sound: false,
+                        showClass: 'animated slideInDown',
+                        hideClass: 'animated slideOutRight',
+                        position: 'top right',
+                        delayIndicator: false,
+                        icon: 'fa fa-times',
+                        rounded: true,
+                        msg: message,
+                    });
+                });
+
+
                 $form
                     .bootstrapValidator('disableSubmitButtons', false)
                     .bootstrapValidator('resetForm', true);
