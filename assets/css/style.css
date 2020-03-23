@@ -151,6 +151,11 @@ label{
     opacity: 1;
 }
 
+table{
+    table-layout: fixed!important;
+    
+}
+
 
 @media only screen and (max-width:576px) {
     .notification-show {

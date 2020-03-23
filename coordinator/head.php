@@ -61,6 +61,8 @@ $lecDetails = $lec->getUser();
     <link rel="stylesheet" type="text/css" href="../assets/css/animate.css">
     <!-- Sweet Alert-->
     <link href="../assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
     <!-- util css -->
     <link rel="stylesheet" type="text/css" href="../assets/css/util.css">
     <!-- style -->

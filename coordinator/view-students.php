@@ -3,8 +3,6 @@ include_once 'head.php';
 $student = new Student($conn);
 $studentArray = $student->getAllUsers();
 ?>
-<!-- DataTables -->
-<link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
 
 
 <link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css"/>
