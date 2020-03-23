@@ -5,11 +5,12 @@ require_once 'api/sendMessage.php';
 
 $conn = Database::getInstance();
 $student = new Student($conn);
-echo json_encode($student->getAllUsers());
+//echo json_encode($student->getAllUsers());
 //$conn->beginTransaction();
-//var_dump($student->saveUser('SB30/PU/41760/16','JAMES MURIITHI','muriithijames556@gmail.com','0746792699'));
+var_dump($student->saveUser('SB30/PU/41769/16','JAMES MURIITHI','muriithijames506@gmail.com','0746792699'));
+print_r($conn->errorInfo());
 //$student->setRegNo('SB30/PU/41760/16');
-////var_dump($student->regExists($student->getRegNo()));
+//var_dump($student->emailExists('muriithijames556@gmail.com'));
 //if ($student->userExists($student->getRegNo())){
 ////    var_dump($student->getToken());
 //    if (!isset($student->getToken()['token'])){
