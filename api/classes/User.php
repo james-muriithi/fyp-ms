@@ -91,7 +91,7 @@ class User implements UserInterface
         if ( $stmt->execute()){
             return array('token'=> $token);
         }
-        return array('token'=> $token);
+        return array('token'=> '');
     }
 
 
@@ -148,7 +148,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getDbToken() : array
+    public function getDbToken() : string
 {
     $username = strval($this->getUserName());
 
@@ -160,7 +160,7 @@ class User implements UserInterface
 
     $stmt->execute();
 
-    return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0]['token'];
 }
 
     /**
@@ -242,13 +242,15 @@ class User implements UserInterface
         $this->password = $password;
     }
 
-    public function verifyToken() :bool
+    public function verifyToken($token = '') :bool
     {
+        $token = empty($token) ? $this->token : $token;
+
         $query = 'SELECT username, level FROM user WHERE token = :token';
 
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':token', $this->token);
+        $stmt->bindParam(':token', $token);
 
         $stmt->execute();
 

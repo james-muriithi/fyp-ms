@@ -17,7 +17,7 @@ class Student extends User
         $stmt = $this->conn->prepare($query);
 
         //bind the values
-        $stmt->bindParam(':name', $email);
+        $stmt->bindParam(':email', $email);
 
         // execute the query
         $stmt->execute();
@@ -33,7 +33,7 @@ class Student extends User
     public function regExists(String $reg_no) : bool
     {
         //sql query
-        $query = 'SELECT * FROM student WHERE reg_no = :reg_no';
+        $query = 'SELECT full_name FROM student WHERE reg_no = :reg_no';
 
         //prepare the query
         $stmt = $this->conn->prepare($query);
@@ -50,35 +50,30 @@ class Student extends User
 
 
     /**
-     * @param $reg_no
-     * @param $full_name
-     * @param $email
-     * @param $phone_no
+     * @param $reg_no string
+     * @param $full_name string
+     * @param $email string
+     * @param $phone_no string
      * @return bool
-     * @throws Exception
+     *
      */
     public function saveUser($reg_no, $full_name, $email, $phone_no):bool
     {
-        $query = 'INSERT INTO `student`(
-                    `reg_no`,
-                    `full_name`,
-                    `email`,
-                    `phone_no`
-                )
-                VALUES(
-                       :reg_no,
-                       :full_name,
-                       :email,
-                       :phone_no
-                )';
+        $query = 'INSERT INTO 
+                        student
+                    SET
+                        reg_no = :reg_no,
+                        full_name = :full_name,
+                        email = :email,
+                        phone_no = :phone_no';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
 
-        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':reg_no', $reg_no);
         $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':phone_no', $phone_no);
 
         return $stmt->execute();
