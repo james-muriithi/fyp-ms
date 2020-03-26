@@ -33,7 +33,7 @@
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="ti-user"></i>
-                                <span>Lecturers</span>
+                                <span>Supervisors</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
                                 <li><a href="add-lecturer.php">Add Lecturer</a></li>
@@ -47,7 +47,7 @@
                                 <span>Upload Categories</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="ui-alerts.html">Add Category</a></li>
+                                <li><a href="add-upload-category.php">Add Category</a></li>
                                 <li><a href="ui-buttons.html">View Categories</a></li>
                             </ul>
                         </li>
@@ -67,6 +67,7 @@
                                 <span>Past Deadline</span>
                             </a>
                         </li>
+
                         <li class="menu-title">Manage Notification</li>
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">

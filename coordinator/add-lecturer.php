@@ -132,15 +132,11 @@ include_once 'head.php'; ?>
     <div class="rightbar-overlay"></div>
     <!-- JAVASCRIPT -->
     <?php include_once 'js.php'; ?>
-    <script type="text/javascript" src="../assets/libs/jquery-nice-select/js/jquery.nice-select.min.js"></script>
     <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 </body>
 
 </html>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('select').niceSelect();
-    });
     $('.add-student-form').on('submit', function(event) {
         event.preventDefault();
     });
@@ -217,10 +213,43 @@ include_once 'head.php'; ?>
 
             },
             onSuccess: function (e,data) {
-                alert("message");
-
-
                 $form = $(e.target);
+
+                let formData = {}
+                $form.serializeArray().map((v)=> formData[v.name] = v.value)
+
+                $.post('../api/lecturer/',{...formData},(data)=>{
+                    console.log(data)
+                    Lobibox.notify('success', {
+                        sound: false,
+                        showClass: 'animated slideInDown',
+                        hideClass: 'animated slideOutRight',
+                        position: 'top right',
+                        delayIndicator: false,
+                        icon: 'fa fa-times',
+                        rounded: true,
+                        msg: data.success.message,
+                    });
+                }).fail((data)=>{
+                    console.log(data)
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    Lobibox.notify('error', {
+                        sound: false,
+                        showClass: 'animated slideInDown',
+                        hideClass: 'animated slideOutRight',
+                        position: 'top right',
+                        delayIndicator: false,
+                        icon: 'fa fa-times',
+                        rounded: true,
+                        msg: message,
+                    });
+                });
+
                 $form
                     .bootstrapValidator('disableSubmitButtons', false)
                     .bootstrapValidator('resetForm', true);

@@ -1,5 +1,7 @@
 <?php
-include_once 'head.php'; ?>
+include_once 'head.php';
+$lecArray = $lec->getAllUsers();
+?>
 <!-- DataTables -->
 <link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
 
@@ -40,50 +42,54 @@ include_once 'head.php'; ?>
 
                                         <h4 class="card-title">Lecturers</h4>
                                         <div class="dropdown-divider"></div>
-
-                                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsives nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                            <thead>
-                                            <tr>
-                                                <th>Emp Id</th>
-                                                <th>Name</th>
-                                                <th>Assigned Students</th>
-                                                <th>Phone No</th>
-                                                <th>Email</th>
-                                                <th>Expertise</th>
-                                                <th>Role</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
+                                            <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
                                                 <tr>
-                                                    <td>34red</td>
-                                                    <td>John Msagha</td>
-                                                    <td>
-                                                        5
-                                                        <a href="#" class="text-right text-underline pl-2">view</a>
-                                                    </td>
-                                                    <td>0712345678</td>
-                                                    <td>john@doe.com</td>
-                                                    <td>database management</td>
-                                                    <td>
-                                                        <span class="badge badge-warning">
-                                                            coordinator
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
-                                                                <i class="mdi mdi-pencil"></i>
-                                                            </button>
-                                                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-
-                                                        </div>
-                                                    </td>
+                                                    <th>Emp Id</th>
+                                                    <th>Name</th>
+                                                    <th>Assigned Students</th>
+                                                    <th>Phone No</th>
+                                                    <th>Email</th>
+                                                    <th>Expertise</th>
+                                                    <th>Role</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                foreach ($lecArray as $row){ ?>
+                                                    <tr>
+                                                        <td><?= $row['emp_id'] ?></td>
+                                                        <td><?= $row['full_name'] ?></td>
+                                                        <td>
+                                                            <?= $row['no_of_projects'] ?>
+                                                            <a href="#" class="text-right text-underline pl-2">view</a>
+                                                        </td>
+                                                        <td><?= $row['phone_no'] ?></td>
+                                                        <td><?= $row['email'] ?></td>
+                                                        <td><?= $row['expertise'] ?></td>
+                                                        <td>
+                                                        <span class="badge <?= $row['coordinator'] == 'True' ? 'badge-warning': 'badge-primary' ?>">
+                                                            <?= $row['coordinator'] == 'True' ? 'Coordinator': 'Supervisor' ?>
+                                                        </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-center">
+                                                                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
+                                                                    <i class="mdi mdi-pencil"></i>
+                                                                </button>
+                                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php }
+                                                ?>
+                                                </tbody>
+                                            </table>
+
                                     </div>
                                 </div>
                             </div> <!-- end col -->
@@ -176,14 +182,14 @@ include_once 'head.php'; ?>
 
     <!-- Datatable init js -->
     <script src="../assets/js/pages/datatables.init.js"></script>
-    
+
     <!-- Sweet Alerts js -->
-    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script> 
+    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
 
     <!-- slimselect -->
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
-    
+
     <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>

@@ -228,7 +228,6 @@ include_once 'head.php'; ?>
                     $form.serializeArray().map((v)=> formData[v.name] = v.value)
 
                 $.post('../api/student/',{...formData},(data)=>{
-                    console.log(data)
                     Lobibox.notify('success', {
                         sound: false,
                         showClass: 'animated slideInDown',
@@ -240,7 +239,6 @@ include_once 'head.php'; ?>
                         msg: data.success.message,
                     });
                 }).fail((data)=>{
-                    console.log(data)
                     let message = 'Some unexpected error occurred';
                     try{
                         message = data['responseJSON']['error']['message'];
