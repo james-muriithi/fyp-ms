@@ -1,8 +1,16 @@
 $(document).ready(function() {
-    $("#datatable").DataTable(), $("#datatable-buttons").DataTable({
-        dom: 'Bfrtip',
+    $("#datatable").DataTable();
+        let table = $("#datatable-buttons").DataTable({
         "scrollX": true,
-        fixedHeader: false,
+            order: [[0,"asc"]],
+            autoWidth: false,
+            sScrollX: '100%',
+            bAutoWidth: false,
+            initComplete: function () {
+            },
+            columnDefs: [
+                {orderable: false, targets: -1}
+            ],
         buttons: [{
                 extend: 'excel',
                 text: '<i class="fa fa-file-excel"></i> Excel',
@@ -29,5 +37,9 @@ $(document).ready(function() {
                 }
             }, "colvis"
         ]
-    }).buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)")
+    });
+        table.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)")
+    setTimeout(()=>{
+        table.draw();
+    },100)
 });
