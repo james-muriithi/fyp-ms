@@ -16,7 +16,7 @@ class Lecturer extends User
         $stmt = $this->conn->prepare($query);
 
         //bind the values
-        $stmt->bindParam(':name', $email);
+        $stmt->bindParam(':email', $email);
 
         // execute the query
         $stmt->execute();
@@ -54,10 +54,13 @@ class Lecturer extends User
                     l.expertise,
                     user.level,
                     l.profile,
-                    l.created_at
+                    l.created_at,
+                    IF(c.emp_id IS NULL, "False", "True") as coordinator
+                    
                 FROM
                     lecturer l
                 LEFT JOIN user on user.username = l.emp_id
+                LEFT JOIN coordinator c on l.emp_id = c.emp_id
                 WHERE
                     l.emp_id = :empid';
 
@@ -74,9 +77,16 @@ class Lecturer extends User
     public function getAllUsers():array
     {
         $query = 'SELECT
-                    *
+                    l.*,
+                    user.level,
+                    IF(c.emp_id IS NULL, "False", "True") as coordinator,
+                    ifnull(nos.no_of_students, 0) as no_of_projects
                 FROM
-                    lecturer ';
+                    lecturer l
+                LEFT JOIN user on user.username = l.emp_id
+                LEFT JOIN coordinator c on l.emp_id = c.emp_id
+                LEFT JOIN (SELECT supervisor,COUNT(*) no_of_students FROM project GROUP BY supervisor)as nos
+                ON nos.supervisor = l.emp_id';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -94,7 +104,6 @@ class Lecturer extends User
      * @param $email string
      * @param $phone_no string
      * @param $expertise string
-     * @throws Exception PDOException
      * @return bool
      */
     public function saveUser($empId, $full_name, $email, $phone_no, $expertise):bool
@@ -119,7 +128,7 @@ class Lecturer extends User
 
 
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':emp_id', $reg_no);
+        $stmt->bindParam(':emp_id', $empId);
         $stmt->bindParam(':full_name', $full_name);
         $stmt->bindParam(':phone_no', $phone_no);
         $stmt->bindParam(':expertise', $expertise);
