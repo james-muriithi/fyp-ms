@@ -1,7 +1,7 @@
 <?php include_once 'head.php'; session_start(); ?>
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="assets/libs/sweetalert2/sweetalert2.min.css">
-<link rel="stylesheet" type="text/css" href="assets/libs/lobibox/css/lobibox.min.css">
+<link rel="stylesheet" type="text/css" href="assets/libs/toastr/toastr.css">
 <style type="text/css">
     .form-control {
         height: 42px;
@@ -91,7 +91,7 @@
     <script src="assets/js/app.js"></script>
 
     <script type="text/javascript" src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="assets/libs/lobibox/js/lobibox.min.js"></script>
+    <script type="text/javascript" src="assets/libs/toastr/toastr.min.js"></script>
 
 </body>
 <?php
@@ -159,15 +159,9 @@ if (isset($_SESSION['error'])){
                     }
                 }).fail(function(data){
                     let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
-                    Lobibox.notify('error', {
-                        sound: false,
-                        showClass: 'animated slideInDown',
-                        hideClass: 'animated slideOutRight',
-                        position: 'top right',
-                        delayIndicator: false,
-                        icon: 'fa fa-times',
-                        rounded: true,
-                        msg: message,
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
                     });
                 });
                 
