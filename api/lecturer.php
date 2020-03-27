@@ -38,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $conn->beginTransaction();
             if ($lecturer->saveUser($emp_id, $name, $email, $phone, $expertise)){
                 $conn->commit();
-                echo json_response(201, 'Lecturer added successfully.');
+                echo json_response(201, 'Lecturer '.$name.' was added successfully.');
                 die();
             }else{
                 $conn->rollBack();
-                echo json_response(400,'There was error adding the lecturer.',true);
+                echo json_response(400,'There was error adding the lecturer. Please try again later.',true);
                 die();
             }
         }
@@ -51,6 +51,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
     }else{
         echo json_response(400,'Please make sure you provide all the required fields. i.e empid, name, phone, email and expertise',true);
     }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH'){
+    if (empty($_PATCH)) {
+        $_PATCH = json_decode(file_get_contents('php://input'), true) ? : [];
+    }
+
+    $data = $_PATCH;
+
+    if(isset($data['empid']) && !empty($data['empid'])){
+        $emp_id = $data['empid'];
+        $lecturer = new Lecturer($conn);
+        $lecturer->setUsername($emp_id);
+        $lecDetails = $lecturer->getUser();
+        if ($lecturer->userExists($emp_id)){
+            $name = empty($data['name']) ? $lecDetails['full_name'] : $data['name'];
+            $phone = empty($data['phone']) ? $lecDetails['phone_no'] : $data['phone'];
+            $expertise = empty($data['expertise']) ? $lecDetails['expertise'] : $data['expertise'];
+            $newEmail = empty($data['email']) ? $lecDetails['email'] : $data['email'];
+
+            if ($newEmail != $lecDetails['email']){
+                if ($lecturer->emailExists($newEmail)){
+                    echo json_response(409,'That email already exists. Please provide another one.',true);
+                    die();
+                }
+            }
+            $conn->beginTransaction();
+            if ($lecturer->updateUser($emp_id ,$name,$newEmail,$phone,$expertise)){
+                $conn->commit();
+                echo json_response(201, 'Your Details were updated successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error updating your details. Please try again later.',true);
+                die();
+            }
+
+        }else{
+            echo json_response(400,'That employee id does not exist! Please provide a correct employee id.',true);
+            die();
+        }
+    }else{
+        echo json_response(400,'Please make sure you provide all the required fields. i.e empid and  name or phone or email or expertise',true);
+        die();
+    }
+
 }
 
 

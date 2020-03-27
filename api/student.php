@@ -36,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $conn->beginTransaction();
             if ($student->saveUser($reg_no, $name, $email, $phone)){
                 $conn->commit();
-                echo json_response(201, 'Student added successfully.');
+                echo json_response(201, 'Student'.$reg_no.' was added successfully.');
                 die();
             }else{
                 $conn->rollBack();
-                echo json_response(400,'There was error addinng the student.',true);
+                echo json_response(400,'There was error adding the student. Please try again later.',true);
                 die();
             }
         }

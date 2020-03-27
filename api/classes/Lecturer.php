@@ -137,6 +137,41 @@ class Lecturer extends User
         return $stmt->execute();
     }
 
+    public function updateImage($filename) :bool
+    {
+        $query = 'UPDATE lecturer
+                  SET profile = :profile 
+                  WHERE emp_id= :empid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':profile',$filename);
+        $stmt->bindParam(':empid', $this->username);
+
+        return $stmt->execute();
+    }
+
+
+    public function updateUser($empid, $name, $email, $phone, $expertise) :bool
+    {
+        $query = 'UPDATE lecturer
+                  SET full_name = :name,
+                      email =:email,
+                      phone_no =:phone,
+                      expertise = :expertise
+                  WHERE emp_id= :empid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':name',$name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':expertise', $expertise);
+        $stmt->bindParam(':empid', $empid);
+
+        return $stmt->execute();
+    }
+
     public function userExists(String $employeeId): bool
     {
         //sql query
