@@ -191,6 +191,93 @@ table.dataTable td{
     transition-duration: 0.3s;
 }
 
+/*card*/
+.card {
+    position: relative;
+    margin-bottom: 24px;
+    margin-top: 10px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+}
+
+.card-topline-yellow {
+    border-top: 3px solid #F39C12;
+}
+
+.card-topline-aqua {
+    border-top: 3px solid #00C0EF;
+}
+
+.card-topline-lightblue {
+    border-top: 3px solid #3C8DBC;
+}
+
+.card-topline-green {
+    border-top: 3px solid #00A65A;
+}
+
+.card-topline-red {
+    border-top: 3px solid #DD4B39;
+}
+
+.card-topline-purple {
+    border-top: 3px solid #ad5bff;
+}
+
+.card-topline-gray {
+    border-top: 3px solid #ddd;
+}
+.card-head {
+    border-radius: 2px 2px 0 0;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+    padding: 2px;
+    /* text-transform: uppercase; */
+    color: #3a405b;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 40px;
+    min-height: 40px;
+}
+
+/*profile card */
+.profile-userpic{
+    text-align: center;
+    align-content: center;
+    align-items: center;
+
+}
+.profile-userpic img {
+    margin: 0px auto!important;
+    width: 130px;
+    height: 130px;
+    padding: 3px;
+    border: 3px solid rgb(210, 214, 222);
+    border-radius: 50% 50% 50% 50%;
+}
+
+.profile-usertitle {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.profile-usertitle-name {
+    font-size: 20px;
+    margin-bottom: 2px;
+    font-weight: bold;
+    color: #3a405b;
+}
+.profile-usertitle-email {
+    color: #777777;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+.profile-usertitle-contact {
+    color: #777777;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
 
 
 @media only screen and (max-width:576px) {
