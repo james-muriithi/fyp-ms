@@ -1,14 +1,15 @@
 <?php
 require_once 'api/config/database.php';
-require_once 'api/classes/Student.php';
+require_once 'api/classes/Lecturer.php';
 require_once 'api/sendMessage.php';
 
 $conn = Database::getInstance();
-$student = new Student($conn);
+$lec = new Lecturer($conn);
+echo json_encode($lec->getAllUsers());
 //echo json_encode($student->getAllUsers());
 //$conn->beginTransaction();
-var_dump($student->saveUser('SB30/PU/41769/16','JAMES MURIITHI','muriithijames506@gmail.com','0746792699'));
-print_r($conn->errorInfo());
+//var_dump($student->saveUser('SB30/PU/41769/16','JAMES MURIITHI','muriithijames506@gmail.com','0746792699'));
+//print_r($conn->errorInfo());
 //$student->setRegNo('SB30/PU/41760/16');
 //var_dump($student->emailExists('muriithijames556@gmail.com'));
 //if ($student->userExists($student->getRegNo())){
