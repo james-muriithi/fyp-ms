@@ -228,15 +228,9 @@ include_once 'head.php'; ?>
                     $form.serializeArray().map((v)=> formData[v.name] = v.value)
 
                 $.post('../api/student/',{...formData},(data)=>{
-                    Lobibox.notify('success', {
-                        sound: false,
-                        showClass: 'animated slideInDown',
-                        hideClass: 'animated slideOutRight',
-                        position: 'top right',
-                        delayIndicator: false,
-                        icon: 'fa fa-times',
-                        rounded: true,
-                        msg: data.success.message,
+                    toastr.success(data.success.message, "Bravoo!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
                     });
                 }).fail((data)=>{
                     let message = 'Some unexpected error occurred';
@@ -245,15 +239,9 @@ include_once 'head.php'; ?>
                     }catch (e) {
                         console.error(message)
                     }
-                    Lobibox.notify('error', {
-                        sound: false,
-                        showClass: 'animated slideInDown',
-                        hideClass: 'animated slideOutRight',
-                        position: 'top right',
-                        delayIndicator: false,
-                        icon: 'fa fa-times',
-                        rounded: true,
-                        msg: message,
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
                     });
                 });
 

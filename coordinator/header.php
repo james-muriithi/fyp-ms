@@ -127,8 +127,12 @@
                         </div>
                     </div>
                     <?php
-                    $profile = 'assets/images/users/';
-                    $profile = empty($lecDetails['profile']) ? $profile.'user-4.jpg' : $profile.$lecDetails['profile'];
+                    $uploadDir = 'assets/images/users/';
+                    $image = empty($lecDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $lecDetails['profile'];
+                    if (!file_exists($image)){
+                        $image = $uploadDir.'avatar-lec.png';
+                    }
+
                     ?>
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect fs-15 text-primary text-bold" id="page-header-user-dropdown"
@@ -136,11 +140,11 @@
                             <?php
                             echo ucfirst(explode(' ',$lecDetails['full_name'])[0]);
                             ?>
-                            <img class="rounded-circle header-profile-user m-l-4" src="<?= $profile ?>" alt="Header Avatar">
+                            <img class="rounded-circle header-profile-user m-l-4" src="<?= $image ?>" alt="Header Avatar">
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
-                            <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle font-size-17 align-middle mr-1"></i> Profile</a>
+                            <a class="dropdown-item" href="user-profile.php"><i class="mdi mdi-account-circle font-size-17 align-middle mr-1"></i> Profile</a>
                             <a class="dropdown-item d-block" href="#"><span class="badge badge-success float-right">11</span><i class="mdi mdi-settings font-size-17 align-middle mr-1"></i> Settings</a>
                             <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline font-size-17 align-middle mr-1"></i> Change Password</a>
                             <div class="dropdown-divider"></div>

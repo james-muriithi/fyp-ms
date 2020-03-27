@@ -48,7 +48,7 @@
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
                                 <li><a href="add-upload-category.php">Add Category</a></li>
-                                <li><a href="ui-buttons.html">View Categories</a></li>
+                                <li><a href="view-upload-category.php">View Categories</a></li>
                             </ul>
                         </li>
                         <li>

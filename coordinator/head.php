@@ -59,8 +59,8 @@ $lecDetails = $lec->getUser();
     <link href="../assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
     <!-- aniamte css -->
     <link rel="stylesheet" type="text/css" href="../assets/css/animate.css">
-    <!--    lobibox-->
-    <link rel="stylesheet" type="text/css" href="../assets/libs/lobibox/css/lobibox.min.css">
+    <!-- toastr -->
+    <link rel="stylesheet" type="text/css" href="../assets/libs/toastr/toastr.css">
     <!-- Sweet Alert-->
     <link href="../assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
     <!-- DataTables -->
