@@ -1,11 +1,16 @@
 <?php
 require_once 'api/config/database.php';
 require_once 'api/classes/Lecturer.php';
+require_once 'api/classes/Project.php';
 require_once 'api/sendMessage.php';
 
 $conn = Database::getInstance();
-$lec = new Lecturer($conn);
-echo json_encode($lec->getAllUsers());
+$project = new Project($conn);
+//$student = new Student($conn);
+//$student->setUsername('SB30/PU/41760/16');
+echo json_encode($project->viewAllProjects());
+//$lec = new Lecturer($conn);
+//echo json_encode($lec->getAllUsers());
 //echo json_encode($student->getAllUsers());
 //$conn->beginTransaction();
 //var_dump($student->saveUser('SB30/PU/41769/16','JAMES MURIITHI','muriithijames506@gmail.com','0746792699'));
