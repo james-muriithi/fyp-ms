@@ -1,5 +1,5 @@
 <?php
-
+include_once 'Student.php';
 
 class Project extends Student
 {
@@ -25,16 +25,16 @@ class Project extends Student
         $this->conn = $conn;
     }
 
-    public function addProject($category, $title = '', string $description = '')
+    public function addProject(string $category,string $title, string $description, string $reg_no = ''):bool
     {
-        $title = !isset($this->title) ? $title :$this->title;
-        $description = !isset($this->description) ? $description :$this->description;
+        $reg_no = isset($reg_no) ? $reg_no : $this->getRegNo();
+        if (empty($reg_no)){
+            return false;
+        }
 
         $query = 'INSERT INTO project set title =:title, description=:desc, category =:category, student=:reg_no ';
 
         $stmt = $this->conn->prepare($query);
-
-        $reg_no = $this->getRegNo();
 
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':desc', $description);
@@ -75,6 +75,9 @@ class Project extends Student
     public function studentHasProject($reg_no = '')
     {
         $reg_no = empty($this->getRegNo()) ? $reg_no :$this->getRegNo();
+        if (empty($reg_no)){
+            return false;
+        }
 
         $query = 'SELECT title FROM project WHERE student = :reg ';
 
@@ -107,14 +110,28 @@ class Project extends Student
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function viewAllProjects():mixed
+    public function viewAllProjects():array
     {
         $query = 'SELECT 
-                        s.reg_no,p.id, p.title, p.description, pc.name as category
+                        p.id, 
+                        p.title,
+                        p.description,
+                        ifnull(nou.no_of_uploads, 0) as no_of_uploads,
+                        CASE
+                            WHEN p.status = 0 THEN "in progress"
+                            WHEN p.status = 1 THEN "complete"
+                            WHEN p.status = 0 THEN "rejected"
+                        END AS status,
+                        pc.name as category,
+                        s.full_name,
+                        s.course,
+                        s.reg_no
                     FROM 
                          project p 
                     LEFT JOIN project_categories pc on p.category = pc.id
-                    LEFT JOIN student s on p.student = s.reg_no';
+                    LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
+                    ON nou.project_id = p.id';
 
         $stmt = $this->conn->prepare($query);
 

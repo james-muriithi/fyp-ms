@@ -1,8 +1,17 @@
 <?php
 include_once 'User.php';
+include_once 'Project.php';
 
 class Student extends User
 {
+
+    public function setUsername($username): void
+    {
+        $this->username = $username;
+        if ($this->userExists($username)){
+            $this->level = parent::getUser()['level'];
+        }
+    }
 
     /**
      * @param String $email
@@ -120,7 +129,7 @@ class Student extends User
                     pc.name as category,
                     l.full_name AS supervisor,
                     ifnull(nou.no_of_uploads,0) as no_of_uploads,
-                    p.approved
+                    p.status
                 FROM
                     student 
                 LEFT JOIN project p on student.reg_no = p.student
