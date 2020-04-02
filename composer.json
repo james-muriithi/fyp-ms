@@ -3,8 +3,10 @@
     "description": "my final year project",
     "type": "project",
     "require": {
-        "phpunit/phpunit": "^8.5",
       "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
     },
     "license": "ICS",
     "authors": [
