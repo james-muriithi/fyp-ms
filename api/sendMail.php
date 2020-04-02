@@ -11,6 +11,10 @@ if (empty($_POST)) {
 
 $data = $_POST;
 
+header('Cache-Control: no-transform,public,max-age=300,s-maxage=900');
+// treat this as json
+header('Content-Type: application/json');
+
 if (isset($data['message'],$data['to'], $data['subject'])) {
     $message = $data['message'];
     $to = $data['to'];
@@ -26,11 +30,11 @@ if (isset($data['message'],$data['to'], $data['subject'])) {
 function sendMail($to, $message, $subject, $from = 'James Muriithi', $cc='')
 {
     // To send HTML mail, the Content-type header must be set
-    $headers  = 'From: ' .$from." < support@theschemaqhigh.co.ke >\r\n";
-    $headers .= 'X-Sender: ' .$from." < support@theschemaqhigh.co.ke >\r\n";
+    $headers  = 'From: ' .$from." < support@oyaa.co.ke >\r\n";
+    $headers .= 'X-Sender: ' .$from." < support@oyaa.co.ke >\r\n";
     $headers .= 'X-Mailer: PHP/' . PHP_VERSION ."\r\n";
     $headers .= "X-Priority: 1\r\n"; // Urgent message!
-    $headers .= "Return-Path: support@theschemaqhigh.co.ke\r\n"; // Return path for errors
+    $headers .= "Return-Path: support@oyaa.co.ke\r\n"; // Return path for errors
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=iso-8859-1\r\n";
     if(!empty($cc) ){
@@ -42,7 +46,7 @@ function sendMail($to, $message, $subject, $from = 'James Muriithi', $cc='')
             'to'=>$to,
             'from' => $from,
             'message' => $message,
-            'fromEmail'=> 'support@theschemaqhigh.co.ke'
+            'fromEmail'=> 'support@oyaa.co.ke'
         )
     );
 }

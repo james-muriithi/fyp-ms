@@ -88,6 +88,24 @@ class Student extends User
         return $stmt->execute();
     }
 
+    public function updateUser($reg_no, $full_name, $email, $phone_no): bool
+    {
+        $query = 'UPDATE student
+                  SET full_name = :name,
+                      email =:email,
+                      phone_no =:phone
+                  WHERE reg_no= :reg_no';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':name',$full_name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':phone', $phone_no);
+        $stmt->bindParam(':reg_no', $reg_no);
+
+        return $stmt->execute();
+    }
+
 
     /**
      * @return array

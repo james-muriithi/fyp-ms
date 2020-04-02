@@ -16,6 +16,12 @@ class Project extends Student
     public $title, $description;
 
     /**
+     * @var string
+     */
+    private $pid;
+
+
+    /**
      * Project constructor.
      * @param $conn
      */
@@ -25,9 +31,9 @@ class Project extends Student
         $this->conn = $conn;
     }
 
-    public function addProject(string $category,string $title, string $description, string $reg_no = ''):bool
+    public function addProject(string $title, string $description,string $category, string $reg_no = ''):bool
     {
-        $reg_no = isset($reg_no) ? $reg_no : $this->getRegNo();
+        $reg_no = !empty($reg_no) ? $reg_no : $this->getRegNo();
         if (empty($reg_no)){
             return false;
         }
@@ -59,7 +65,7 @@ class Project extends Student
 
     public function projectTitleExists($title = ''):bool
     {
-        $title = !isset($this->title) ? $title :$this->title;
+        $title = !empty($this->title) ? $title :$this->title;
 
         $query = 'SELECT title FROM project WHERE title = :title ';
 
@@ -72,7 +78,7 @@ class Project extends Student
         return $stmt->rowCount()>0;
     }
 
-    public function studentHasProject($reg_no = '')
+    public function studentHasProject($reg_no = ''): bool
     {
         $reg_no = empty($this->getRegNo()) ? $reg_no :$this->getRegNo();
         if (empty($reg_no)){
@@ -91,14 +97,64 @@ class Project extends Student
     }
 
 
-    public function viewProject($reg_no):mixed
+    public function viewProject($pid = ''):array
     {
+        $pid = !empty($pid) ? pid : $this->pid;
         $query = 'SELECT 
-                        s.reg_no,p.id, p.title, p.description, pc.name as category
+                        p.id, 
+                        p.title,
+                        p.description,
+                        ifnull(nou.no_of_uploads, 0) as no_of_uploads,
+                        CASE
+                            WHEN p.status = 0 THEN "in progress"
+                            WHEN p.status = 1 THEN "complete"
+                            WHEN p.status = 0 THEN "rejected"
+                        END AS status,
+                        pc.name as category,
+                        s.full_name,
+                        s.course,
+                        s.reg_no
                     FROM 
                          project p 
                     LEFT JOIN project_categories pc on p.category = pc.id
                     LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
+                    ON nou.project_id = p.id
+                    WHERE p.id  = :pid ';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':pid', $pid);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+
+    public function viewStudentProject($reg_no = ''):array
+    {
+        $reg_no = !empty($reg_no) ? $reg_no : $this->getRegNo();
+        $query = 'SELECT 
+                        p.id, 
+                        p.title,
+                        p.description,
+                        ifnull(nou.no_of_uploads, 0) as no_of_uploads,
+                        CASE
+                            WHEN p.status = 0 THEN "in progress"
+                            WHEN p.status = 1 THEN "complete"
+                            WHEN p.status = 0 THEN "rejected"
+                        END AS status,
+                        pc.name as category,
+                        s.full_name,
+                        s.course,
+                        s.reg_no
+                    FROM 
+                         project p 
+                    LEFT JOIN project_categories pc on p.category = pc.id
+                    LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
+                    ON nou.project_id = p.id
                     WHERE student = :reg ';
 
         $stmt = $this->conn->prepare($query);
@@ -107,7 +163,7 @@ class Project extends Student
 
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
     public function viewAllProjects():array
@@ -133,16 +189,14 @@ class Project extends Student
                     LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
                     ON nou.project_id = p.id';
 
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->execute();
+        $stmt = $this->conn->query($query);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function viewProjectUploads($reg_no):mixed
+    public function viewProjectUploads($reg_no):array
     {
-        $projectDetails = $this->viewProject($reg_no);
+        $projectDetails = $this->viewStudentProject($reg_no);
 
         $query = 'SELECT 
                         u.id, u.name, uc.name, u.upload_time, uc.deadline
@@ -154,7 +208,7 @@ class Project extends Student
 
         $stmt = $this->conn->prepare($query);
 
-        $project_id = $projectDetails[0]['id'];
+        $project_id = $projectDetails['id'];
 
         $stmt->bindParam(':project_id', $project_id);
 
@@ -180,6 +234,23 @@ class Project extends Student
         $stmt->bindParam(':reg_no', $reg_no);
 
         return $stmt->execute();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getPid()
+    {
+        return $this->pid;
+    }
+
+    /**
+     * @param string $pid
+     */
+    public function setPid($pid): void
+    {
+        $this->pid = $pid;
     }
 
 }

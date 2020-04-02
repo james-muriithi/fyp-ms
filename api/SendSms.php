@@ -1,6 +1,6 @@
 <?php
 
-header('Access-Control-Allow-Origin: http://localhost/fyp_ms/');
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -15,6 +15,10 @@ $data = $_POST;
 if (isset($data['message'],$data['phone'])) {
     $message = $data['message'];
     $phone = $data['phone'];
+	header('Cache-Control: no-transform,public,max-age=300,s-maxage=900');
+    // treat this as json
+    header('Content-Type: application/json');
+	
     echo sendSms($phone,$message);
 }
 
