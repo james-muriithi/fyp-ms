@@ -89,11 +89,7 @@ class Lecturer extends User
                 ON nos.supervisor = l.emp_id';
 
         // prepare the query
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(':username', $this->username);
-
-        $stmt->execute();
+        $stmt = $this->conn->query($query);
 
         return @$stmt->fetchAll(PDO::FETCH_ASSOC);
     }

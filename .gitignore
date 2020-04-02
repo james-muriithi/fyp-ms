@@ -2,3 +2,4 @@
 .phpintel/
 .phpunit.result.cache
 /vendor/
+tests/

@@ -41,6 +41,17 @@ class ProjectCategory
         return $stmt->execute();
     }
 
+    public function deleteCategory(string $id):bool
+    {
+        $query = 'DELETE FROM project_categories WHERE id = :id';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+    }
+
     public function viewAllCategories():array
     {
         $query = 'SELECT 

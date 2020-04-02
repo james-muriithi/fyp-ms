@@ -141,7 +141,7 @@ class Student extends User
     {
         $query = 'SELECT
                     student.*,
-                    CONCAT("pid-",p.id) as project_id,
+                    p.id,
                     p.title,
                     p.description,
                     pc.name as category,
