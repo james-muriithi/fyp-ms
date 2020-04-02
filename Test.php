@@ -3,29 +3,34 @@ require_once 'api/config/database.php';
 require_once 'api/classes/Lecturer.php';
 require_once 'api/classes/Project.php';
 require_once 'api/sendMessage.php';
+require_once 'api/classes/Upload.php';
 
 $conn = Database::getInstance();
-$project = new Project($conn);
-//$student = new Student($conn);
-$project->setUsername('SB30/PU/41769/16');
-if (!$project->studentHasProject()){
-    $conn->beginTransaction();
-    $desc = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-    if ($project->addProject('Church Management System', $desc, 1)){
-        $conn->commit();
-        echo json_encode(['message'=>'added successfully']);
-    }else{
+$uc = new Upload($conn);
 
-        echo json_encode(['message'=>'not added']);
-        $conn->rollBack();
-    }
-}
-echo json_encode($project->viewProjectUploads($project->getRegNo()));
+echo json_encode($uc->viewAllUploads());
+
+//$project = new Project($conn);
+////$student = new Student($conn);
+//$project->setUsername('SB30/PU/41769/16');
+//if (!$project->studentHasProject()){
+//    $conn->beginTransaction();
+//    $desc = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+//tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+//quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+//consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+//cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+//proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+//    if ($project->addProject('Church Management System', $desc, 1)){
+//        $conn->commit();
+//        echo json_encode(['message'=>'added successfully']);
+//    }else{
+//
+//        echo json_encode(['message'=>'not added']);
+//        $conn->rollBack();
+//    }
+//}
+//echo json_encode($project->viewProjectUploads($project->getRegNo()));
 //$lec = new Lecturer($conn);
 //echo json_encode($lec->getAllUsers());
 //echo json_encode($student->getAllUsers());
