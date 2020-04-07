@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $("#datatable").DataTable();
-        let table = $("#datatable-buttons").DataTable({
+        var table = $("#datatable-buttons").DataTable({
         "scrollX": true,
             order: [[0,"asc"]],
             autoWidth: false,
@@ -38,7 +38,7 @@ $(document).ready(function() {
             }, "colvis"
         ]
     });
-        table.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)")
+    table.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)")
     setTimeout(()=>{
         table.draw();
     },100)
