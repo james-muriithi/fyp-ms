@@ -175,7 +175,6 @@ $lecArray = $lec->getAllUsers();
     <script src="../assets/libs/metismenu/metisMenu.min.js"></script>
     <script src="../assets/libs/simplebar/simplebar.min.js"></script>
     <script src="../assets/libs/node-waves/waves.min.js"></script>
-    <script src="../assets/js/app.js" type="text/javascript" ></script>
 
     <!-- Required datatable js -->
     <script type="text/javascript" src="../assets/libs/DataTables/datatables.min.js"></script>
@@ -189,7 +188,10 @@ $lecArray = $lec->getAllUsers();
     <!-- slimselect -->
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
+    <script src="../assets/js/app.js" type="text/javascript" ></script>
 
     <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>
+<script>
+</script>

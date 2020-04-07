@@ -17,14 +17,14 @@ $(document).ready(function() {
         closeOnSelect: false,
         hideSelectedOption: true
     });
-
-    $('#btn-assign').on('click', function(event) {
+    let empId = '';
+    $('.btn-assign').on('click', function(event) {
         // clear select
         select.set([])
         //
         let tr = $(this).closest('tr'),
-            empId = $.trim(tr.find('td:nth-child(1)').text()),
-            lecName = tr.find('td:nth-child(2)').text()
+            lecName = tr.find('td:nth-child(2)').text();
+        empId = $.trim(tr.find('td:nth-child(1)').text())
         $('.lec-name').text(lecName)
 
     });
@@ -32,15 +32,52 @@ $(document).ready(function() {
     $('#assign-form').on('submit', function(event) {
         event.preventDefault();
         if (select.selected().length < 1) {
-            // alert("Please select atleast one student");
-            Swal.fire({ 
-            	title: "Sorry!",
-            	text: "Please select atleast one student!",
-            	type: "warning",
-    	      	confirmButtonColor: "#02a499", 
-    	      })
+            toastr.error("Please select at least one Project", "Sorry", {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut"
+            });
         } else {
+            $form = $(event.target);
+            let formData = {}
+            formData['emp_id'] = empId;
+            formData['projects'] = select.selected()
 
+            $.ajax({
+                url: '../api/project/',
+                data: JSON.stringify({assign : {...formData}}),
+                method: 'PATCH',
+                dataType: 'json',
+                processData: false,
+                contentType: 'application/merge-patch+json',
+                success: function (data) {
+                    toastr.success(data.success.message, "Bravoo!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+                    // clear select
+                    select.set([])
+                    //close modal
+                    $('#myModal').modal('hide');
+                },
+                error: function (data) {
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+
+                    // clear select
+                    select.set([])
+                    //close modal
+                    $('#myModal').modal('hide');
+                }
+
+            });
         }
     });
 

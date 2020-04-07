@@ -137,98 +137,99 @@ include_once 'head.php'; ?>
         $('select').niceSelect();
         let x = $('#period').daterangepicker({
             startDate: moment(),
-        });
-        // console.log(x[0].value)
-    });
-    $('.add-category-form').on('submit', function(event) {
-        event.preventDefault();
-    });
-
-    $('.add-category-form').bootstrapValidator({
-        message: 'This value is not valid',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
-        fields:{
-            'category_name' : {
-                message: 'The name is not valid',
-                validators: {
-                    notEmpty: {
-                        message: 'The name of the upload is required and cannot be empty e.g. Chapter 1 '
-                    },
-                    stringLength: {
-                        min: 5,
-                        max: 40,
-                        message: 'The name must be more than 5 and less than 40 characters long'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9-_\s]+$/,
-                        message: 'The name can only consist of alphabetical, numbers, underscores and hyphen'
-                    }
-                }
-            },
-            'description' : {
-                message: 'The description is not valid',
-                validators: {
-                    notEmpty: {
-                        message: 'The description is required and cannot be empty'
-                    }
-                }
-            },
-            'period' : {
-                message: 'The dates are not valid',
-                validators: {
-                    notEmpty: {
-                        message: 'The duration is required and cannot be empty'
-                    }
-                }
+            locale:{
+                separator: ' To ',
+                format: 'YYYY-MM-DD'
             }
+        });
+        let startDate = $('#period').data('daterangepicker').startDate.format('YYYY-MM-DD')
+        let endDate = $('#period').data('daterangepicker').endDate.format('YYYY-MM-DD')
 
-        },
-        onSuccess: function (e) {
-            $form = $(e.target);
-            let formData = {}
-            $form.serializeArray().map((v)=> formData[v.name] = v.value)
+        x.on('apply.daterangepicker', (e, picker) => {
+            startDate = picker.startDate.format('YYYY-MM-DD')
+            endDate = picker.endDate.format('YYYY-MM-DD')
+        })
 
-            $.post('../api/student/',{...formData},(data)=>{
-                Lobibox.notify('success', {
-                    sound: false,
-                    showClass: 'animated slideInDown',
-                    hideClass: 'animated slideOutRight',
-                    position: 'top right',
-                    delayIndicator: false,
-                    icon: 'fa fa-times',
-                    rounded: true,
-                    msg: data.success.message,
-                });
-            }).fail((data)=>{
-                let message = 'Some unexpected error occurred';
-                try{
-                    message = data['responseJSON']['error']['message'];
-                }catch (e) {
-                    console.error(message)
+        $('.add-category-form').on('submit', function(event) {
+            event.preventDefault();
+        });
+
+        $('.add-category-form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields:{
+                'category_name' : {
+                    message: 'The name is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'The name of the upload is required and cannot be empty e.g. Chapter 1 '
+                        },
+                        stringLength: {
+                            min: 5,
+                            max: 40,
+                            message: 'The name must be more than 5 and less than 40 characters long'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9-_\s]+$/,
+                            message: 'The name can only consist of alphabetical, numbers, underscores and hyphen'
+                        }
+                    }
+                },
+                'description' : {
+                    message: 'The description is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'The description is required and cannot be empty'
+                        }
+                    }
+                },
+                'period' : {
+                    message: 'The dates are not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'The duration is required and cannot be empty'
+                        }
+                    }
                 }
-                Lobibox.notify('error', {
-                    sound: false,
-                    showClass: 'animated slideInDown',
-                    hideClass: 'animated slideOutRight',
-                    position: 'top right',
-                    delayIndicator: false,
-                    icon: 'fa fa-times',
-                    rounded: true,
-                    msg: message,
+
+            },
+            onSuccess: function (e) {
+                $form = $(e.target);
+                let formData = {}
+                $form.serializeArray().map((v)=> formData[v.name] = v.value)
+                formData['startDate'] = startDate;
+                formData['endDate'] = endDate;
+
+                $.post('../api/upload-category/',{...formData},(data)=>{
+                    toastr.success(data.success.message, "Bravoo!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+                }).fail((data)=>{
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
                 });
-            });
 
 
-            $form
-                .bootstrapValidator('disableSubmitButtons', false)
-                .bootstrapValidator('resetForm', true);
-        }
-    })
+                $form
+                    .bootstrapValidator('disableSubmitButtons', false)
+                    .bootstrapValidator('resetForm', true);
+            }
+        })
         .on('status.field.bv', function(e, data) {
             data.bv.disableSubmitButtons(false);
         });
+    });
 </script>

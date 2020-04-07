@@ -47,12 +47,12 @@ $studentArray = $student->getAllUsers();
                                             <tr>
                                                 <th>Reg No</th>
                                                 <th>Name</th>
-                                                <th>Project</th>
-                                                <th>Assigned Lecturer</th>
                                                 <th>Phone No</th>
                                                 <th>Email</th>
-                                                <th>Uploads</th>
-                                                <th>status</th>
+                                                <th>Project</th>
+                                                <th>Assigned Lecturer</th>
+<!--                                                <th>Uploads</th>-->
+<!--                                                <th>status</th>-->
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -62,16 +62,18 @@ $studentArray = $student->getAllUsers();
                                                     <tr>
                                                         <td><?= $row['reg_no'] ?></td>
                                                         <td><?= $row['full_name'] ?></td>
-                                                        <td><?= $row['title'] ?></td>
-                                                        <td><?= $row['supervisor'] ?></td>
                                                         <td><?= $row['phone_no'] ?></td>
                                                         <td><?= $row['email'] ?></td>
-                                                        <td><?= $row['no_of_uploads'] ?></td>
+                                                        <td><?= $row['project_title'] ?></td>
                                                         <td>
-                                                        <span class="badge badge-warning">
-                                                            pending
-                                                        </span>
+                                                            <?= $row['supervisor'] ?>
                                                         </td>
+<!--                                                        <td>--><?//= $row['no_of_uploads'] ?><!--</td>-->
+<!--                                                        <td>-->
+<!--                                                        <span class="badge badge-warning">-->
+<!--                                                            pending-->
+<!--                                                        </span>-->
+<!--                                                        </td>-->
                                                         <td>
                                                             <div class="text-center">
                                                                 <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">

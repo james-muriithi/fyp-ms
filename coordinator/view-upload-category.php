@@ -1,5 +1,8 @@
 <?php
 include_once 'head.php';
+require_once '../api/classes/UploadCategory.php';
+
+$uc = new UploadCategory($conn);
 ?>
 
 
@@ -52,26 +55,29 @@ include_once 'head.php';
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>
+                                        <?php
+                                        $catArray = $uc->viewAllCategories();
+                                        foreach ($catArray as $cat){  ?>
+                                            <tr>
+                                                <td><?= $cat['name'] ?></td>
+                                                <td><?= $cat['start_date'] ?></td>
+                                                <td><?= $cat['deadline'] ?></td>
+                                                <td><?= $cat['no_of_uploads'] ?> <a href="#" class="text-underline"> view</a></td>
+                                                <td><?= $cat['description'] ?></td>
+                                                <td>
+                                                    <div class="text-center">
+                                                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
+                                                            <i class="mdi mdi-pencil"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
 
-                                            </td>
-                                            <td>
-                                                <div class="text-center">
-                                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
-                                                        <i class="mdi mdi-pencil"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

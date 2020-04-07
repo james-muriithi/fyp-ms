@@ -1,5 +1,9 @@
 <?php
-include_once 'head.php'; ?>
+include_once 'head.php';
+$lecArray = $lec->getAllUsers();
+$project = new Project($conn);
+$projectArray = $project->viewAllProjects();
+?>
 <!-- DataTables -->
 <link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
 
@@ -51,21 +55,27 @@ include_once 'head.php'; ?>
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            <?php
+                                            foreach ($lecArray as $row){ ?>
                                                 <tr>
-                                                    <td>34r55</td>
-                                                    <td>John Doe</td>
-                                                    <td>Database management</td>
-                                                    <td>4</td>
-                                                    <td>0712345678</td>
-                                                    <td>john@doe.com</td>
+                                                    <td><?= $row['emp_id'] ?></td>
+                                                    <td><?= $row['full_name'] ?></td>
+                                                    <td><?= $row['expertise'] ?></td>
+                                                    <td>
+                                                        <?= $row['no_of_projects'] ?>
+                                                        <a href="#" class="text-right text-underline pl-2">view</a>
+                                                    </td>
+                                                    <td><?= $row['phone_no'] ?></td>
+                                                    <td><?= $row['email'] ?></td>
                                                     <td>
                                                         <div class="text-center">
-                                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModal" id="btn-assign">
+                                                            <button class="btn btn-sm btn-success btn-assign" data-toggle="modal" data-target="#myModal" id="btn-assign">
                                                                 Assign
                                                             </button>
                                                         </div>
                                                     </td>
                                                 </tr>
+                                            <?php } ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -118,22 +128,49 @@ include_once 'head.php'; ?>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title mt-0" id="myModalLabel">
-                        Assign Students to: <span class="lec-name"></span>
+                        Assign projects to: <span class="lec-name"></span>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
                     <form id="assign-form">
-                        <select id="students" multiple name="sel">
-                          <optgroup label="JavaScript">
-                            <option value="value 1">Angular</option>
-                            <option value="value 2">React</option>
-                            <option value="value 3">Vue</option>
+                        <select id="students" multiple name="projects">
+                            <?php
+                            $webArr = [];
+                            $androidArr= [];
+                            $desktopArr = [];
+                            foreach ($projectArray as $proj){
+                                if ($proj['category'] === 'Web App' && empty($proj['supervisor'])){
+                                    $webArr[] = $proj;
+                                }
+                                if ($proj['category'] === 'Android App' && empty($proj['supervisor'])){
+                                    $androidArr[] = $proj;
+                                }
+                                if ($proj['category'] === 'Desktop App' && empty($proj['supervisor'])){
+                                    $desktopArr[] = $proj;
+                                }
+                            }
+                            ?>
+                          <optgroup label="Web Apps">
+                              <?php
+                              foreach ($webArr as $proj) { ?>
+                                  <option value="<?= $proj['id'] ?>"><?= $proj['title'].' - '.$proj['full_name'] ?></option>
+                               <?php }
+                              ?>
                           </optgroup>
-                          <optgroup label="CSS">
-                            <option value="value 4">Bootstrap</option>
-                            <option value="value 5">Foundation</option>
-                            <option value="value 6">Bulma</option>
+                          <optgroup label="Android Apps">
+                              <?php
+                              foreach ($androidArr as $proj) { ?>
+                                  <option value="<?= $proj['id'] ?>"><?= $proj['title'].' - '.$proj['full_name'] ?></option>
+                              <?php }
+                              ?>
+                          </optgroup>
+                          <optgroup label="Desktop Apps">
+                              <?php
+                              foreach ($desktopArr as $proj) { ?>
+                                  <option value="<?= $proj['id'] ?>"><?= $proj['title'].' - '.$proj['full_name'] ?></option>
+                              <?php }
+                              ?>
                           </optgroup>
                         </select> 
                     </form>
@@ -148,21 +185,13 @@ include_once 'head.php'; ?>
     <!-- Right bar overlay-->
     <div class="rightbar-overlay"></div>
     <!-- JAVASCRIPT -->
-    <script src="../assets/libs/jquery/jquery.min.js"></script>
-    <script src="../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/libs/metismenu/metisMenu.min.js"></script>
-    <script src="../assets/libs/simplebar/simplebar.min.js"></script>
-    <script src="../assets/libs/node-waves/waves.min.js"></script>
-    <script src="../assets/js/app.js"></script>
-
+    <?php include_once 'js.php'; ?>
     <!-- Required datatable js -->
     <script type="text/javascript" src="../assets/libs/DataTables/datatables.min.js"></script>
 
     <!-- Datatable init js -->
     <script src="../assets/js/pages/datatables.init.js"></script>
-    
-    <!-- Sweet Alerts js -->
-    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script> 
+
 
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
@@ -172,4 +201,3 @@ include_once 'head.php'; ?>
 
 
 </html>
-

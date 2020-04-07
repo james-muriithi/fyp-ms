@@ -84,18 +84,16 @@ include_once 'head.php'; ?>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xl-3 col-md-6">
                             <div class="card mini-stat bg-warning text-white">
                                 <div class="card-body">
                                     <div class="mb-4">
                                         <div class="float-left mr-4">
-                                            <img src="assets/images/services-icon/assigned.svg" alt="assigned students" width="70">
+                                            <img src="assets/images/services-icon/completed.svg" alt="" width="80">
                                         </div>
-                                        <h5 class="fs-16 text-uppercase mt-0 text-white-50">Assigned</h5>
-                                        <h4 class="font-weight-medium font-size-24">60</h4>
-                                        <div class="mini-stat-label bg-success">
-                                            <p class="mb-0"> 91%</p>
-                                        </div>
+                                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Projects</h5>
+                                        <h4 class="font-weight-medium font-size-24">36</h4>
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
@@ -106,15 +104,16 @@ include_once 'head.php'; ?>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xl-3 col-md-6">
                             <div class="card mini-stat bg-danger text-white">
                                 <div class="card-body">
                                     <div class="mb-4">
                                         <div class="float-left mr-4">
-                                            <img src="assets/images/services-icon/completed.svg" alt="" width="80">
+                                            <img src="assets/images/services-icon/assigned.svg" alt="assigned students" width="70">
                                         </div>
-                                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Projects</h5>
-                                        <h4 class="font-weight-medium font-size-24">36</h4>
+                                        <h5 class="fs-16 text-uppercase mt-0 text-white-50">deadlines</h5>
+                                        <h4 class="font-weight-medium font-size-24">2</h4>
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
