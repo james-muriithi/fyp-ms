@@ -3,15 +3,17 @@ require_once 'api/config/database.php';
 require_once 'api/classes/Lecturer.php';
 require_once 'api/classes/Project.php';
 require_once 'api/sendMessage.php';
-require_once 'api/classes/Upload.php';
+require_once 'api/classes/Student.php';
+require_once 'api/classes/UploadCategory.php';
 
 $conn = Database::getInstance();
-$uc = new Upload($conn);
+//$uc = new UploadCategory($conn);
 
-echo json_encode($uc->viewAllUploads());
+//echo json_encode($uc->viewAllCategories());
 
-//$project = new Project($conn);
-////$student = new Student($conn);
+$project = new Project($conn);
+$student = new Student($conn);
+//echo json_encode($student->getAllUsers());
 //$project->setUsername('SB30/PU/41769/16');
 //if (!$project->studentHasProject()){
 //    $conn->beginTransaction();
@@ -21,7 +23,7 @@ echo json_encode($uc->viewAllUploads());
 //consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 //cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 //proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-//    if ($project->addProject('Church Management System', $desc, 1)){
+//    if ($project->addProject('Church Management System', $desc, 1, '','')){
 //        $conn->commit();
 //        echo json_encode(['message'=>'added successfully']);
 //    }else{
@@ -29,8 +31,10 @@ echo json_encode($uc->viewAllUploads());
 //        echo json_encode(['message'=>'not added']);
 //        $conn->rollBack();
 //    }
+//}else{
+//    echo json_encode($project->viewStudentProject($project->getRegNo()));
 //}
-//echo json_encode($project->viewProjectUploads($project->getRegNo()));
+echo json_encode($project->isAssigned(8));
 //$lec = new Lecturer($conn);
 //echo json_encode($lec->getAllUsers());
 //echo json_encode($student->getAllUsers());
