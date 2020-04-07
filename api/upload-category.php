@@ -7,8 +7,7 @@ error_reporting(E_ALL);
 
 
 include_once '../api/config/database.php';
-include_once '../api/classes/Student.php';
-include_once '../api/classes/User.php';
+include_once '../api/classes/UploadCategory.php';
 
 $conn = Database::getInstance();
 
@@ -18,36 +17,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
     }
 
     $data = $_POST;
+    if(isset($data['category_name'],$data['startDate'],$data['endDate'],$data['description'])){
+        $catName = $data['category_name'];
+        $starDate = $data['startDate'];
+        $endDate = $data['endDate'];
+        $description = $data['description'];
 
-    if(isset($data['regno'],$data['name'],$data['email'],$data['phone'])){
-        $reg_no = $data['regno'];
-        $name = $data['name'];
-        $phone = $data['phone'];
-        $email = $data['email'];
-
-        $student = new Student($conn);
-        if ($student->regExists($reg_no)){
-            echo json_response(409,'That registration number already exists',true);
-            die();
-        }elseif ($student->emailExists($email)){
-            echo json_response(409,'That email already exists',true);
+        $uc = new UploadCategory($conn);
+        if ($uc->categoryNameExists($catName)){
+            echo json_response(409,$catName.' already exists. Please choose a different name.',true);
             die();
         }else{
             $conn->beginTransaction();
-            if ($student->saveUser($reg_no, $name, $email, $phone)){
+            if ($uc->addCategory($catName,$description,$starDate,$endDate)){
                 $conn->commit();
-                echo json_response(200, 'Student'.$reg_no.' was added successfully.');
+                echo json_response(200, $catName.' has been added successfully.');
                 die();
             }else{
                 $conn->rollBack();
-                echo json_response(400,'There was error adding the student. Please try again later.',true);
+                echo json_response(400,'There was error adding the category. Please try again later.',true);
                 die();
             }
         }
 
 
     }else{
-        echo json_response(400,'Please make sure you provide all the required fields. i.e regno, name, phone and email',true);
+        echo json_response(400,'Please make sure you provide all the required fields. i.e category_name, startDate, endDate and description',true);
     }
 }
 

@@ -31,14 +31,15 @@ class Project extends Student
         $this->conn = $conn;
     }
 
-    public function addProject(string $title, string $description,string $category, string $reg_no = ''):bool
+    public function addProject(string $title, string $description,string $category, string $reg_no = '', string $empId= null):bool
     {
-        $reg_no = !empty($reg_no) ? $reg_no : $this->getRegNo();
+        $empId = empty($empId) ? null : $empId;
+        $reg_no = !empty($reg_no) ? $reg_no : $this->getUsername();
         if (empty($reg_no)){
             return false;
         }
 
-        $query = 'INSERT INTO project set title =:title, description=:desc, category =:category, student=:reg_no ';
+        $query = 'INSERT INTO project set title =:title, description=:desc, category =:category, student=:reg_no, supervisor=:supervisor ';
 
         $stmt = $this->conn->prepare($query);
 
@@ -46,6 +47,7 @@ class Project extends Student
         $stmt->bindParam(':desc', $description);
         $stmt->bindParam(':category', $category);
         $stmt->bindParam(':reg_no', $reg_no);
+        $stmt->bindParam(':supervisor', $empId);
 
         return $stmt->execute();
     }
@@ -80,7 +82,7 @@ class Project extends Student
 
     public function studentHasProject($reg_no = ''): bool
     {
-        $reg_no = empty($this->getRegNo()) ? $reg_no :$this->getRegNo();
+        $reg_no = empty($this->getUsername()) ? $reg_no :$this->getUsername();
         if (empty($reg_no)){
             return false;
         }
@@ -104,6 +106,7 @@ class Project extends Student
                         p.id, 
                         p.title,
                         p.description,
+                        ifnull(lecturer.full_name, "") as supervisor,
                         ifnull(nou.no_of_uploads, 0) as no_of_uploads,
                         CASE
                             WHEN p.status = 0 THEN "in progress"
@@ -118,6 +121,7 @@ class Project extends Student
                          project p 
                     LEFT JOIN project_categories pc on p.category = pc.id
                     LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN lecturer ON p.supervisor = lecturer.emp_id
                     LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
                     ON nou.project_id = p.id
                     WHERE p.id  = :pid ';
@@ -134,11 +138,12 @@ class Project extends Student
 
     public function viewStudentProject($reg_no = ''):array
     {
-        $reg_no = !empty($reg_no) ? $reg_no : $this->getRegNo();
+        $reg_no = !empty($reg_no) ? $reg_no : $this->getUsername();
         $query = 'SELECT 
                         p.id, 
                         p.title,
                         p.description,
+                        ifnull(lecturer.full_name, "") as supervisor,
                         ifnull(nou.no_of_uploads, 0) as no_of_uploads,
                         CASE
                             WHEN p.status = 0 THEN "in progress"
@@ -153,6 +158,7 @@ class Project extends Student
                          project p 
                     LEFT JOIN project_categories pc on p.category = pc.id
                     LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN lecturer ON p.supervisor = lecturer.emp_id
                     LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
                     ON nou.project_id = p.id
                     WHERE student = :reg ';
@@ -172,11 +178,12 @@ class Project extends Student
                         p.id, 
                         p.title,
                         p.description,
+                        ifnull(lecturer.full_name, "") as supervisor,
                         ifnull(nou.no_of_uploads, 0) as no_of_uploads,
                         CASE
                             WHEN p.status = 0 THEN "in progress"
                             WHEN p.status = 1 THEN "complete"
-                            WHEN p.status = 0 THEN "rejected"
+                            WHEN p.status = 2 THEN "rejected"
                         END AS status,
                         pc.name as category,
                         s.full_name,
@@ -186,6 +193,7 @@ class Project extends Student
                          project p 
                     LEFT JOIN project_categories pc on p.category = pc.id
                     LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN lecturer ON p.supervisor = lecturer.emp_id
                     LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
                     ON nou.project_id = p.id';
 
@@ -234,6 +242,34 @@ class Project extends Student
         $stmt->bindParam(':reg_no', $reg_no);
 
         return $stmt->execute();
+    }
+
+    public function setSupervisor($empId, $pid):bool
+    {
+        $query = 'UPDATE project SET 
+                        supervisor = :supervisor 
+                    WHERE id =:pid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':supervisor', $empId);
+        $stmt->bindParam(':pid', $pid);
+
+        return $stmt->execute();
+    }
+
+    public function isAssigned($pid):bool
+    {
+        $query = 'SELECT title FROM project
+                    WHERE id =:pid and supervisor is not null';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':pid', $pid);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() >0;
     }
 
 

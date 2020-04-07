@@ -141,11 +141,11 @@ class Student extends User
     {
         $query = 'SELECT
                     student.*,
-                    p.id,
-                    p.title,
-                    p.description,
-                    pc.name as category,
-                    l.full_name AS supervisor,
+                    p.id as project_id,
+                    p.title as project_title,
+                    p.description as project_description,
+                    pc.name  as project_category,
+                    ifnull(l.full_name, "") as supervisor,
                     ifnull(nou.no_of_uploads,0) as no_of_uploads,
                     p.status
                 FROM
@@ -167,6 +167,7 @@ class Student extends User
 
         return @$stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     /**
      * @return String

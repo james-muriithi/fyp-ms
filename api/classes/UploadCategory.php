@@ -64,8 +64,12 @@ class UploadCategory
     public function viewAllCategories():array
     {
         $query = 'SELECT 
-                        *
-                   FROM upload_category';
+                        uc.*,
+                        ifnull(nou.no_of_uploads, 0) as no_of_uploads
+                   FROM upload_category uc
+                    LEFT JOIN (SELECT category, COUNT(*) as no_of_uploads FROM upload GROUP BY category) as nou
+                    ON nou.category = uc.id
+                    ORDER BY uc.deadline ASC';
 
         $stmt = $this->conn->query($query);
 
@@ -78,13 +82,15 @@ class UploadCategory
     {
         $catId = !empty($catId) ? $catId : $this->catId;
         $query = 'SELECT 
-                        *
-                   FROM upload_category
-                   WHERE id = :cat_id';
+                        uc.*,
+                        ifnull(nou.no_of_uploads, 0) as no_of_uploads
+                   FROM upload_category uc
+                    LEFT JOIN (SELECT category, COUNT(*) as no_of_uploads FROM upload GROUP BY category) as nou
+                    ON nou.category = uc.id
+                   WHERE uc.id = :cat_id
+                   ORDER BY uc.deadline ASC';
 
         $stmt = $this->conn->prepare($query);
-
-        $catId = '1';
 
         $stmt->bindParam(':cat_id', $catId);
 
