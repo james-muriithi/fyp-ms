@@ -3,9 +3,7 @@ include_once 'head.php';
 $student = new Student($conn);
 $studentArray = $student->getAllUsers();
 ?>
-
-
-<link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css"/>
+<link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 
 <body data-sidebar="dark">
     <!-- Begin page -->
@@ -76,10 +74,10 @@ $studentArray = $student->getAllUsers();
 <!--                                                        </td>-->
                                                         <td>
                                                             <div class="text-center">
-                                                                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editModal" id="btn-edit">
+                                                                <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" >
                                                                     <i class="mdi mdi-pencil"></i>
                                                                 </button>
-                                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" id="btn-delete">
+                                                                <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
 
@@ -97,78 +95,83 @@ $studentArray = $student->getAllUsers();
                 </div> <!-- container-fluid -->
             </div>
             <!-- End Page-content -->
+            <!--edit modal-->
+            <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title mt-0" id="myModalLabel">
+                                Edit Student Details
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="edit-student-form">
+                                <div class="form-group form-row">
+                                    <div class="col-sm-12">
+                                        <label for="regno">Reg No: </label>
+                                        <input type="text" class="form-control" id="regno" readonly placeholder="Enter registration number" name="regno">
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-row">
+                                    <div class="col-sm-12">
+                                        <label for="name">Full Name:</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Enter full name" name="name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-row">
+                                    <div class="col-sm-12">
+                                        <label for="email">Email: </label>
+                                        <input type="email" class="form-control" id="email" placeholder="john@doe.com" name="email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-row">
+                                    <div class="col-sm-12">
+                                        <label for="phone">Phone No:</label>
+                                        <input type="text" class="form-control" id="phone" placeholder="0712345678" name="phone">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success waves-effect waves-light btn-save" form="edit-student-form">Edit</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
             <?php include_once 'footer.php'; ?>
         </div>
         <!-- end main content-->
     </div>
     <!-- END layout-wrapper -->
-    <!-- Right Sidebar -->
-    <div class="right-bar">
-        <div data-simplebar class="h-100">
-            <div class="rightbar-title px-3 py-4">
-                <a href="javascript:void(0);" class="right-bar-toggle float-right">
-                    <i class="mdi mdi-close noti-icon"></i>
-                </a>
-                <h5 class="m-0">Settings</h5>
-            </div>
-            <!-- Settings -->
-            <hr class="mt-0" />
-            <h6 class="text-center">Choose Layouts</h6>
-            <div class="p-4">
-                <div class="mb-2">
-                    <img src="assets/images/layouts/layout-1.jpg" class="img-fluid img-thumbnail" alt="">
-                </div>
-                <div class="custom-control custom-switch mb-3">
-                    <input type="checkbox" class="custom-control-input theme-choice" id="light-mode-switch" checked />
-                    <label class="custom-control-label" for="light-mode-switch">Light Mode</label>
-                </div>
-                <div class="mb-2">
-                    <img src="assets/images/layouts/layout-2.jpg" class="img-fluid img-thumbnail" alt="">
-                </div>
-                <div class="custom-control custom-switch mb-3">
-                    <input type="checkbox" class="custom-control-input theme-choice" id="dark-mode-switch" data-bsStyle="assets/css/bootstrap-dark.min.css" data-appStyle="assets/css/app-dark.min.css" />
-                    <label class="custom-control-label" for="dark-mode-switch">Dark Mode</label>
-                </div>
-            </div>
-        </div>
-    </div> <!-- end slimscroll-menu-->
-    </div>
-    <!-- /Right-bar -->
-    <!-- sample modal content -->
-    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+    <!-- delete modal -->
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title mt-0" id="myModalLabel">
-                        Assign Students to: <span class="lec-name"></span>
+                        Delete Student
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
-                    <form id="assign-form">
-                        <select id="students" multiple name="sel">
-                          <optgroup label="JavaScript">
-                            <option value="value 1">Angular</option>
-                            <option value="value 2">React</option>
-                            <option value="value 3">Vue</option>
-                          </optgroup>
-                          <optgroup label="CSS">
-                            <option value="value 4">Bootstrap</option>
-                            <option value="value 5">Foundation</option>
-                            <option value="value 6">Bulma</option>
-                          </optgroup>
-                        </select> 
-                    </form>
+                    <h5 class="text-danger">Are you sure you want to delete <span class="student_name"></span>?
+                        <br><br><span class="fs-14">P.S. This action is irreversible.</span>
+                    </h5>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success waves-effect waves-light" form="assign-form">Assign</button>
+                    <button type="button" class="btn btn-danger waves-effect waves-light btn-del"><i class="fa fa-trash"></i> Yes</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    </div><!-- /. deletemodal -->
     <!-- Right bar overlay-->
-    <div class="rightbar-overlay"></div>
     <!-- JAVASCRIPT -->
     <script src="../assets/libs/jquery/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -182,9 +185,10 @@ $studentArray = $student->getAllUsers();
 
     <!-- Datatable init js -->
     <script src="../assets/js/pages/datatables.init.js"></script>
-    
-    <!-- Sweet Alerts js -->
-    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script> 
+
+    <script type="text/javascript" src="../assets/libs/toastr/toastr.min.js"></script>
+
+    <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 
     <!-- slimselect -->
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
@@ -193,3 +197,173 @@ $studentArray = $student->getAllUsers();
     <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>
+<script>
+//    delete modal
+    let deleteStudent = '';
+    $('.btn-delete').on('click', function (event) {
+        let tr = $(this).closest('tr'),
+            full_name = tr.find('td:nth-child(2)').text();
+        deleteStudent = tr.find('td:nth-child(1)').text();
+        $('span.student_name').text(full_name);
+    });
+
+    $('.btn-del').on('click', function (event) {
+        $.ajax({
+            url: '../api/student/',
+            data: JSON.stringify({student: deleteStudent}),
+            method: 'DELETE',
+            dataType: 'json',
+            processData: false,
+            contentType: 'application/json',
+            success: function (data) {
+                //havent removed conn->rollback()
+                toastr.success(`${data.success.message} doesn't delete though`, "Bravoo!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut",
+                    onHidden: function () {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (data) {
+                let message = 'Some unexpected error occurred';
+                try{
+                    message = data['responseJSON']['error']['message'];
+                }catch (e) {
+                    console.error(message)
+                }
+                toastr.error(message, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+
+            }
+
+        });
+    })
+
+    //edit modal
+    $('.btn-edit').on('click', function (event) {
+        let tr = $(this).closest('tr'),
+            full_name = tr.find('td:nth-child(2)').text(),
+            reg_no = tr.find('td:nth-child(1)').text(),
+            phone = tr.find('td:nth-child(3)').text(),
+            email = tr.find('td:nth-child(4)').text();
+        $('input#regno').val(reg_no)
+        $('input#name').val(full_name)
+        $('input#email').val(email)
+        $('input#phone').val(phone)
+    });
+    $('#edit-student-form').on('submit', (e) => e.preventDefault())
+    $('#edit-student-form').bootstrapValidator({
+        message: 'This value is not valid',
+        excluded:':disabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields:{
+            'regno' : {
+                validators: {
+                    //when empty it will bring this error message
+                    notEmpty: {
+                        message: 'The registration number is required and cannot be empty'
+                    },
+                    //this is a regular expression to validate registration number
+                    regexp: {
+                        regexp: /^([a-z0-9]{4})+\/pu+\/(\d{4,5})+\/(\d{2})$/i,
+                        message: 'Please provide a valid registration number'
+                    }
+                }
+            },
+            'phone':{
+                validators:{
+                    notEmpty: {
+                        message: 'The phone number is required and cannot be empty'
+                    },
+                    regexp: {
+                        regexp: /^(0|\+?254)7(\d){8}$/,
+                        message: 'Please provide a valid phone number'
+                    }
+                }
+            },
+            'name' : {
+                message: 'The name is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The full name is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 5,
+                        max: 40,
+                        message: 'The full name must be more than 5 and less than 40 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z]+\s+[a-zA-Z\s]+$/,
+                        message: 'The name can only consist of alphabetical and atlest two names'
+                    }
+                }
+            },
+            'email' : {
+                message: 'The email is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The email is required and cannot be empty'
+                    },
+                    regexp: {
+                        regexp: /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i,
+                        message: 'Please provide a valid email address'
+                    }
+                }
+            }
+
+        },
+        onSuccess: function (e) {
+            $form = $(e.target);
+            let formData = {}
+            $form.serializeArray().map((v)=> formData[v.name] = v.value)
+
+            $.ajax({
+                url: '../api/student/',
+                data: JSON.stringify({...formData}),
+                method: 'PATCH',
+                dataType: 'json',
+                processData: false,
+                contentType: 'application/merge-patch+json',
+                success: function (data) {
+                    toastr.success(data.success.message, "Bravoo!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut",
+                        onHidden: function () {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    console.log(data)
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+
+                }
+
+            });
+
+            $form
+                .bootstrapValidator('disableSubmitButtons', false)
+                .bootstrapValidator('resetForm', true);
+            $('#editModal').modal('hide');
+        }
+    })
+        .on('status.field.bv', function(e, data) {
+            data.bv.disableSubmitButtons(false);
+        });
+</script>

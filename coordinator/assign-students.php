@@ -1,8 +1,7 @@
 <?php
 include_once 'head.php';
+include_once '../api/classes/Project.php';
 $lecArray = $lec->getAllUsers();
-$project = new Project($conn);
-$projectArray = $project->viewAllProjects();
 ?>
 <!-- DataTables -->
 <link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
@@ -48,7 +47,7 @@ $projectArray = $project->viewAllProjects();
                                                 <th>Employee Id</th>
                                                 <th>Name</th>
                                                 <th>Expertise</th>
-                                                <th>Assigned Students</th>
+                                                <th>Assigned Projects</th>
                                                 <th>Phone No</th>
                                                 <th>Email</th>
                                                 <th>Action</th>
@@ -63,7 +62,7 @@ $projectArray = $project->viewAllProjects();
                                                     <td><?= $row['expertise'] ?></td>
                                                     <td>
                                                         <?= $row['no_of_projects'] ?>
-                                                        <a href="#" class="text-right text-underline pl-2">view</a>
+                                                        <a href="#" class="text-right text-underline pl-2 btn-view" data-toggle="modal" data-target="#viewModal">view</a>
                                                     </td>
                                                     <td><?= $row['phone_no'] ?></td>
                                                     <td><?= $row['email'] ?></td>
@@ -122,7 +121,40 @@ $projectArray = $project->viewAllProjects();
     </div> <!-- end slimscroll-menu-->
     </div>
     <!-- /Right-bar -->
-    <!-- sample modal content -->
+<!--    view modal-->
+    <div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="myModalLabel">
+                        Assign projects to: <span class="lec-name"></span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body" style="overflow-x: auto;">
+                    <table class="table table-striped table-bordered dt-responsives mb-0 view-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Project</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Reg No.</th>
+                            <th scope="col">Student</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+<!-- end view modal-->
+    <!-- assign modal -->
     <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -135,43 +167,7 @@ $projectArray = $project->viewAllProjects();
                 <div class="modal-body">
                     <form id="assign-form">
                         <select id="students" multiple name="projects">
-                            <?php
-                            $webArr = [];
-                            $androidArr= [];
-                            $desktopArr = [];
-                            foreach ($projectArray as $proj){
-                                if ($proj['category'] === 'Web App' && empty($proj['supervisor'])){
-                                    $webArr[] = $proj;
-                                }
-                                if ($proj['category'] === 'Android App' && empty($proj['supervisor'])){
-                                    $androidArr[] = $proj;
-                                }
-                                if ($proj['category'] === 'Desktop App' && empty($proj['supervisor'])){
-                                    $desktopArr[] = $proj;
-                                }
-                            }
-                            ?>
-                          <optgroup label="Web Apps">
-                              <?php
-                              foreach ($webArr as $proj) { ?>
-                                  <option value="<?= $proj['id'] ?>"><?= $proj['title'].' - '.$proj['full_name'] ?></option>
-                               <?php }
-                              ?>
-                          </optgroup>
-                          <optgroup label="Android Apps">
-                              <?php
-                              foreach ($androidArr as $proj) { ?>
-                                  <option value="<?= $proj['id'] ?>"><?= $proj['title'].' - '.$proj['full_name'] ?></option>
-                              <?php }
-                              ?>
-                          </optgroup>
-                          <optgroup label="Desktop Apps">
-                              <?php
-                              foreach ($desktopArr as $proj) { ?>
-                                  <option value="<?= $proj['id'] ?>"><?= $proj['title'].' - '.$proj['full_name'] ?></option>
-                              <?php }
-                              ?>
-                          </optgroup>
+
                         </select> 
                     </form>
                 </div>

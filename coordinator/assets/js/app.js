@@ -15,23 +15,120 @@ $(document).ready(function() {
     let select = new SlimSelect({
         select: '#students',
         closeOnSelect: false,
+        allowDeselect: true,
         hideSelectedOption: true
     });
     let empId = '';
     $('.btn-assign').on('click', function(event) {
         // clear select
-        select.set([])
+        select.setData([]);
         //
         let tr = $(this).closest('tr'),
             lecName = tr.find('td:nth-child(2)').text();
         empId = $.trim(tr.find('td:nth-child(1)').text())
         $('.lec-name').text(lecName)
+        $.ajax({
+            type: 'get',
+            data: {supervisor: empId},
+            headers:{
+              'Content-Type': 'application/json'
+            },
+            url: '../api/project/',
+            success: data =>{
+                try{
+                    data = JSON.parse(data)
+                    console.log(data)
+                    const webArr = data['webArr']
+                    const androidArr = data['androidArr']
+                    const desktopArr = data['desktopArr']
+                    const selectedArr = data['assignedArr']
 
+                    let webData = []
+                    let androidData = []
+                    let desktopData = []
+                    let selectedData = []
+                    webArr.map(proj => webData.push({'text'  : `${proj['title']} - ${proj['full_name']}`, 'value' : proj['id']}))
+                    androidArr.map(proj => androidData.push({'text'  : `${proj['title']} - ${proj['full_name']}`, 'value' : proj['id']}))
+                    desktopArr.map(proj => desktopData.push({'text'  : `${proj['title']} - ${proj['full_name']}`, 'value' : proj['id']}))
+                    selectedArr.map(proj => selectedData.push(proj['id']))
+                    select.setData([
+                        {
+                            label: 'Web Apps',
+                            options: [
+                                ...webData
+                            ]
+                        },
+                        {
+                            label: 'Android Apps',
+                            options: [
+                                ...androidData
+                            ]
+                        },
+                        {
+                            label: 'Desktop Apps',
+                            options: [
+                                ...desktopData
+                            ]
+                        }
+                    ])
+                    console.log(selectedData)
+                    select.set(selectedData)
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error : data =>{
+                console.log(data)
+            }
+        })
     });
+
+    $('.btn-view').on('click', function(event){
+        event.preventDefault();
+        let tr = $(this).closest('tr'),
+            lecName = tr.find('td:nth-child(2)').text();
+        empId = $.trim(tr.find('td:nth-child(1)').text())
+        $('#viewModal .lec-name').text(lecName)
+        console.log(lecName)
+        $.ajax({
+            type: 'get',
+            data: {supervisor: empId},
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            url: '../api/project/',
+            success: data =>{
+                try{
+                    data = JSON.parse(data)
+                    const selectedArr = data['assignedArr']
+
+                    // let newTrs = []
+                    $('table.view-table tbody').empty();
+                    selectedArr.forEach(proj => {
+                        let newTr = `<tr>
+                                        <td>${proj['title']}</td>
+                                        <td>${proj['category']}</td>
+                                        <td>${proj['reg_no']}</td>
+                                        <td>
+                                        ${proj['full_name']}
+                                        </td>
+                                        <td><span class="badge badge-warning">${proj['status']}</span></td>
+                                       </tr>`
+                        $('table.view-table tbody').append(newTr);
+                    })
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error : data =>{
+                console.log(data)
+            }
+        })
+    })
 
     $('#assign-form').on('submit', function(event) {
         event.preventDefault();
-        if (select.selected().length < 1) {
+        if (select.selected().length < 0) {
             toastr.error("Please select at least one Project", "Sorry", {
                 showMethod: "slideDown",
                 hideMethod: "fadeOut"
@@ -52,7 +149,10 @@ $(document).ready(function() {
                 success: function (data) {
                     toastr.success(data.success.message, "Bravoo!", {
                         showMethod: "slideDown",
-                        hideMethod: "fadeOut"
+                        hideMethod: "fadeOut",
+                        onHidden: function () {
+                            location.reload();
+                        }
                     });
                     // clear select
                     select.set([])
