@@ -13,8 +13,18 @@ $conn = Database::getInstance();
 
 $project = new Project($conn);
 $student = new Student($conn);
-//echo json_encode($student->getAllUsers());
-//$project->setUsername('SB30/PU/41769/16');
+$lec = new Lecturer($conn);
+$lec->setUsername('12345');
+//echo json_encode($lec->getUser());
+echo json_encode($project->getLecurerProjects('12345'));
+function extractIds($project){
+    return $project['id'];
+}
+$assignedArrIds = array_map('extractIds', $project->getLecurerProjects('12345'));
+//echo json_encode($assignedArrIds);
+$removedProjects = array_diff($assignedArrIds,['1','3', '5']);
+//echo json_encode($removedProjects);
+//$student->setUsername('SB30/PU/41760/16');
 //if (!$project->studentHasProject()){
 //    $conn->beginTransaction();
 //    $desc = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -34,7 +44,8 @@ $student = new Student($conn);
 //}else{
 //    echo json_encode($project->viewStudentProject($project->getRegNo()));
 //}
-echo json_encode($project->isAssigned(8));
+//echo json_encode($project->isAssignedToMe(8, '12345'));
+//echo json_encode($student->getUser());
 //$lec = new Lecturer($conn);
 //echo json_encode($lec->getAllUsers());
 //echo json_encode($student->getAllUsers());
