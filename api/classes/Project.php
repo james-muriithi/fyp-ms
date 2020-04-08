@@ -98,6 +98,40 @@ class Project extends Student
         return $stmt->rowCount()>0;
     }
 
+    public function getLecurerProjects($empid):array
+    {
+        $query = 'SELECT 
+                        p.id, 
+                        p.title,
+                        p.description,
+                        ifnull(lecturer.full_name, "") as supervisor,
+                        ifnull(nou.no_of_uploads, 0) as no_of_uploads,
+                        CASE
+                            WHEN p.status = 0 THEN "in progress"
+                            WHEN p.status = 1 THEN "complete"
+                            WHEN p.status = 0 THEN "rejected"
+                        END AS status,
+                        pc.name as category,
+                        s.full_name,
+                        s.course,
+                        s.reg_no
+                    FROM 
+                         project p 
+                    LEFT JOIN project_categories pc on p.category = pc.id
+                    LEFT JOIN student s on p.student = s.reg_no
+                    LEFT JOIN lecturer ON p.supervisor = lecturer.emp_id
+                    LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
+                    ON nou.project_id = p.id
+                    WHERE p.supervisor  = :supervisor ';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':supervisor', $empid);
+
+        $stmt->execute();
+
+        return @$stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function viewProject($pid = ''):array
     {
@@ -266,6 +300,21 @@ class Project extends Student
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':pid', $pid);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() >0;
+    }
+
+    public function isAssignedToMe($pid ,$empId):bool
+    {
+        $query = 'SELECT title FROM project
+                    WHERE id =:pid and supervisor is not null and supervisor = :empid ';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':pid', $pid);
+        $stmt->bindParam(':empid', $empId);
 
         $stmt->execute();
 

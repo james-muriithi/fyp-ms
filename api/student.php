@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 
 
 include_once '../api/config/database.php';
-include_once '../api/classes/Student.php';
+include_once 'classes/Student.php';
 include_once '../api/classes/User.php';
 
 $conn = Database::getInstance();
@@ -48,6 +48,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
 
     }else{
         echo json_response(400,'Please make sure you provide all the required fields. i.e regno, name, phone and email',true);
+    }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH'){
+    if (empty($_PATCH)) {
+        $_PATCH = json_decode(file_get_contents('php://input'), true) ? : [];
+    }
+    $data = $_PATCH;
+
+    if(isset($data['regno']) && !empty($data['regno'])) {
+        $reg_no = $data['regno'];
+        $student = new Student($conn);
+        $student->setUsername($reg_no);
+        $studentDetails = $student->getUser();
+        if ($student->regExists($reg_no)){
+            $name = empty($data['name']) ? $studentDetails['full_name'] : $data['name'];
+            $phone = empty($data['phone']) ? $studentDetails['phone_no'] : $data['phone'];
+            $newEmail = empty($data['email']) ? $studentDetails['email'] : $data['email'];
+
+            if (($newEmail != $studentDetails['email']) && $student->emailExists($newEmail)) {
+                echo json_response(409,'That email already exists. Please provide another one.',true);
+                die();
+            }
+            $conn->beginTransaction();
+            if ($student->updateUser($reg_no ,$name,$newEmail,$phone)){
+                $conn->commit();
+                echo json_response(201, 'The Student Details were updated successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error updating the student details. Please try again later.',true);
+                die();
+            }
+        }else{
+            echo json_response(400,'That registration no does not exist! Please provide a correct reg no.',true);
+            die();
+        }
+    }else{
+        echo json_response(400,'Please make sure you provide all the required fields. i.e regno and  name or phone or email',true);
+        die();
+    }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if (empty($_DELETE)) {
+        $_DELETE = json_decode(file_get_contents('php://input'), true) ?: [];
+    }
+    $data = $_DELETE;
+
+    if(isset($data['student']) && !empty($data['student'])) {
+        $reg_no = $data['student'];
+        $student = new Student($conn);
+        $student->setUsername($reg_no);
+        if ($student->regExists($reg_no)) {
+            $conn->beginTransaction();
+            if ($student->deleteUser($reg_no)){
+                $conn->rollBack();
+                echo json_response(201, 'The Student was deleted successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error deleting the student. Please try again later.',true);
+                die();
+            }
+        }else{
+            echo json_response(400,'That registration no does not exist! Please provide a correct reg no.',true);
+            die();
+        }
     }
 }
 

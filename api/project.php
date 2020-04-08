@@ -73,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
 
     $data = $_PATCH;
     if (isset($data['assign'])){
+        function extractIds($project){
+            return $project['id'];
+        }
         $data = $data['assign'];
         if (isset($data['emp_id'], $data['projects'])){
             $empId = $data['emp_id'];
@@ -91,15 +94,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             }else{
                 $executeAll = true;
                 $conn->beginTransaction();
+                $assignedArr = $project->getLecurerProjects($empId);
+
+                $assignedArrIds = array_map('extractIds', $assignedArr);
+                $removedProjects = array_diff($assignedArrIds,$projectArr);
                 foreach ($projectArr as $proj){
-                    if ($project->projectExists($proj) && !$project->isAssigned($proj)){
+                    if ($project->projectExists($proj) && (!$project->isAssigned($proj) || $project->isAssignedToMe($proj, $empId))){
+                        if ($project->isAssignedToMe($proj, $empId)){
+                            continue;
+                        }
+
                         if (!$project->setSupervisor($empId,$proj)){
                             $executeAll = false;
                             $conn->rollBack();
                             break;
                         }
-                    }else{
-                        $executeAll = false;
+                    }
+                }
+
+                foreach ($removedProjects as $proj){
+                    if ($project->projectExists($proj) && $project->isAssignedToMe($proj, $empId)){
+                        if (!$project->setSupervisor(null,$proj)){
+                            $executeAll = false;
+                            $conn->rollBack();
+                            break;
+                        }
                     }
                 }
                 if ($executeAll){
@@ -107,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
                     echo json_response(200, 'The project(s) has been assigned successfully.');
                     die();
                 }else{
+                    $conn->rollBack();
                     echo json_response(400,'There was error assigning some project(s). Please try again later.',true);
                     die();
                 }
@@ -118,7 +138,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
 
     }
 }
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
+    if (isset($_GET['supervisor'])){
+        $empId = $_GET['supervisor'];
+        $lec = new Lecturer($conn);
+        if (!$lec->userExists($empId)){
+            echo json_encode([
+                'webArr' => [],
+                'androidArr' => [],
+                'desktopArr' => [],
+                'assignedArr' => []
+            ]);
+            die();
+        }else{
+            $project = new Project($conn);
+            $projectArray = $project->viewAllProjects();
+            $lec->setUsername($empId);
+            $lecName = $lec->getUser()['full_name'];
 
+            $webArr = [];
+            $androidArr= [];
+            $desktopArr = [];
+            $assignedArr = [];
+            foreach ($projectArray as $proj){
+                if ($proj['category'] === 'Web App' && ($proj['supervisor'] == $lecName || empty($proj['supervisor']))){
+                    $webArr[] = $proj;
+                }
+                if ($proj['category'] === 'Android App'  && ($proj['supervisor'] == $lecName || empty($proj['supervisor']))){
+                    $androidArr[] = $proj;
+                }
+                if ($proj['category'] === 'Desktop App'  && ($proj['supervisor'] == $lecName || empty($proj['supervisor']))){
+                    $desktopArr[] = $proj;
+                }
+                if ($proj['supervisor'] == $lecName){
+                    $assignedArr[] = $proj;
+                }
+            }
+            echo json_encode([
+                'webArr' => $webArr,
+                'androidArr' => $androidArr,
+                'desktopArr' => $desktopArr,
+                'assignedArr' => $assignedArr
+            ]);
+            die();
+        }
+    }
+}
 
 function json_response($code = 200, $message = null, $error = false)
 {

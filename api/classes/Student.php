@@ -1,6 +1,5 @@
 <?php
 include_once 'User.php';
-include_once 'Project.php';
 
 class Student extends User
 {
@@ -101,6 +100,18 @@ class Student extends User
         $stmt->bindParam(':name',$full_name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':phone', $phone_no);
+        $stmt->bindParam(':reg_no', $reg_no);
+
+        return $stmt->execute();
+    }
+
+    public function deleteUser($reg_no):bool
+    {
+        $query = 'DELETE FROM student
+                  WHERE reg_no= :reg_no';
+
+        $stmt = $this->conn->prepare($query);
+
         $stmt->bindParam(':reg_no', $reg_no);
 
         return $stmt->execute();

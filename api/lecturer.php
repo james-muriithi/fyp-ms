@@ -69,11 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $expertise = empty($data['expertise']) ? $lecDetails['expertise'] : $data['expertise'];
             $newEmail = empty($data['email']) ? $lecDetails['email'] : $data['email'];
 
-            if ($newEmail != $lecDetails['email']){
-                if ($lecturer->emailExists($newEmail)){
-                    echo json_response(409,'That email already exists. Please provide another one.',true);
-                    die();
-                }
+            if (($newEmail != $lecDetails['email']) && $lecturer->emailExists($newEmail)) {
+                echo json_response(409,'That email already exists. Please provide another one.',true);
+                die();
             }
             $conn->beginTransaction();
             if ($lecturer->updateUser($emp_id ,$name,$newEmail,$phone,$expertise)){
