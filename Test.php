@@ -5,24 +5,29 @@ require_once 'api/classes/Project.php';
 require_once 'api/sendMessage.php';
 require_once 'api/classes/Student.php';
 require_once 'api/classes/UploadCategory.php';
+require_once 'api/classes/Upload.php';
 
 $conn = Database::getInstance();
-//$uc = new UploadCategory($conn);
+$uc = new UploadCategory($conn);
+$up = new Upload($conn);
+$uc->setCatId(1);
 
-//echo json_encode($uc->viewAllCategories());
+echo json_encode($up->viewAllUploads());
 
-$project = new Project($conn);
-$student = new Student($conn);
-$lec = new Lecturer($conn);
-$lec->setUsername('12345');
+//$project = new Project($conn);
+//$student = new Student($conn);
+//$lec = new Lecturer($conn);
+//$lec->setUsername('12345');
+//$lecDetails =  $lec->getUser();
+//echo $lecDetails['coordinator'];
 //echo json_encode($lec->getUser());
-echo json_encode($project->getLecurerProjects('12345'));
-function extractIds($project){
-    return $project['id'];
-}
-$assignedArrIds = array_map('extractIds', $project->getLecurerProjects('12345'));
+//echo json_encode($project->getLecturerProjects('12345'));
+//function extractIds($project){
+//    return $project['id'];
+//}
+//$assignedArrIds = array_map('extractIds', $project->getLecurerProjects('12345'));
 //echo json_encode($assignedArrIds);
-$removedProjects = array_diff($assignedArrIds,['1','3', '5']);
+//$removedProjects = array_diff($assignedArrIds,['1','3', '5']);
 //echo json_encode($removedProjects);
 //$student->setUsername('SB30/PU/41760/16');
 //if (!$project->studentHasProject()){
