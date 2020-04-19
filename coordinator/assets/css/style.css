@@ -53,7 +53,9 @@ header .navbar-header button.noti-icon span.badge {
         right: calc(50% - 40px)
     }
 }
-
+thead tr th{
+    font-weight: bold!important;
+}
 
 
 

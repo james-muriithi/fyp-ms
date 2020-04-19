@@ -12,12 +12,15 @@ $(document).ready(function() {
     };
     handleCounterup()
 
-    let select = new SlimSelect({
-        select: '#students',
-        closeOnSelect: false,
-        allowDeselect: true,
-        hideSelectedOption: true
-    });
+    let select;
+    if ($('#students').length > 0){
+        select = new SlimSelect({
+            select: '#students',
+            closeOnSelect: false,
+            allowDeselect: true,
+            hideSelectedOption: true
+        });
+    }
     let empId = '';
     $('.btn-assign').on('click', function(event) {
         // clear select
@@ -113,6 +116,60 @@ $(document).ready(function() {
                                         ${proj['full_name']}
                                         </td>
                                         <td><span class="badge badge-warning">${proj['status']}</span></td>
+                                       </tr>`
+                        $('table.view-table tbody').append(newTr);
+                    })
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error : data =>{
+                console.log(data)
+            }
+        })
+    })
+
+    $('.btn-view-uploads').on('click', function(event){
+        event.preventDefault();
+        let tr = $(this).closest('tr'),
+            catName = tr.find('td:nth-child(1)').text(),
+            category = $.trim(tr.data('id'))
+        $('#viewModal .lec-name').text(catName)
+        $.ajax({
+            type: 'get',
+            data: {category},
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            url: '../api/project/',
+            success: data =>{
+                try{
+                    data = JSON.parse(data)
+
+                    // let newTrs = []
+                    $('table.view-table tbody').empty();
+                    data.forEach(proj => {
+                        let badge = 'badge-warning',
+                            approved = 'Pending';
+                        if (proj['approved'] == 1){
+                            badge = 'badge-success'
+                            approved = 'Approved';
+                        }else if (proj['approved'] == 2){
+                            badge = 'badge-danger'
+                            approved = 'Rejected';
+                        }
+                        let newTr = `<tr>
+                                        <td>
+                                        <a href="#" class="text-underline">${proj['name']}</a>
+                                        </td>
+                                        <td>${proj['upload_time']}</td>
+                                        <td>${proj['reg_no']}</td>
+                                        <td>
+                                        ${proj['full_name']}
+                                        </td>
+                                        <td>
+                                        <span class="badge ${badge}">${approved}</span>
+                                        </td>
                                        </tr>`
                         $('table.view-table tbody').append(newTr);
                     })
