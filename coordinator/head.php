@@ -69,4 +69,5 @@ $lecDetails = $lec->getUser();
     <link rel="stylesheet" type="text/css" href="../assets/css/util.css">
     <!-- style -->
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>

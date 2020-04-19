@@ -69,7 +69,7 @@
                                 <span>Students Uploads</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="form-elements.html">View Uploads</a></li>
+                                <li><a href="view-uploads.php">View Uploads</a></li>
                             </ul>
                         </li>
                         <li>

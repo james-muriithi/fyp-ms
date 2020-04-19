@@ -45,7 +45,7 @@ include_once 'head.php'; ?>
                     <div class="col-md-7 ">
                         <div class="card card-topline-purple">
                             <div class="card-body">
-                                <h4 class="card-title">Lecturer Details</h4>
+                                <h4 class="card-title">Your Details</h4>
                                 <div class="dropdown-divider"></div>
 
                                 <form class="add-lecturer-form">
@@ -92,7 +92,7 @@ include_once 'head.php'; ?>
                         <div class="card text-left card-topline-aqua">
                             <div class="card-body">
 <!--                                <h4 class="card-title">single upload</h4>-->
-                                <div class="row">
+                                <div class="row" >
                                     <div class="profile-userpic w-100">
                                         <?php
                                         $uploadDir = 'assets/images/users/';
@@ -101,13 +101,16 @@ include_once 'head.php'; ?>
                                             $image = $uploadDir.'avatar-lec.png';
                                         }
                                         ?>
-                                        <img src="<?= $image ?>" class="img-responsive" alt="">
+                                        <img src="<?= $image ?>" class="img-responsive" alt="" style="display:inline-block;">
+                                        <button style="display:inline-block;" class="m-l-4 d-none btn btn-sm btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="profile-usertitle">
                                     <div class="profile-usertitle-name">Kiran Patel </div>
                                     <div class="profile-usertitle-email">
-                                        <a href="mail:john@doe.com"><i class="fa fa-envelope"></i> john@doe.com</a>
+                                        <a href="mailto:john@doe.com"><i class="fa fa-envelope"></i> john@doe.com</a>
                                         <span style="font-size: 25px" class="text-warning">|</span>
                                         <a href="tel:0712345678"><i class="fa fa-phone-square"></i> 0712345678</a>
                                     </div>

@@ -72,6 +72,13 @@ include_once 'head.php'; ?>
 
                                     <div class="form-group form-row">
                                         <div class="col-sm-6">
+                                            <label for="role">Role:</label>
+                                            <select name="role" id="role" class="wide">
+                                                <option value="0">Supervisor</option>
+                                                <option value="1">Coordinator</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
                                             <label for="expertise">Expertise:</label>
                                             <input type="text" class="form-control" id="expertise" placeholder="Database Management" name="expertise">
                                         </div>
@@ -133,10 +140,14 @@ include_once 'head.php'; ?>
 <!-- JAVASCRIPT -->
 <?php include_once 'js.php'; ?>
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
+<!-- slimselect -->
+<script type="text/javascript" src="../assets/libs/jquery-nice-select/js/jquery.nice-select.min.js"></script>
 </body>
 
 </html>
 <script type="text/javascript">
+    $('select').niceSelect();
+
     $('.add-student-form').on('submit', function(event) {
         event.preventDefault();
     });
@@ -153,9 +164,8 @@ include_once 'head.php'; ?>
                 validators: {
                     //when empty it will bring this error message
                     notEmpty: {
-                        message: 'The registration number is required and cannot be empty'
+                        message: 'The employee id is required and cannot be empty'
                     },
-                    //this is a regular expression to validate registration number
                     stringLength: {
                         min: 3,
                         message: 'Please provide an employee id of 3 or more characters'
