@@ -55,7 +55,7 @@ class Lecturer extends User
                     user.level,
                     l.profile,
                     l.created_at,
-                    IF(c.emp_id IS NULL, "False", "True") as coordinator
+                    IF(c.emp_id IS NULL, FALSE, TRUE) as coordinator
                     
                 FROM
                     lecturer l
@@ -133,6 +133,18 @@ class Lecturer extends User
         return $stmt->execute();
     }
 
+    public function deleteUser($emp_id):bool
+    {
+        $query = 'DELETE FROM lecturer
+                  WHERE emp_id= :empid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':empid', $emp_id);
+
+        return $stmt->execute();
+    }
+
     public function updateImage($filename) :bool
     {
         $query = 'UPDATE lecturer
@@ -164,6 +176,30 @@ class Lecturer extends User
         $stmt->bindParam(':phone', $phone);
         $stmt->bindParam(':expertise', $expertise);
         $stmt->bindParam(':empid', $empid);
+
+        return $stmt->execute();
+    }
+
+    public function makeCoordinator($emp_id):bool
+    {
+        $query = 'INSERT INTO coordinator
+                  SET emp_id = :empid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':empid', $emp_id);
+
+        return $stmt->execute();
+    }
+
+    public function removeCoordinator($emp_id):bool
+    {
+        $query = 'DELETE FROM coordinator
+                  WHERE emp_id = :empid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':empid', $emp_id);
 
         return $stmt->execute();
     }

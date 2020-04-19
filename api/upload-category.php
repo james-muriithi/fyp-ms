@@ -44,6 +44,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
     }else{
         echo json_response(400,'Please make sure you provide all the required fields. i.e category_name, startDate, endDate and description',true);
     }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH'){
+    if (empty($_PATCH)) {
+        $_PATCH = json_decode(file_get_contents('php://input'), true) ? : [];
+    }
+
+    $data = $_PATCH;
+
+    if(isset($data['category']) && !empty($data['category'])){
+        $cat_id = $data['category'];
+        $uc = new UploadCategory($conn);
+        $uc->setCatId($cat_id);
+        $catDetails = $uc->viewCategory();
+
+        if ($uc->categoryExists($cat_id)){
+            $name = empty($data['category']) ? $catDetails['name'] : $data['category_name'];
+            $startDate = empty($data['startDate']) ? $catDetails['start_date'] : $data['startDate'];
+            $endDate = empty($data['endDate']) ? $catDetails['end_date'] : $data['endDate'];
+            $description = empty($data['description']) ? $catDetails['description'] : $data['description'];
+
+            if (($name != $catDetails['name']) && $uc->categoryNameExists($name)) {
+                echo json_response(409,'That category name already exists. Please provide another one.',true);
+                die();
+            }
+            $conn->beginTransaction();
+            if ($uc->editCategory($cat_id ,$name,$description,$startDate,$endDate)){
+                $conn->commit();
+                echo json_response(201, 'The category was updated successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error updating the category. Please try again later.',true);
+                die();
+            }
+
+        }else{
+            echo json_response(400,'That category id does not exist! Please provide a correct category id.',true);
+            die();
+        }
+    }else{
+        echo json_response(400,'Please make sure you provide all the required fields. i.e empid and  name or phone or email or expertise',true);
+        die();
+    }
+
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if (empty($_DELETE)) {
+        $_DELETE = json_decode(file_get_contents('php://input'), true) ?: [];
+    }
+    $data = $_DELETE;
+
+    if(isset($data['category']) && !empty($data['category'])) {
+        $catId = $data['category'];
+        $uc = new UploadCategory($conn);
+        $uc->setCatId($catId);
+        if ($uc->categoryExists($catId)) {
+            $conn->beginTransaction();
+            if ($uc->deleteCategory($catId)){
+                $conn->rollBack();
+                echo json_response(201, 'The category was deleted successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error deleting the category. Please try again later.',true);
+                die();
+            }
+        }else{
+            echo json_response(400,'That category id does not exist! Please provide a correct category.',true);
+            die();
+        }
+    }
 }
 
 

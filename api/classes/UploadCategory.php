@@ -99,6 +99,7 @@ class UploadCategory
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
+
     public function categoryExists($catId = ''):bool
     {
         $catId = !empty($catId) ? $catId :$this->getCatId();

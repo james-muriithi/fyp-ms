@@ -93,6 +93,7 @@ class Upload
                     s.full_name,
                     p.title as project,
                     uc.name as category,
+                    uc.id as category_id,
                     uc.deadline
                     FROM upload u
                     LEFT JOIN upload_category uc on u.id = uc.id

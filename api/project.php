@@ -9,6 +9,8 @@ error_reporting(E_ALL);
 include_once '../api/config/database.php';
 include_once '../api/classes/Lecturer.php';
 include_once '../api/classes/Project.php';
+include_once '../api/classes/Upload.php';
+include_once '../api/classes/UploadCategory.php';
 include_once '../api/classes/ProjectCategory.php';
 
 $conn = Database::getInstance();
@@ -137,8 +139,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
         }
 
     }
-}
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
+}elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if (empty($_DELETE)) {
+        $_DELETE = json_decode(file_get_contents('php://input'), true) ?: [];
+    }
+    $data = $_DELETE;
+
+    if(isset($data['project']) && !empty($data['project'])) {
+        $pid = $data['project'];
+        $proj = new Project($conn);
+        if ($proj->projectExists($pid)) {
+            $conn->beginTransaction();
+            if ($proj->deleteProject($pid)){
+                $conn->rollBack();
+                echo json_response(201, 'The project was deleted successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error deleting the project. Please try again later.',true);
+                die();
+            }
+        }else{
+            echo json_response(400,'That project id no does not exist! Please provide a correct reg no.',true);
+            die();
+        }
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
     if (isset($_GET['supervisor'])){
         $empId = $_GET['supervisor'];
         $lec = new Lecturer($conn);
@@ -180,6 +206,26 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
                 'desktopArr' => $desktopArr,
                 'assignedArr' => $assignedArr
             ]);
+            die();
+        }
+    }elseif (isset($_GET['category'])){
+        $catId = $_GET['category'];
+        $upload = new Upload($conn);
+        $uc = new UploadCategory($conn);
+        if (!$uc->categoryExists($catId)){
+            echo json_encode(array([]));
+            die();
+        }else{
+            $uploadArr = $upload->viewAllUploads();
+            $myArray = [];
+
+            foreach ($uploadArr as $up){
+                if ($up['category_id'] == $catId){
+                    array_push($myArray, $up);
+                }
+            }
+
+            echo json_encode( $myArray);
             die();
         }
     }

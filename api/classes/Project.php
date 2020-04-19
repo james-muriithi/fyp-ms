@@ -98,7 +98,7 @@ class Project extends Student
         return $stmt->rowCount()>0;
     }
 
-    public function getLecurerProjects($empid):array
+    public function getLecturerProjects($empid):array
     {
         $query = 'SELECT 
                         p.id, 
@@ -274,6 +274,16 @@ class Project extends Student
         $stmt->bindParam(':desc', $description);
         $stmt->bindParam(':category', $category);
         $stmt->bindParam(':reg_no', $reg_no);
+
+        return $stmt->execute();
+    }
+
+    public function deleteProject($pid):bool
+    {
+        $query = 'DELETE FROM project WHERE id= :pid';
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':pid', $pid);
 
         return $stmt->execute();
     }

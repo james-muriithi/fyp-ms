@@ -63,6 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
         $lecturer = new Lecturer($conn);
         $lecturer->setUsername($emp_id);
         $lecDetails = $lecturer->getUser();
+        $isCoordinator = $lecDetails['coordinator'];
+        $role = isset($data['role']) ? $data['role'] : $isCoordinator;
         if ($lecturer->userExists($emp_id)){
             $name = empty($data['name']) ? $lecDetails['full_name'] : $data['name'];
             $phone = empty($data['phone']) ? $lecDetails['phone_no'] : $data['phone'];
@@ -75,6 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             }
             $conn->beginTransaction();
             if ($lecturer->updateUser($emp_id ,$name,$newEmail,$phone,$expertise)){
+                if ($role == 1 &&  $isCoordinator != $role){
+                    $lecturer->makeCoordinator($emp_id);
+                }elseif ($role == 0 &&  $isCoordinator != $role){
+                    $lecturer->removeCoordinator($emp_id);
+                }
                 $conn->commit();
                 echo json_response(201, 'Your Details were updated successfully.');
                 die();
@@ -93,6 +100,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
         die();
     }
 
+}elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if (empty($_DELETE)) {
+        $_DELETE = json_decode(file_get_contents('php://input'), true) ?: [];
+    }
+    $data = $_DELETE;
+
+    if(isset($data['emp_id']) && !empty($data['emp_id'])) {
+        $empId = $data['emp_id'];
+        $lecturer = new Lecturer($conn);
+        $lecturer->setUsername($empId);
+        if ($lecturer->userExists($empId)) {
+            $conn->beginTransaction();
+            if ($lecturer->deleteUser($empId)){
+                $conn->rollBack();
+                echo json_response(201, 'The Lecturer was deleted successfully.');
+                die();
+            }else{
+                $conn->rollBack();
+                echo json_response(400,'There was error deleting the lecturer. Please try again later.',true);
+                die();
+            }
+        }else{
+            echo json_response(400,'That employee id does not exist! Please provide a correct emp_id.',true);
+            die();
+        }
+    }
 }
 
 
