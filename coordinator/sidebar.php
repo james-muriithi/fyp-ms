@@ -13,13 +13,13 @@
                             </a>
                         </li>
                         <li class="menu-title">Users</li>
-                        <li>
-                            <a href="assign-students.php" class="waves-effect">
-                                <i class="ti-calendar"></i>
-                                <span class="badge badge-pill badge-danger float-right">6</span>
-                                <span>Assign Supervisors</span>
-                            </a>
-                        </li>
+                            <li>
+                                <a href="assign-students.php" class="waves-effect">
+                                    <i class="ti-calendar"></i>
+                                    <!--                                <span class="badge badge-pill badge-danger float-right">6</span>-->
+                                    <span>Assign Supervisors</span>
+                                </a>
+                            </li>
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="fa fa-graduation-cap"></i>
@@ -36,7 +36,11 @@
                                 <span>Supervisors</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="add-lecturer.php">Add Lecturer</a></li>
+                                <?php
+                                if($_SESSION['level'] === 1){ ?>
+                                    <li><a href="add-lecturer.php">Add Lecturer</a></li>
+                                <?php }
+                                ?>
                                 <li><a href="view-lecturer.php">View Lecturers</a></li>
                             </ul>
                         </li>
@@ -58,7 +62,11 @@
                                 <span>Upload Categories</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="add-upload-category.php">Add Category</a></li>
+                                <?php
+                                if($_SESSION['level'] === 1){ ?>
+                                    <li><a href="add-upload-category.php">Add Category</a></li>
+                                <?php }
+                                ?>
                                 <li><a href="view-upload-category.php">View Categories</a></li>
                             </ul>
                         </li>

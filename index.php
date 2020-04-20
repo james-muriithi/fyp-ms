@@ -74,7 +74,6 @@
                         <p class="mb-0 text-success">© <script>document.write(new Date().getFullYear())</script> FYPMS.
                     </div>
 
-
                 </div>
             </div>
         </div>
@@ -89,28 +88,9 @@
     <script src="assets/libs/node-waves/waves.min.js"></script>
 
     <script src="assets/js/app.js"></script>
-
-    <script type="text/javascript" src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
     <script type="text/javascript" src="assets/libs/toastr/toastr.min.js"></script>
 
 </body>
-<?php
-if (isset($_SESSION['error'])){
-    echo 'lorem';
-    echo '<script>
-            Lobibox.notify(\'error\', {
-                sound: false,
-                showClass: \'animated slideInDown\',
-                hideClass: \'animated slideOutRight\',
-                position: \'top right\',
-                delayIndicator: false,
-                icon: \'fa fa-times\',
-                msg: "'.$_SESSION['error'].'"
-            });
-        </script>';
-    unset($_SESSION['error']);
-}
-?>
 </html>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -159,10 +139,7 @@ if (isset($_SESSION['error'])){
                     }
                 }).fail(function(data){
                     let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
-                    toastr.error(message, "Ooops!", {
-                        showMethod: "slideDown",
-                        hideMethod: "fadeOut"
-                    });
+
                 });
                 
                 $form

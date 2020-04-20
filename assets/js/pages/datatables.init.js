@@ -14,14 +14,12 @@ $(document).ready(function() {
         buttons: [{
                 extend: 'excel',
                 text: '<i class="fa fa-file-excel"></i> Excel',
-                title: "Available Supervisors",
                 exportOptions: {
                     columns: 'th:not(:last-child)'
                 }
             }, {
                 extend: 'pdf',
                 text: '<i class="mdi mdi-file-pdf"></i> PDF',
-                title: "Available Supervisors",
                 exportOptions: {
                     columns: 'th:not(:last-child)'
                 }

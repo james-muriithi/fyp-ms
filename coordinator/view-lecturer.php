@@ -73,12 +73,20 @@ $lecArray = $lec->getAllUsers();
                                                         </td>
                                                         <td>
                                                             <div class="text-center">
-                                                                <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" id="">
-                                                                    <i class="mdi mdi-pencil"></i>
-                                                                </button>
-                                                                <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" id="">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
+                                                                <?php
+                                                                if ($_SESSION['level'] === 1){ ?>
+                                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" id="">
+                                                                        <i class="mdi mdi-pencil"></i>
+                                                                    </button>
+                                                                    <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" id="">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                <?php }else if($row['emp_id'] === $_SESSION['username']){ ?>
+                                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" id="">
+                                                                        <i class="mdi mdi-pencil"></i>
+                                                                    </button>
+                                                                <?php }
+                                                                ?>
 
                                                             </div>
                                                         </td>
@@ -95,7 +103,6 @@ $lecArray = $lec->getAllUsers();
                 </div> <!-- container-fluid -->
             </div>
             <!-- End Page-content -->
-            <?php include_once 'footer.php'; ?>
         </div>
         <!-- end main content-->
     </div>
@@ -170,13 +177,18 @@ $lecArray = $lec->getAllUsers();
                         </div>
 
                         <div class="form-group form-row">
-                            <div class="col-sm-6">
-                                <label for="role">Role:</label>
-                                <select name="role" id="role" class="wide">
-                                    <option value="0">Supervisor</option>
-                                    <option value="1">Coordinator</option>
-                                </select>
-                            </div>
+                            <?php
+                            if ($_SESSION['level'] === 1) { ?>
+                                <div class="col-sm-6">
+                                    <label for="role">Role:</label>
+                                    <select name="role" id="role" class="wide">
+                                        <option value="0">Supervisor</option>
+                                        <option value="1">Coordinator</option>
+                                    </select>
+                                </div>
+                            <?php
+                            }
+                            ?>
                             <div class="col-sm-6">
                                 <label for="expertise">Expertise:</label>
                                 <input type="text" class="form-control" id="expertise" placeholder="Database Management" name="expertise">
@@ -238,6 +250,7 @@ $lecArray = $lec->getAllUsers();
     <script src="../assets/js/app.js" type="text/javascript" ></script>
 
     <script type="text/javascript" src="assets/js/app.js"></script>
+    <?php include_once 'footer.php'; ?>
 </body>
 </html>
 <script>

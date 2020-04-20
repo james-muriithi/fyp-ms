@@ -1,5 +1,16 @@
 <?php
-include_once 'head.php'; ?>
+include_once 'head.php';
+if($_SESSION['level'] !== 1){
+    $_SESSION['error'] = 'You do not have permission to view that page';
+    ?>
+    <script>
+        location.href = 'view-upload-category.php';
+    </script>
+    <?php
+    http_response_code(403);
+    die();
+}
+?>
 <link rel="stylesheet" type="text/css" href="../assets/libs/jquery-nice-select/css/nice-select.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/daterangepicker/daterangepicker.css">

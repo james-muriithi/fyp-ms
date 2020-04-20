@@ -61,12 +61,18 @@ $lecArray = $lec->getAllUsers();
                                     </thead>
                                     <tbody>
                                     <?php
-                                    foreach ($projectArray as $proj){ ?>
+                                    foreach ($projectArray as $proj){
+                                        if ($_SESSION['level'] !== 1 && $proj['emp_id'] !== $_SESSION['username']){
+                                            continue;
+                                        }
+                                        ?>
                                         <tr data-description="<?= $proj['description'] ?>">
                                             <td><?= $proj['id'] ?></td>
                                             <td><?= $proj['title'] ?></td>
                                             <td><?= $proj['category'] ?></td>
-                                            <td><?= $proj['no_of_uploads'] ?> <a href="#" class="text-underline p-l-3 btn-view"> view</a></td>
+                                            <td><?= $proj['no_of_uploads'] ?>
+                                                <a href="#" class="text-underline p-l-3 btn-view"> view</a>
+                                            </td>
                                             <td><?= $proj['reg_no'] ?></td>
                                             <td><?= $proj['full_name'] ?></td>
                                             <td>

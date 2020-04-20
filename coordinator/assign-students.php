@@ -67,11 +67,15 @@ $lecArray = $lec->getAllUsers();
                                                     <td><?= $row['phone_no'] ?></td>
                                                     <td><?= $row['email'] ?></td>
                                                     <td>
-                                                        <div class="text-center">
-                                                            <button class="btn btn-sm btn-success btn-assign" data-toggle="modal" data-target="#myModal" id="btn-assign">
-                                                                Assign
-                                                            </button>
-                                                        </div>
+                                                        <?php
+                                                        if ($_SESSION['level'] === 1 || $_SESSION['username'] === $row['emp_id']){ ?>
+                                                            <div class="text-center">
+                                                                <button class="btn btn-sm btn-success btn-assign" data-toggle="modal" data-target="#myModal" id="btn-assign">
+                                                                    Assign
+                                                                </button>
+                                                            </div>
+                                                        <?php }
+                                                        ?>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

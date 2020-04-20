@@ -1,5 +1,10 @@
 <?php
-include_once 'head.php'; ?>
+include_once 'head.php';
+require_once '../api/classes/Upload.php';
+require_once '../api/classes/Project.php';
+
+$upload = new Upload($conn);
+?>
 
 
 <body data-sidebar="dark" onload="preloader()">
@@ -92,8 +97,13 @@ include_once 'head.php'; ?>
                                         <div class="float-left mr-4">
                                             <img src="assets/images/services-icon/completed.svg" alt="" width="80">
                                         </div>
+                                        <?php
+                                        $project = new Project($conn);
+                                        $allProjects = $project->viewAllProjects();
+                                        $totalProjects = count($allProjects);
+                                        ?>
                                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Projects</h5>
-                                        <h4 class="font-weight-medium font-size-24">36</h4>
+                                        <h4 class="font-weight-medium font-size-24" data-counter="counterup" data-value="<?= $totalProjects ?>">0</h4>
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
@@ -112,8 +122,11 @@ include_once 'head.php'; ?>
                                         <div class="float-left mr-4">
                                             <img src="assets/images/services-icon/assigned.svg" alt="assigned students" width="70">
                                         </div>
-                                        <h5 class="fs-16 text-uppercase mt-0 text-white-50">deadlines</h5>
-                                        <h4 class="font-weight-medium font-size-24">2</h4>
+                                        <?php
+                                        $uploadArr = $upload->viewAllUploads();
+                                        ?>
+                                        <h5 class="fs-16 text-uppercase mt-0 text-white-50">Uploads</h5>
+                                        <h4 class="font-weight-medium font-size-24" data-counter="counterup" data-value="<?= count($uploadArr) ?>">0</h4>
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
@@ -215,51 +228,66 @@ include_once 'head.php'; ?>
                                         <table class="table table-hover table-centered table-nowrap mb-0">
                                             <thead>
                                                 <tr>
+                                                    <th scope="col">File Name</th>
+                                                    <th scope="col">Upload Time</th>
                                                     <th scope="col">Project</th>
                                                     <th scope="col">Category</th>
                                                     <th scope="col">Reg No.</th>
                                                     <th scope="col">Student</th>
-                                                    <th scope="col">Uploaded</th>
-                                                    <th scope="col">Download</th>
-                                                    <th scope="col" colspan="2">Status</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>School Management System</td>
-                                                    <td>Concept paper</td>
-                                                    <td>SB30/PU/41760/16</td>
-                                                    <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-2.jpg" alt="" class="avatar-xs rounded-circle mr-2"> Philip Smead
-                                                        </div>
-                                                    </td>
-                                                    <td>15/1/2018</td>
-                                                    <td><a href="#">dowload</a></td>
-                                                    <td><span class="badge badge-warning">Pending</span></td>
-                                                    <td>
-                                                        <div>
-                                                            <a href="#" class="btn btn-success btn-sm">Approve <i class="mdi mdi-check"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            <?php
+                                            $i = 0;
+                                            foreach ($uploadArr as $upl){
+                                                $i++;
+                                                if ($i > 10){
+                                                    break;
+                                                }
+                                                ?>
 
-                                                <tr>
-                                                    <td>Church Management System</td>
-                                                    <td>Concept paper</td>
-                                                    <td>SB30/PU/41761/16</td>
+                                                <tr data-id="<?= $upl['id'] ?>">
                                                     <td>
-                                                        <div>
-                                                            <img src="assets/images/users/user-2.jpg" alt="" class="avatar-xs rounded-circle mr-2"> Jane Doe
+                                                        <a href="#" class="text-underline"><?= $upl['name'] ?></a>
+                                                    </td>
+                                                    <td><?= $upl['upload_time'] ?></td>
+                                                    <td><?= $upl['project'] ?></td>
+                                                    <td><?= $upl['category'] ?></td>
+                                                    <td><?= $upl['reg_no'] ?></td>
+                                                    <td><?= $upl['full_name'] ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if($upl['approved'] == 0){ ?>
+                                                            <span class="badge badge-warning">Pending</span>
+                                                        <?php }elseif($upl['approved'] == 1){ ?>
+                                                            <span class="badge badge-success">Approved</span>
+                                                        <?php }else{ ?>
+                                                            <span class="badge badge-danger">Rejected</span>
+                                                        <?php }
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-center">
+                                                            <?php
+                                                            if($upl['approved'] == 0){ ?>
+                                                                <button class="btn btn-sm badge-success btn-approve" data-toggle="modal" data-target="#approveModal">Approve</button>
+                                                                <button class="btn btn-sm badge-danger btn-reject" data-toggle="modal" data-target="#rejectModal">Reject</button>
+                                                            <?php }elseif($upl['approved'] == 1){ ?>
+                                                                <button class="btn btn-sm badge-danger btn-undo" data-toggle="modal" data-target="#undoModal">Undo</button>
+                                                            <?php }else{ ?>
+                                                                <button class="btn btn-sm badge-danger btn-undo" data-toggle="modal" data-target="#undoModal">Undo</button>
+                                                            <?php }
+                                                            ?>
+                                                            <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </div>
                                                     </td>
-                                                    <td>15/1/2018</td>
-                                                    <td><a href="#">dowload</a></td>
-                                                    <td><span class="badge badge-success">approved</span></td>
-                                                    <td>
-                                                        
-                                                    </td>
                                                 </tr>
+                                            <?php }
+                                            ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -271,47 +299,15 @@ include_once 'head.php'; ?>
                 </div> <!-- container-fluid -->
             </div>
             <!-- End Page-content -->
-            <?php include_once 'footer.php'; ?>
         </div>
         <!-- end main content-->
     </div>
     <!-- END layout-wrapper -->
-    <!-- Right Sidebar -->
-    <div class="right-bar">
-        <div data-simplebar class="h-100">
-            <div class="rightbar-title px-3 py-4">
-                <a href="javascript:void(0);" class="right-bar-toggle float-right">
-                    <i class="mdi mdi-close noti-icon"></i>
-                </a>
-                <h5 class="m-0">Settings</h5>
-            </div>
-            <!-- Settings -->
-            <hr class="mt-0" />
-            <h6 class="text-center">Choose Layouts</h6>
-            <div class="p-4">
-                <div class="mb-2">
-                    <img src="assets/images/layouts/layout-1.jpg" class="img-fluid img-thumbnail" alt="">
-                </div>
-                <div class="custom-control custom-switch mb-3">
-                    <input type="checkbox" class="custom-control-input theme-choice" id="light-mode-switch" checked />
-                    <label class="custom-control-label" for="light-mode-switch">Light Mode</label>
-                </div>
-                <div class="mb-2">
-                    <img src="assets/images/layouts/layout-2.jpg" class="img-fluid img-thumbnail" alt="">
-                </div>
-                <div class="custom-control custom-switch mb-3">
-                    <input type="checkbox" class="custom-control-input theme-choice" id="dark-mode-switch" data-bsStyle="assets/css/bootstrap-dark.min.css" data-appStyle="assets/css/app-dark.min.css" />
-                    <label class="custom-control-label" for="dark-mode-switch">Dark Mode</label>
-                </div>
-            </div>
-        </div>
-    </div> <!-- end slimscroll-menu-->
-    </div>
-    <!-- /Right-bar -->
-    <!-- Right bar overlay-->
-    <div class="rightbar-overlay"></div>
+
     <!-- JAVASCRIPT -->
     <?php include_once 'js.php'; ?>
+
+    <?php include_once 'footer.php'; ?>
 </body>
 
 </html>

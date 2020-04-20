@@ -21,7 +21,7 @@ echo json_encode($up->viewAllUploads());
 //$lecDetails =  $lec->getUser();
 //echo $lecDetails['coordinator'];
 //echo json_encode($lec->getUser());
-//echo json_encode($project->getLecturerProjects('12345'));
+//echo json_encode($project->viewAllProjects());
 //function extractIds($project){
 //    return $project['id'];
 //}

@@ -34,6 +34,9 @@ session_start();
                 $student->setRegNo($user->getUsername());
                 $phone = $student->getUser()['phone_no'];
             }
+        }else{
+            header('Location: confirm-username.php');
+            die();
         }
     }
     ?>
@@ -49,7 +52,7 @@ session_start();
                         <div class="bg-primary">
                             <div class="text-primary text-center p-4">
                                 <h5 class="text-white font-size-20">Set Password</h5>
-                                <p class="text-white-50">Hello <?= $user->getUsername(); ?>, enter your new password!</p>
+                                <p class="text-white-50">Hello <?= $user->getUsername() ?>, enter your new password!</p>
                                 <a href="javascript:void(0)" class="logo logo-admin">
                                     <img src="assets/images/users/user-6.jpg" class="rounded-circle" height="70" alt="logo">
                                 </a>
@@ -148,7 +151,7 @@ session_start();
     function sendMsg(){
             $('#btn-save').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...')
 
-                $name = '<?= $user->getUsername(); ?>'
+                $name = '<?= $user->getUsername() ?>'
                 $.post('api/signup/', {name: $name}, function(data, textStatus, xhr) {
                     console.log(data);
                     if (typeof data['success']['message'] != 'undefined') {

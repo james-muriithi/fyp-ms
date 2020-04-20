@@ -48,9 +48,21 @@ $uc = new UploadCategory($conn);
                                         <th>Category</th>
                                         <th>Start Date</th>
                                         <th>Deadline</th>
-                                        <th>No. of Uploads</th>
+                                        <?php
+                                        if ($_SESSION['level'] === 1){
+                                        ?>
+                                            <th>No. of Uploads</th>
+                                            <?php
+                                        }
+                                        ?>
                                         <th>Description</th>
-                                        <th>Action</th>
+                                        <?php
+                                        if ($_SESSION['level'] === 1){
+                                        ?>
+                                            <th>Action</th>
+                                            <?php
+                                        }
+                                        ?>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -61,20 +73,32 @@ $uc = new UploadCategory($conn);
                                                 <td><?= $cat['name'] ?></td>
                                                 <td><?= $cat['start_date'] ?></td>
                                                 <td><?= $cat['deadline'] ?></td>
+                                                <?php
+                                                if ($_SESSION['level'] === 1){
+                                                ?>
                                                 <td><?= $cat['no_of_uploads'] ?>
-                                                    <a href="#" class="text-underline btn-view-uploads" data-toggle="modal" data-target="#viewModal"> view</a></td>
-                                                <td><?= $cat['description'] ?></td>
-                                                <td>
-                                                    <div class="text-center">
-                                                        <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal">
-                                                            <i class="mdi mdi-pencil"></i>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-
-                                                    </div>
+                                                    <a href="#" class="text-underline btn-view-uploads" data-toggle="modal" data-target="#viewModal"> view</a>
                                                 </td>
+                                                    <?php
+                                                }
+                                                ?>
+                                                <td><?= $cat['description'] ?></td>
+                                                <?php
+                                                if ($_SESSION['level'] === 1){
+                                                ?>
+                                                    <td>
+                                                        <div class="text-center">
+                                                            <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal">
+                                                                <i class="mdi mdi-pencil"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <?php
+                                                }
+                                                ?>
                                             </tr>
                                         <?php }
                                         ?>
@@ -87,7 +111,6 @@ $uc = new UploadCategory($conn);
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-        <?php include_once 'footer.php'; ?>
     </div>
     <!-- end main content-->
 </div>
@@ -215,6 +238,7 @@ $uc = new UploadCategory($conn);
 
 
 <script type="text/javascript" src="assets/js/app.js"></script>
+<?php include_once 'footer.php'; ?>
 </body>
 </html>
 <script>
