@@ -228,6 +228,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             echo json_encode( $myArray);
             die();
         }
+    }else{
+        $project = new Project($conn);
+        $projectArray = $project->viewAllProjects();
+        $webArr = [];
+        $androidArr= [];
+        $desktopArr = [];
+        foreach ($projectArray as $proj){
+            if ($proj['category'] === 'Web App'){
+                $webArr[] = $proj;
+            }
+            if ($proj['category'] === 'Android App'){
+                $androidArr[] = $proj;
+            }
+            if ($proj['category'] === 'Desktop App'){
+                $desktopArr[] = $proj;
+            }
+        }
+        echo json_encode([
+            'webArr' => $webArr,
+            'androidArr' => $androidArr,
+            'desktopArr' => $desktopArr,
+            'total' => count($projectArray)
+        ]);
+        die();
     }
 }
 

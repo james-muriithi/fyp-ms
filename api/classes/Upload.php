@@ -92,6 +92,7 @@ class Upload
                     s.reg_no,
                     s.full_name,
                     p.title as project,
+                    p.id as pid,
                     uc.name as category,
                     uc.id as category_id,
                     uc.deadline
@@ -99,11 +100,36 @@ class Upload
                     LEFT JOIN upload_category uc on u.id = uc.id
                     LEFT JOIN project p on u.project_id = p.id
                     LEFT JOIN (SELECT full_name,reg_no FROM student GROUP BY reg_no) as s 
-                        ON s.reg_no = p.student';
+                        ON s.reg_no = p.student order by upload_time desc';
 
         $stmt = $this->conn->query($query);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function uploadExists($uid):bool
+    {
+        $query = 'SELECT id FROM upload WHERE id = :uid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':uid',$uid);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public function setUploadStatus($uid, $status):bool
+    {
+        $query = 'UPDATE upload SET approved = :status WHERE id = :uid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':uid',$uid);
+        $stmt->bindParam(':status',$status);
+
+        return $stmt->execute();
     }
 
     /**

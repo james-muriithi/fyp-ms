@@ -26,7 +26,7 @@ if (isset($data['name']) && !empty($data['name'])) {
 
     $user->setUsername($username);
     if ($user->userExists($username)){
-        $token = $user->getDbToken()['token'];
+        $token = $user->getDbToken();
         if (empty($token)) {
             $token = $user->saveToken()['token'];
         }
@@ -110,7 +110,7 @@ if (isset($data['name']) && !empty($data['name'])) {
         if (!@fsockopen('www.google.com',80)){
             echo json_response(500, 'Please make sure you have a working internet connection.', true);
         }else{
-            sendMsg($phone, 'Your one time password is '.$otp);
+//            sendMsg($phone, 'Your one time password is '.$otp);
             sendMail($email,$msg,'Password Reset', 'FYPMS');
             echo json_response(200,$token);
         }

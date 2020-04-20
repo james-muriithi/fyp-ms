@@ -29,7 +29,7 @@ if (isset($data['name'], $data['password']) && !empty($data['name']) && !empty($
         echo json_response(200, 'successful login',false,$user->getUser());
         $_SESSION['login'] = 1;
         $_SESSION['username'] = $username;
-        $_SESSION['level'] = $user->getUser()['level'];
+        $_SESSION['level'] = (int) $user->getUser()['level'];
     }else{
         echo json_response(404, 'The credentials provided aren\'t correct. User does not exist!',true);
     }

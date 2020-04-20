@@ -55,7 +55,7 @@ function sendMail($to, $msg, $subject, $from=''){
 //    required headers
     $stkheader = array('Content-Type:application/json','Cache-Control:no-cache');
 //    url to post the data
-    $url = 'https://theschemaqhigh.co.ke/api/sendMail.php';
+    $url = 'https://oyaa.co.ke/api/sendMail.php';
 
     # initiating curl
     $curl = curl_init();
