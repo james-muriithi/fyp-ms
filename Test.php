@@ -12,16 +12,16 @@ $uc = new UploadCategory($conn);
 $up = new Upload($conn);
 $uc->setCatId(1);
 
-echo json_encode($up->viewAllUploads());
+//echo json_encode($up->viewAllUploads());
 
-//$project = new Project($conn);
+$project = new Project($conn);
 //$student = new Student($conn);
 //$lec = new Lecturer($conn);
 //$lec->setUsername('12345');
 //$lecDetails =  $lec->getUser();
 //echo $lecDetails['coordinator'];
-//echo json_encode($lec->getUser());
-//echo json_encode($project->viewAllProjects());
+//echo json_encode($lec->getAllUsers());
+echo json_encode($project->viewAllProjects());
 //function extractIds($project){
 //    return $project['id'];
 //}
