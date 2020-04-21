@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             }else{
                 $executeAll = true;
                 $conn->beginTransaction();
-                $assignedArr = $project->getLecurerProjects($empId);
+                $assignedArr = $project->getLecturerProjects($empId);
 
                 $assignedArrIds = array_map('extractIds', $assignedArr);
                 $removedProjects = array_diff($assignedArrIds,$projectArr);
@@ -209,10 +209,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             die();
         }
     }elseif (isset($_GET['category'])){
-        $catId = $_GET['category'];
+        $pid = $_GET['category'];
         $upload = new Upload($conn);
-        $uc = new UploadCategory($conn);
-        if (!$uc->categoryExists($catId)){
+        $project = new UploadCategory($conn);
+        if (!$project->categoryExists($pid)){
             echo json_encode(array([]));
             die();
         }else{
@@ -220,7 +220,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             $myArray = [];
 
             foreach ($uploadArr as $up){
-                if ($up['category_id'] == $catId){
+                if ($up['category_id'] == $pid){
+                    array_push($myArray, $up);
+                }
+            }
+
+            echo json_encode( $myArray);
+            die();
+        }
+    }elseif (isset($_GET['project_id'])){
+        $pid = $_GET['project_id'];
+        $upload = new Upload($conn);
+        $project = new Project($conn);
+        if (!$project->projectExists($pid)){
+            echo json_encode(array([]));
+            die();
+        }else{
+            $uploadArr = $upload->viewAllUploads();
+            $myArray = [];
+
+            foreach ($uploadArr as $up){
+                if ($up['pid'] == $pid){
                     array_push($myArray, $up);
                 }
             }
@@ -234,6 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
         $webArr = [];
         $androidArr= [];
         $desktopArr = [];
+
+        $completedArr = [];
+        $onGoingArr = [];
+        $rejectedArr = [];
+
+        $assignedArr = [];
+        $unAssignedArr = [];
+
         foreach ($projectArray as $proj){
             if ($proj['category'] === 'Web App'){
                 $webArr[] = $proj;
@@ -244,11 +272,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             if ($proj['category'] === 'Desktop App'){
                 $desktopArr[] = $proj;
             }
+
+            if (empty($proj['supervisor'])){
+                $unAssignedArr[] = $proj;
+            }else{
+                $assignedArr[] = $proj;
+            }
+            if ($proj['status'] == 'in progress'){
+                $onGoingArr[] = $proj;
+            }elseif($proj['status'] == 'complete'){
+                $completedArr[] = $proj;
+            }else{
+                $rejectedArr[] = $proj;
+            }
+
         }
         echo json_encode([
             'webArr' => $webArr,
             'androidArr' => $androidArr,
             'desktopArr' => $desktopArr,
+            'unAssignedArr' => $unAssignedArr,
+            'assignedArr' => $assignedArr,
+            'completedArr' => $completedArr,
+            'onGoingArr' => $onGoingArr,
+            'rejectedArr' => $rejectedArr,
             'total' => count($projectArray)
         ]);
         die();
