@@ -5,7 +5,7 @@ require_once '../api/classes/Project.php';
 
 $upload = new Upload($conn);
 ?>
-
+<link rel="stylesheet" type="text/css" href="../assets/libs/chart.js/Chart.min.css">
 
 <body data-sidebar="dark" onload="preloader()">
     <!-- preloader -->
@@ -146,7 +146,7 @@ $upload = new Upload($conn);
                                 <div class="card-body">
                                     <h4 class="card-title mb-4">Project Categories</h4>
                                     <div class="chart-container" style="position: relative; height:33vh;">
-                                        <canvas  id="ct-donut"></canvas>
+                                        <canvas  id="ct-donut" height="150"></canvas>
                                     </div>
 
                                     <div class="mt-4">
@@ -172,48 +172,10 @@ $upload = new Upload($conn);
                         </div>
                         <div class="col-xl-7">
                             <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title mb-4">Activity</h4>
-                                    <ol class="activity-feed">
-                                        <li class="feed-item">
-                                            <div class="feed-item-list">
-                                                <span class="date">Jan 22</span>
-                                                <span class="activity-text">Responded to need “Volunteer
-                                                    Activities”</span>
-                                            </div>
-                                        </li>
-                                        <li class="feed-item">
-                                            <div class="feed-item-list">
-                                                <span class="date">Jan 20</span>
-                                                <span class="activity-text">At vero eos et accusamus et iusto odio
-                                                    dignissimos ducimus qui deleniti atque...<a href="#" class="text-success">Read more</a></span>
-                                            </div>
-                                        </li>
-                                        <li class="feed-item">
-                                            <div class="feed-item-list">
-                                                <span class="date">Jan 19</span>
-                                                <span class="activity-text">Joined the group “Boardsmanship
-                                                    Forum”</span>
-                                            </div>
-                                        </li>
-                                        <li class="feed-item">
-                                            <div class="feed-item-list">
-                                                <span class="date">Jan 17</span>
-                                                <span class="activity-text">Responded to need “In-Kind
-                                                    Opportunity”</span>
-                                            </div>
-                                        </li>
-                                        <li class="feed-item">
-                                            <div class="feed-item-list">
-                                                <span class="date">Jan 16</span>
-                                                <span class="activity-text">Sed ut perspiciatis unde omnis iste natus
-                                                    error sit rem.</span>
-                                            </div>
-                                        </li>
-                                    </ol>
-                                    <div class="text-center">
-                                        <a href="#" class="btn btn-primary">Load More</a>
-                                    </div>
+                                <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+
+                                    <h4 class="card-title mb-4">Projects</h4>
+                                    <canvas id="radar" height="400"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -243,6 +205,9 @@ $upload = new Upload($conn);
                                             $i = 0;
                                             foreach ($uploadArr as $upl){
                                                 $i++;
+                                                if ($_SESSION['level'] !== 1 && !$project->isAssignedToMe($upl['pid'], $_SESSION['username'])){
+                                                    continue;
+                                                }
                                                 if ($i > 10){
                                                     break;
                                                 }

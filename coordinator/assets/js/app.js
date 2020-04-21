@@ -183,6 +183,58 @@ $(document).ready(function() {
         })
     })
 
+    $('.btn-view-p-uploads').on('click', function(event){
+        event.preventDefault();
+        let tr = $(this).closest('tr'),
+            catName = tr.find('td:nth-child(2)').text(),
+            pid = tr.find('td:nth-child(1)').text()
+        $('#viewModal .project_name').text(catName)
+        $.ajax({
+            type: 'get',
+            data: {project_id: pid},
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            url: '../api/project/',
+            success: data =>{
+                console.log(data)
+                try{
+                    data = JSON.parse(data)
+
+                    // let newTrs = []
+                    $('table.view-table tbody').empty();
+                    data.forEach(proj => {
+                        let badge = 'badge-warning',
+                            approved = 'Pending';
+                        if (proj['approved'] == 1){
+                            badge = 'badge-success'
+                            approved = 'Approved';
+                        }else if (proj['approved'] == 2){
+                            badge = 'badge-danger'
+                            approved = 'Rejected';
+                        }
+                        let newTr = `<tr>
+                                        <td>
+                                        <a href="#" class="text-underline">${proj['name']}</a>
+                                        </td>
+                                        <td>${proj['upload_time']}</td>
+                                        <td>${proj['deadline']}</td>
+                                        <td>
+                                        <span class="badge ${badge}">${approved}</span>
+                                        </td>
+                                       </tr>`
+                        $('table.view-table tbody').append(newTr);
+                    })
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error : data =>{
+                console.log(data)
+            }
+        })
+    })
+
     $('#assign-form').on('submit', function(event) {
         event.preventDefault();
         if (select.selected().length < 0) {

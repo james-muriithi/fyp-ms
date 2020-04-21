@@ -71,7 +71,7 @@ $lecArray = $lec->getAllUsers();
                                             <td><?= $proj['title'] ?></td>
                                             <td><?= $proj['category'] ?></td>
                                             <td><?= $proj['no_of_uploads'] ?>
-                                                <a href="#" class="text-underline p-l-3 btn-view"> view</a>
+                                                <a href="#" class="text-underline p-l-3 btn-view-p-uploads" data-toggle="modal" data-target="#viewModal"> view</a>
                                             </td>
                                             <td><?= $proj['reg_no'] ?></td>
                                             <td><?= $proj['full_name'] ?></td>
@@ -117,38 +117,40 @@ $lecArray = $lec->getAllUsers();
     <!-- end main content-->
 </div>
 <!-- END layout-wrapper -->
-<!-- Right Sidebar -->
-<div class="right-bar">
-    <div data-simplebar class="h-100">
-        <div class="rightbar-title px-3 py-4">
-            <a href="javascript:void(0);" class="right-bar-toggle float-right">
-                <i class="mdi mdi-close noti-icon"></i>
-            </a>
-            <h5 class="m-0">Settings</h5>
-        </div>
-        <!-- Settings -->
-        <hr class="mt-0" />
-        <h6 class="text-center">Choose Layouts</h6>
-        <div class="p-4">
-            <div class="mb-2">
-                <img src="assets/images/layouts/layout-1.jpg" class="img-fluid img-thumbnail" alt="">
+
+<!--    view modal-->
+<div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="myModalLabel">
+                    <span class="project_name"></span> uploads
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <div class="custom-control custom-switch mb-3">
-                <input type="checkbox" class="custom-control-input theme-choice" id="light-mode-switch" checked />
-                <label class="custom-control-label" for="light-mode-switch">Light Mode</label>
+            <div class="modal-body" style="overflow-x: auto;">
+                <table class="table table-striped table-bordered dt-responsives mb-0 view-table">
+                    <thead>
+                    <tr>
+                        <th scope="col">File Name</th>
+                        <th scope="col">Upload Time</th>
+                        <th scope="col">Deadline</th>
+                        <th scope="col">Status</th>
+                        <!--                        <th scope="col">Action</th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
             </div>
-            <div class="mb-2">
-                <img src="assets/images/layouts/layout-2.jpg" class="img-fluid img-thumbnail" alt="">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
             </div>
-            <div class="custom-control custom-switch mb-3">
-                <input type="checkbox" class="custom-control-input theme-choice" id="dark-mode-switch" data-bsStyle="assets/css/bootstrap-dark.min.css" data-appStyle="assets/css/app-dark.min.css" />
-                <label class="custom-control-label" for="dark-mode-switch">Dark Mode</label>
-            </div>
-        </div>
-    </div>
-</div> <!-- end slimscroll-menu-->
-</div>
-<!-- /Right-bar -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- end view modal-->
 
 <!--edit modal-->
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -262,8 +264,7 @@ $lecArray = $lec->getAllUsers();
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!-- Right bar overlay-->
-<div class="rightbar-overlay"></div>
+
 <!-- JAVASCRIPT -->
 <?php
 include_once 'js.php';

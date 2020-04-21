@@ -11,7 +11,7 @@
     <script src="../assets/libs/counterup/jquery.waypoints.min.js"></script>
     <script src="../assets/libs/counterup/jquery.counterup.min.js"></script>
     <script type="text/javascript" src="../assets/libs/toastr/toastr.min.js"></script>
-    <script src="../assets/libs/chart.js/Chart.bundle.min.js"></script>
+    <script src="../assets/libs/chart.js/Chart.min.js"></script>
     <script src="../assets/js/pages/dashboard.init.js"></script>
 
     <script src="../assets/js/app.js"></script>
