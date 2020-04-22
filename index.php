@@ -92,6 +92,22 @@
 
 </body>
 </html>
+<?php
+if (isset($_SESSION['error'])){
+    echo '<script>toastr.error("'.$_SESSION['error'].'", "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });</script>';
+    unset($_SESSION['error']);
+}
+if (isset($_SESSION['success'])){
+    echo '<script>toastr.success("'.$_SESSION['success'].'", "Bravoo!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });</script>';
+    unset($_SESSION['success']);
+}
+?>
 <script type="text/javascript">
     $(document).ready(function() {
         $('.login-form').on('submit', function(event) {
@@ -135,11 +151,21 @@
                         let level = data.payload.level;
                         if (Number(level) == 2 || Number(level) == 1) {
                             location.href = 'coordinator/'
+                        }else{
+                            location.href = 'student/'
                         }
                     }
                 }).fail(function(data){
-                    let message = typeof data['responseJSON']['error']['message'] != 'undefined'? data['responseJSON']['error']['message'] : 'Some unexpected error occured';
-
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
                 });
                 
                 $form
