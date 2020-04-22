@@ -114,6 +114,9 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             die();
         }
     }
+}elseif ($_SERVER['REQUEST_METHOD'] === 'GET'){
+    $uc = new UploadCategory($conn);
+    echo json_encode($uc->viewAllCategories());
 }
 
 
