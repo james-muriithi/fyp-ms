@@ -128,7 +128,7 @@
                     </div>
                     <?php
                     $uploadDir = 'assets/images/users/';
-                    $image = empty($lecDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $lecDetails['profile'];
+                    $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $studentDetails['profile'];
                     if (!file_exists($image)){
                         $image = $uploadDir.'avatar-lec.png';
                     }
@@ -138,7 +138,7 @@
                         <button type="button" class="btn header-item waves-effect fs-15 text-primary text-bold" id="page-header-user-dropdown"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-family: font-family: 'Open Sans', sans-serif;">
                             <?php
-                            echo ucfirst(explode(' ',$lecDetails['full_name'])[0]);
+                            echo ucfirst(explode(' ',$studentDetails['full_name'])[0]);
                             ?>
                             <img class="rounded-circle header-profile-user m-l-4" src="<?= $image ?>" alt="Header Avatar">
                         </button>

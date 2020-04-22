@@ -1,6 +1,6 @@
 <?php
 include_once 'head.php';
-$lecArray = $lec->getAllUsers();
+$lecArray = $student->getAllUsers();
 $student = new Student($conn);
 $studentArray = $student->getAllUsers();
 ?>

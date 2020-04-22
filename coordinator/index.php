@@ -45,7 +45,7 @@ $upload = new Upload($conn);
                                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Lecturers</h5>
                                         <h4 class="font-weight-medium font-size-24">
                                             <?php
-                                            $lecturers = $lec->getAllUsers();
+                                            $lecturers = $student->getAllUsers();
                                             $totalLecturers = count($lecturers);
                                             ?>
                                             <span class="people_in info-box-number" data-counter="counterup" data-value="<?= $totalLecturers ?>">0</span>

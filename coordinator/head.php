@@ -9,7 +9,11 @@ $conn = Database::getInstance();
 
 if (!isset($_SESSION['login'],$_SESSION['username'], $_SESSION['level'])) {
     $_SESSION['error'] = 'You are not authorized to access that page. Please login';
-    header('Location: ../index.php');
+    ?>
+    <script>
+        location.href = '../index.php';
+    </script>
+<?php
     die();
 }
 
@@ -18,7 +22,11 @@ $lec->setUsername($_SESSION['username']);
 
 if (!$lec->userExists($_SESSION['username'])){
     $_SESSION['error'] = 'You are not authorized to access that page. Please login';
-    header('Location: ../index.php');
+    ?>
+    <script>
+        location.href = '../index.php';
+    </script>
+    <?php
     die();
 }
 $lecDetails = $lec->getUser();
