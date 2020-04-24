@@ -15,13 +15,13 @@ $uc->setCatId(1);
 //echo json_encode($up->viewAllUploads());
 
 $project = new Project($conn);
-//$student = new Student($conn);
+$student = new Student($conn);
 //$lec = new Lecturer($conn);
-//$lec->setUsername('12345');
+$student->setUsername('SB30/PU/41760/16');
 //$lecDetails =  $lec->getUser();
 //echo $lecDetails['coordinator'];
-//echo json_encode($lec->getAllUsers());
-echo json_encode($project->viewAllProjects());
+echo json_encode($project->viewProject(2));
+//echo json_encode($project->viewAllProjects());
 //function extractIds($project){
 //    return $project['id'];
 //}
