@@ -65,15 +65,18 @@ class Project extends Student
         return $stmt->rowCount()>0;
     }
 
-    public function projectTitleExists($title = ''):bool
+    public function projectTitleExists($title = '', $category = ''):bool
     {
-        $title = !empty($this->title) ? $title :$this->title;
+        $title = empty($this->title) ? $title :$this->title;
 
-        $query = 'SELECT title FROM project WHERE title = :title ';
+        $query = 'SELECT title FROM project WHERE title like :title AND category= :cat';
 
         $stmt = $this->conn->prepare($query);
 
+        $title = '%'.$title.'%';
+
         $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':cat', $category);
 
         $stmt->execute();
 
@@ -82,12 +85,12 @@ class Project extends Student
 
     public function studentHasProject($reg_no = ''): bool
     {
-        $reg_no = empty($this->getUsername()) ? $reg_no :$this->getUsername();
+        $reg_no = empty(!$reg_no) ? $reg_no :$this->getUsername();
         if (empty($reg_no)){
             return false;
         }
 
-        $query = 'SELECT title FROM project WHERE student = :reg ';
+        $query = 'SELECT title FROM project WHERE student = :reg AND status!=2';
 
         $stmt = $this->conn->prepare($query);
 
@@ -135,7 +138,7 @@ class Project extends Student
 
     public function viewProject($pid = ''):array
     {
-        $pid = !empty($pid) ? pid : $this->pid;
+        $pid = !empty($pid) ? $pid : $this->pid;
         $query = 'SELECT 
                         p.id, 
                         p.title,
@@ -149,6 +152,7 @@ class Project extends Student
                             WHEN p.status = 0 THEN "rejected"
                         END AS status,
                         pc.name as category,
+                        pc.id as cat_id,
                         s.full_name,
                         s.course,
                         s.reg_no
@@ -159,7 +163,7 @@ class Project extends Student
                     LEFT JOIN lecturer ON p.supervisor = lecturer.emp_id
                     LEFT JOIN (SELECT project_id,COUNT(*) no_of_uploads FROM upload GROUP BY project_id) as nou
                     ON nou.project_id = p.id
-                    WHERE p.id  = :pid ';
+                    WHERE p.id  = :pid';
 
         $stmt = $this->conn->prepare($query);
 
@@ -264,18 +268,18 @@ class Project extends Student
     }
 
 
-    public function editProject($reg_no, $category, $title , $description):bool
+    public function editProject($pid, $category, $title , $description):bool
     {
         $query = 'UPDATE project SET 
                         title = :title, category = :category, description = :description 
-                    WHERE student =:regno';
+                    WHERE id = :pid';
 
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':title', $title);
-        $stmt->bindParam(':desc', $description);
+        $stmt->bindParam(':description', $description);
         $stmt->bindParam(':category', $category);
-        $stmt->bindParam(':reg_no', $reg_no);
+        $stmt->bindParam(':pid', $pid);
 
         return $stmt->execute();
     }

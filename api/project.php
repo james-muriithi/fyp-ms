@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
         }elseif ($project->studentHasProject($regNo)){
             echo json_response(409,' That student ('.$regNo.') already has a project.',true);
             die();
-        }elseif ($project->projectTitleExists($title)){
+        }elseif ($project->projectTitleExists($title, $category)){
             echo json_response(409,' That project ('.$title.') already exists.',true);
             die();
         }elseif ($projectCat->categoryExists($category)){
@@ -138,7 +138,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             die();
         }
 
+    }else{
+        if (isset($data['pid'])){
+            $pid = $data['pid'];
+            $project = new Project($conn);
+            $projectCat = new ProjectCategory($conn);
+            if ($project->projectExists($pid)){
+                $projectDetails = $project->viewProject($pid);
+                $title = empty($data['project_title']) ? $projectDetails['title'] :$data['project_title'];
+                $category = empty($data['category']) ? $projectDetails['cat_id'] :$data['category'];
+                $description = empty($data['description']) ? $projectDetails['description'] : $data['description'];
+                $empId = empty($data['supervisor']) ? $projectDetails['emp_id'] : $data['supervisor'];
+
+                if($title  != $projectDetails['title']){
+                    if ($project->projectTitleExists($title, $category)){
+                        echo json_response(409,' That project ('.$title.') already exists.',true);
+                        die();
+                    }
+                }elseif ($projectCat->categoryExists($category)){
+                    echo json_response(409,' That category ('.$category.') does not exist.',true);
+                    die();
+                }
+
+                $conn->beginTransaction();
+
+                if ($project->editProject($pid, $category,$title,$description)){
+                    $conn->commit();
+                    echo json_response(200, 'The project has been edited successfully.');
+                    die();
+                }else{
+                    $conn->rollBack();
+                    echo json_response(400,'There was error editing the project. Please try again later.',true);
+                    die();
+                }
+
+            }else{
+                echo json_response(400,'That project does not exist.',true);
+                die();
+            }
+        }else{
+            echo json_response(400,'Please make sure you provide a project id. i.e pid',true);
+            die();
+        }
     }
+
+
+
 }elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     if (empty($_DELETE)) {
         $_DELETE = json_decode(file_get_contents('php://input'), true) ?: [];
