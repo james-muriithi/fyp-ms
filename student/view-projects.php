@@ -6,8 +6,7 @@ $project = new Project($conn);
 $projectArray = $project->viewAllProjects();
 $lecArray = $student->getAllUsers();
 ?>
-
-
+<link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css"/>
 
 <body data-sidebar="dark">
@@ -48,10 +47,8 @@ $lecArray = $student->getAllUsers();
                                 <table id="datatable-buttons" class="table table-striped table-bordered dt-responsives nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th># Pid</th>
                                         <th>Title</th>
                                         <th>Category</th>
-                                        <th>No of Uploads</th>
                                         <th>Reg No</th>
                                         <th>Name</th>
                                         <th>Supervisor</th>
@@ -62,17 +59,10 @@ $lecArray = $student->getAllUsers();
                                     <tbody>
                                     <?php
                                     foreach ($projectArray as $proj){
-                                        if ($_SESSION['level'] !== 1 && $proj['emp_id'] !== $_SESSION['username']){
-                                            continue;
-                                        }
                                         ?>
-                                        <tr data-description="<?= $proj['description'] ?>">
-                                            <td><?= $proj['id'] ?></td>
+                                        <tr data-description="<?= $proj['description'] ?>" data-pid="<?= $proj['id'] ?>">
                                             <td><?= $proj['title'] ?></td>
                                             <td><?= $proj['category'] ?></td>
-                                            <td><?= $proj['no_of_uploads'] ?>
-                                                <a href="#" class="text-underline p-l-3 btn-view-p-uploads" data-toggle="modal" data-target="#viewModal"> view</a>
-                                            </td>
                                             <td><?= $proj['reg_no'] ?></td>
                                             <td><?= $proj['full_name'] ?></td>
                                             <td>
@@ -90,15 +80,19 @@ $lecArray = $student->getAllUsers();
                                                 ?>
                                             </td>
                                             <td>
-                                                <div class="text-center">
-                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal">
-                                                        <i class="mdi mdi-pencil"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
+                                                <?php
+                                                if ($proj['reg_no'] === $_SESSION['username']){ ?>
+                                                    <div class="text-center">
+                                                        <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal">
+                                                            <i class="mdi mdi-pencil"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
 
-                                                </div>
+                                                    </div>
+                                                <?php }
+                                                ?>
                                             </td>
                                         </tr>
                                     <?php }
@@ -166,7 +160,7 @@ $lecArray = $student->getAllUsers();
                 <form id="edit-project-form">
                     <div class="form-group form-row">
                         <div class="col-sm-12">
-                            <label for="pid">Title: </label>
+                            <label for="pid">Project Id: </label>
                             <input type="text" class="form-control" id="pid" placeholder="" readonly name="pid">
                         </div>
                     </div>
@@ -179,15 +173,7 @@ $lecArray = $student->getAllUsers();
                     </div>
 
                     <div class="form-group form-row">
-                        <div class="col-sm-6">
-                            <label for="pstatus">Status:</label>
-                            <select id="pstatus" name="status" class="form-control">
-                                <option value="0">in progress</option>
-                                <option value="1">complete</option>
-                                <option value="2">rejected</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6">
+                        <div class="col-12">
                             <label for="pcat">Project Category:</label>
                             <select id="pcat" name="category" class="form-control">
                                 <option value="1">Web App</option>
@@ -206,7 +192,7 @@ $lecArray = $student->getAllUsers();
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success waves-effect waves-light btn-save" form="edit-student-form">Edit</button>
+                <button type="submit" class="btn btn-success waves-effect waves-light btn-save" form="edit-project-form">Edit</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -234,37 +220,6 @@ $lecArray = $student->getAllUsers();
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /. deletemodal -->
-
-<!-- assign modal -->
-<div id="assign-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mt-0" id="myModalLabel">
-                    Assign Project
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="assign-lec-form">
-                    <select id="lecturers" name="emp_id">
-                        <option value="" disabled selected>--Select Supervisor--</option>
-                        <?php
-                        foreach ($lecArray as $lecturer){ ?>
-                            <option value="<?= $lecturer['emp_id'] ?>"><?= $lecturer['emp_id'].' - '.ucwords($lecturer['full_name']) ?></option>
-                        <?php }
-                        ?>
-                    </select>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success waves-effect waves-light" form="assign-lec-form">Assign</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 <!-- JAVASCRIPT -->
 <?php
 include_once 'js.php';
@@ -276,11 +231,9 @@ include_once 'js.php';
 <!-- Datatable init js -->
 <script src="../assets/js/pages/datatables.init.js"></script>
 
-<!-- Sweet Alerts js -->
-<script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
-
 <!-- slimselect -->
 <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
+<script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 
 
 <script type="text/javascript" src="assets/js/app.js"></script>
@@ -291,8 +244,8 @@ include_once 'js.php';
     let deleteProject = '';
     $('.btn-delete').on('click', function (event) {
         let tr = $(this).closest('tr'),
-            project_name = tr.find('td:nth-child(2)').text();
-        deleteProject = tr.find('td:nth-child(1)').text();
+            project_name = tr.find('td:nth-child(1)').text();
+        deleteProject = tr.data('pid');
         $('span.project_name').text(project_name);
     });
 
@@ -334,10 +287,9 @@ include_once 'js.php';
 //    edit modal
     $('.btn-edit').on('click', function (event) {
         let tr = $(this).closest('tr'),
-            title = tr.find('td:nth-child(2)').text(),
-            pid = tr.find('td:nth-child(1)').text(),
-            category = tr.find('td:nth-child(3)').text().toLowerCase(),
-            status = tr.find('td:nth-child(8)').text().toLowerCase(),
+            title = tr.find('td:nth-child(1)').text(),
+            pid = tr.data('pid'),
+            category = tr.find('td:nth-child(2)').text().toLowerCase(),
             description = tr.data('description').trim();
         if (category ==='web app'){
             category = 1;
@@ -361,40 +313,60 @@ include_once 'js.php';
         $('input#project_title').val(title)
         $('textarea#description').val(description)
         $(`select#pcat option[value='${category}']`).prop('selected', true);
-        $(`select#pstatus option[value='${status}']`).prop('selected', true);
     });
 
-
-//    assign modal
-    let select = new SlimSelect({
-        select: '#lecturers',
-        allowDeselect: true,
-        hideSelectedOption: true
-    });
-    let pid = '';
-    $('.btn-assign').on('click', function(event) {
-        // clear select
-        select.set([]);
-        //
-        let tr = $(this).closest('tr');
-        pid = $.trim(tr.find('td:nth-child(1)').text())
-    });
-
-    $('form#assign-lec-form').on('submit', function (event) {
-        event.preventDefault();
-        if (!select.selected()) {
-            toastr.error("Please select at least one Supervisor", "Sorry", {
-                showMethod: "slideDown",
-                hideMethod: "fadeOut"
-            });
-        }else{
+    $('#edit-project-form').bootstrapValidator({
+        message: 'This value is not valid',
+        excluded:':disabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields:{
+            'project_title' : {
+                message: 'The title is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The title of the project is required and cannot be empty. '
+                    },
+                    stringLength: {
+                        min: 5,
+                        max: 40,
+                        message: 'The title must be more than 5 and less than 40 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9'\s]+$/,
+                        message: 'The title can only consist of alphabetical, numbers, underscores and hyphen'
+                    }
+                }
+            },
+            'description' : {
+                message: 'The description is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The description is required and cannot be empty'
+                    }
+                }
+            },
+            'category':{
+                message: 'The description is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'Please select a project category'
+                    }
+                }
+            }
+        },
+        onSuccess: function (e) {
+            $form = $(e.target);
             let formData = {}
-            $(event.target).serializeArray().map(item => formData[item.name] = item.value)
-            formData['projects'] = [pid]
+            $form.serializeArray().map((v)=> formData[v.name] = v.value)
+            formData['student'] = '<?= $_SESSION['username'] ?>';
 
             $.ajax({
                 url: '../api/project/',
-                data: JSON.stringify({assign : formData}),
+                data: JSON.stringify({...formData}),
                 method: 'PATCH',
                 dataType: 'json',
                 processData: false,
@@ -407,12 +379,9 @@ include_once 'js.php';
                             location.reload();
                         }
                     });
-                    // clear select
-                    select.set([])
-                    //close modal
-                    $('#myModal').modal('hide');
                 },
                 error: function (data) {
+                    console.log(data)
                     let message = 'Some unexpected error occurred';
                     try{
                         message = data['responseJSON']['error']['message'];
@@ -424,13 +393,20 @@ include_once 'js.php';
                         hideMethod: "fadeOut"
                     });
 
-                    // clear select
-                    select.set([])
-                    //close modal
-                    $('#myModal').modal('hide');
                 }
 
             });
+
+
+            $form
+                .bootstrapValidator('disableSubmitButtons', false)
+                .bootstrapValidator('resetForm', true);
+            $('#editModal').modal('hide');
         }
     })
+        .on('status.field.bv', function(e, data) {
+            data.bv.disableSubmitButtons(false);
+        });
+
+
 </script>

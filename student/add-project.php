@@ -59,36 +59,14 @@ $studentArray = $student->getAllUsers();
                                             <input type="text" class="form-control" id="project_title" placeholder="e.g. Church management system " name="project_title">
                                         </div>
                                     </div>
-                                    <div class="form-group form-row">
+                                    <div class="form-group form-row d-none">
                                         <div class="col-sm-12">
-                                            <label for="student">Student:</label>
-                                            <select id="student" name="student">
-                                                <option value="" disabled selected>--Select Student--</option>
-                                                <?php
-                                                foreach ($studentArray as $student) {
-                                                    if (empty($student['project_title'])) { ?>
-                                                        <option value="<?= $student['reg_no'] ?>">
-                                                            <?= ucwords($student['full_name']).' - '. $student['reg_no'] ?>
-                                                        </option>
-                                                <?php } }
-                                                ?>
-                                            </select>
+                                            <input type="text" hidden class="form-control" name="student" value="<?= $_SESSION['username'] ?>">
                                         </div>
                                     </div>
 
                                     <div class="form-group form-row">
-                                        <div class="col-sm-6">
-                                            <label for="supervisor">Supervisor:</label>
-                                            <select id="supervisor" name="supervisor">
-                                                <option value="" disabled selected>--Select Supervisor--</option>
-                                                <?php
-                                                foreach ($lecArray as $lec) { ?>
-                                                    <option value="<?= $lec['emp_id'] ?>"><?= ucwords($lec['full_name']) ?></option>
-                                                <?php }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <label for="p-cat">Project Category:</label>
                                             <select id="p-cat" name="category">
                                                 <option value="1">Web App</option>
@@ -167,19 +145,6 @@ $studentArray = $student->getAllUsers();
 </html>
 <script type="text/javascript">
     $(document).ready(function() {
-        // $('select').niceSelect();
-        let select = new SlimSelect({
-            select: '#student',
-            allowDeselect: true,
-            closeOnSelect: true,
-            searchHighlight: true
-        });
-
-        let select2 = new SlimSelect({
-            select: '#supervisor',
-            closeOnSelect: true
-        });
-
         let select3 = new SlimSelect({
             select: '#p-cat',
             closeOnSelect: true
@@ -223,14 +188,7 @@ $studentArray = $student->getAllUsers();
                         }
                     }
                 },
-                'student':{
-                    message: 'The description is not valid',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please select a student'
-                        }
-                    }
-                },
+
                 'category':{
                     message: 'The description is not valid',
                     validators: {

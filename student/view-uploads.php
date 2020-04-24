@@ -58,7 +58,7 @@ $project = new Project($conn);
                                     <?php
                                     $uploadArr = $upload->viewAllUploads();
                                     foreach ($uploadArr as $upl){
-                                        if ($_SESSION['level'] !== 1 && !$project->isAssignedToMe($upl['pid'], $_SESSION['username'])){
+                                        if ( $_SESSION['username'] !== $upl['reg_no'] ){
                                             continue;
                                         }
                                         ?>
@@ -84,18 +84,8 @@ $project = new Project($conn);
                                             </td>
                                             <td>
                                                 <div class="text-center">
-                                                    <?php
-                                                    if($upl['approved'] == 0){ ?>
-                                                        <button class="btn btn-sm badge-success btn-approve" data-toggle="modal" data-target="#approveModal">Approve</button>
-                                                        <button class="btn btn-sm badge-danger btn-reject" data-toggle="modal" data-target="#rejectModal">Reject</button>
-                                                    <?php }elseif($upl['approved'] == 1){ ?>
-                                                        <button class="btn btn-sm badge-danger btn-undo" data-toggle="modal" data-target="#undoModal">Undo</button>
-                                                    <?php }else{ ?>
-                                                        <button class="btn btn-sm badge-danger btn-undo" data-toggle="modal" data-target="#undoModal">Undo</button>
-                                                    <?php }
-                                                    ?>
-                                                    <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
-                                                        <i class="fa fa-trash"></i>
+                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" >
+                                                        <i class="mdi mdi-pencil"></i>
                                                     </button>
                                                 </div>
                                             </td>

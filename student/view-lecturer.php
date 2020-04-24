@@ -1,6 +1,7 @@
 <?php
 include_once 'head.php';
-$lecArray = $student->getAllUsers();
+$lecturer = new Lecturer($conn);
+$lecArray = $lecturer->getAllUsers();
 ?>
 <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/jquery-nice-select/css/nice-select.css">
@@ -43,21 +44,18 @@ $lecArray = $student->getAllUsers();
                                             <table id="datatable-buttons" class="table table-striped table-bordered dt-responsives nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead>
                                                 <tr>
-                                                    <th>Emp Id</th>
                                                     <th>Name</th>
                                                     <th>Assigned Students</th>
                                                     <th>Phone No</th>
                                                     <th>Email</th>
                                                     <th>Expertise</th>
                                                     <th>Role</th>
-                                                    <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <?php
                                                 foreach ($lecArray as $row){ ?>
-                                                    <tr>
-                                                        <td><?= $row['emp_id'] ?></td>
+                                                    <tr data-lec="<?= $row['emp_id'] ?>">
                                                         <td><?= $row['full_name'] ?></td>
                                                         <td>
                                                             <?= $row['no_of_projects'] ?>
@@ -70,25 +68,6 @@ $lecArray = $student->getAllUsers();
                                                         <span class="badge <?= $row['coordinator'] == 'True' ? 'badge-warning': 'badge-primary' ?>">
                                                             <?= $row['coordinator'] == 'True' ? 'Coordinator': 'Supervisor' ?>
                                                         </span>
-                                                        </td>
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <?php
-                                                                if ($_SESSION['level'] === 1){ ?>
-                                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" id="">
-                                                                        <i class="mdi mdi-pencil"></i>
-                                                                    </button>
-                                                                    <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" id="">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                <?php }else if($row['emp_id'] === $_SESSION['username']){ ?>
-                                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" id="">
-                                                                        <i class="mdi mdi-pencil"></i>
-                                                                    </button>
-                                                                <?php }
-                                                                ?>
-
-                                                            </div>
                                                         </td>
                                                     </tr>
                                                 <?php }

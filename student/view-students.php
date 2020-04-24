@@ -51,7 +51,6 @@ $studentArray = $student->getAllUsers();
                                                 <th>Assigned Lecturer</th>
 <!--                                                <th>Uploads</th>-->
 <!--                                                <th>status</th>-->
-                                                <th>Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -72,17 +71,6 @@ $studentArray = $student->getAllUsers();
 <!--                                                            pending-->
 <!--                                                        </span>-->
 <!--                                                        </td>-->
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" >
-                                                                    <i class="mdi mdi-pencil"></i>
-                                                                </button>
-                                                                <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-
-                                                            </div>
-                                                        </td>
                                                     </tr>
                                                <?php }
                                                 ?>

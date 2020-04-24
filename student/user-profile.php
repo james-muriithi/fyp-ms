@@ -51,8 +51,8 @@ include_once 'head.php'; ?>
                                 <form class="add-lecturer-form">
                                     <div class="form-group form-row">
                                         <div class="col-sm-6">
-                                            <label for="empid">Employee Id: </label>
-                                            <input type="text" readonly class="form-control" id="empid" placeholder="Enter employee Id" name="empid" value="<?= $studentDetails['emp_id'] ?>">
+                                            <label for="reg_no">Reg No: </label>
+                                            <input type="text" readonly class="form-control" id="reg_no" placeholder="Enter registration number" name="regno" value="<?= $studentDetails['reg_no'] ?>">
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="name">Full Name:</label>
@@ -68,13 +68,6 @@ include_once 'head.php'; ?>
                                         <div class="col-sm-6">
                                             <label for="phone">Phone No:</label>
                                             <input type="text" class="form-control" id="phone" placeholder="0712345678" name="phone" value="<?= $studentDetails['phone_no'] ?>">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group form-row">
-                                        <div class="col-sm-6">
-                                            <label for="expertise">Expertise:</label>
-                                            <input type="text" class="form-control" id="expertise" placeholder="Database Management" name="expertise" value="<?= $studentDetails['expertise'] ?>">
                                         </div>
                                     </div>
 
@@ -96,9 +89,9 @@ include_once 'head.php'; ?>
                                     <div class="profile-userpic w-100">
                                         <?php
                                         $uploadDir = 'assets/images/users/';
-                                        $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $studentDetails['profile'];
+                                        $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-st.png': $uploadDir. $studentDetails['profile'];
                                         if (!file_exists($image)){
-                                            $image = $uploadDir.'avatar-lec.png';
+                                            $image = $uploadDir.'avatar-st.png';
                                         }
                                         ?>
                                         <img src="<?= $image ?>" class="img-responsive" alt="" style="display:inline-block;">
@@ -108,11 +101,11 @@ include_once 'head.php'; ?>
                                     </div>
                                 </div>
                                 <div class="profile-usertitle">
-                                    <div class="profile-usertitle-name">Kiran Patel </div>
+                                    <div class="profile-usertitle-name"><?= $studentDetails['full_name'] ?> </div>
                                     <div class="profile-usertitle-email">
-                                        <a href="mailto:john@doe.com"><i class="fa fa-envelope"></i> john@doe.com</a>
+                                        <a href="mailto:<?= $studentDetails['email'] ?>"><i class="fa fa-envelope"></i> <?= $studentDetails['email'] ?> </a>
                                         <span style="font-size: 25px" class="text-warning">|</span>
-                                        <a href="tel:0712345678"><i class="fa fa-phone-square"></i> 0712345678</a>
+                                        <a href="tel:<?= $studentDetails['phone_no'] ?>"><i class="fa fa-phone-square"></i> <?= $studentDetails['phone_no'] ?> </a>
                                     </div>
                                 </div>
                                 <form class="dropzone" id="single-file-upload" action="#">
@@ -265,19 +258,6 @@ include_once 'head.php'; ?>
                 validating: 'fa fa-refresh'
             },
             fields:{
-                'empid' : {
-                    validators: {
-                        //when empty it will bring this error message
-                        notEmpty: {
-                            message: 'The registration number is required and cannot be empty'
-                        },
-                        //this is a regular expression to validate registration number
-                        stringLength: {
-                            min: 3,
-                            message: 'Please provide an employee id of 3 or more characters'
-                        }
-                    }
-                },
                 'phone':{
                     validators:{
                         notEmpty: {
@@ -317,14 +297,6 @@ include_once 'head.php'; ?>
                             message: 'Please provide a valid email address'
                         }
                     }
-                },
-                'expertise' : {
-                    message: 'The expertise is not valid',
-                    validators: {
-                        notEmpty: {
-                            message: 'The expertise is required and cannot be empty'
-                        }
-                    }
                 }
 
             },
@@ -335,7 +307,7 @@ include_once 'head.php'; ?>
                 $form.serializeArray().map((v)=> formData[v.name] = v.value)
 
                 $.ajax({
-                    url: '../api/lecturer/',
+                    url: '../api/student/',
                     data: JSON.stringify({...formData}),
                     method: 'PATCH',
                     dataType: 'json',
