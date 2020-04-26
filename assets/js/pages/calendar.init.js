@@ -30,8 +30,12 @@ window.addEventListener('DOMContentLoaded', async function () {
             allDay: true,
             eventRender: function(event, element, view) {
                 let endDate = new Date(event.end._d).toLocaleDateString()
-                if (Math.abs(new Date(endDate) - new Date().setHours(0,0,0,0))/60/60/24/1000 <= 3){
+                let remainigDays = (new Date(endDate) - new Date().setHours(0,0,0,0))/60/60/24/1000 - 1
+                if (remainigDays <= 3){
                     element.addClass('bg-danger')
+                }
+                if (remainigDays < 0){
+                    element.find('.fc-title').text(`${event.title} - Past Due Date`)
                 }
             },
             eventMouseover: function(event, jsEvent){

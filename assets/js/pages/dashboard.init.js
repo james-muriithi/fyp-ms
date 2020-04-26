@@ -85,21 +85,21 @@
             })
             return p;
         })
-      this.respChart(d("#radar"), "Radar", {
-          labels: ["Assigned", "Unassigned","Completed", "Ongoing", "Rejected"],
-          datasets: [{ label: "Projects",fill: true, backgroundColor: "rgba(102, 51, 153, 0.4)",
-              borderColor: "#3c4ccf", pointBackgroundColor: "#3c4ccf", pointBorderColor: "#fff",
-              pointHoverBackgroundColor: "#fff", pointHoverBorderColor: "#3c4ccf",
-              data: await projects.slice(3,8) }] },{
-          scale: {
-              ticks: {
-                  callback: function (tick) {
-                      if (tick.toString().indexOf('.') < 0){return tick}
-                      return '';
-                  }
-              }
-          }
-      });
+        this.respChart(d("#radar"), "Radar", {
+            labels: ["Unassigned", "Assigned","Completed", "Ongoing", "Rejected"],
+            datasets: [{ label: "Projects",fill: true, backgroundColor: "rgba(102, 51, 153, 0.4)",
+                borderColor: "#3c4ccf", pointBackgroundColor: "#3c4ccf", pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff", pointHoverBorderColor: "#3c4ccf",
+                data: await projects.slice(3,8) }] },{
+            scale: {
+                ticks: {
+                    callback: function (tick) {
+                        if (tick.toString().indexOf('.') < 0){return tick}
+                        return '';
+                    }
+                }
+            }
+        });
     }, d.ChartJs = new r, d.ChartJs.Constructor = r
 }(window.jQuery),
     function() {
