@@ -97,7 +97,7 @@ class Upload
                     uc.id as category_id,
                     uc.deadline
                     FROM upload u
-                    LEFT JOIN upload_category uc on u.id = uc.id
+                    LEFT JOIN upload_category uc on u.category = uc.id
                     LEFT JOIN project p on u.project_id = p.id
                     LEFT JOIN (SELECT full_name,reg_no FROM student GROUP BY reg_no) as s 
                         ON s.reg_no = p.student order by upload_time desc';
@@ -160,30 +160,6 @@ class Upload
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     }
-
-    /**
-     * @param string $cid category id
-     * @param string $pid project id
-     * @return bool
-     */
-    public function hasUpload($pid, $cid) :bool
-    {
-        $query = 'SELECT 
-                    u.id
-                    FROM upload u
-                     WHERE u.project_id =:pid
-                     AND u.category =:cid';
-
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(':pid',$pid);
-        $stmt->bindParam(':cid',$cid);
-
-        $stmt->execute();
-
-        return $stmt->rowCount() > 0;
-    }
-
 
     /**
      * @return string

@@ -83,8 +83,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
             echo json_response(400,'That registration no does not exist! Please provide a correct reg no.',true);
             die();
         }
+    }elseif (isset($data['change_password'])){
+        $data = $data['change_password'];
+        if (isset($data['regno'], $data['old_password'], $data['password'])){
+            $reg_no = $data['regno'];
+            $old_password = $data['old_password'];
+            $newPassword = $data['password'];
+
+            $student = new Student($conn);
+            $student->setUsername($reg_no);
+            $student->setPassword($old_password);
+            if (!$student->regExists($reg_no)){
+                echo json_response(409,'That registration number does not exists',true);
+                die();
+            }elseif (!$student->verifyUser()){
+                echo json_response(409,'Your old password is incorrect',true);
+                die();
+            }else{
+                $conn->beginTransaction();
+                if ($student->updatePassword($newPassword)){
+                    $conn->commit();
+                    echo json_response(201, 'Your password was updated successfully.');
+                    die();
+                }else{
+                    $conn->rollBack();
+                    echo json_response(400,'There was error changing your passowrd. Please try again later.',true);
+                    die();
+                }
+            }
+        }
     }else{
-        echo json_response(400,'Please make sure you provide all the required fields. i.e regno and  name or phone or email',true);
+        echo json_response(400,'Please make sure you provide all the required fields. i.e regno, old_password and  password.',true);
         die();
     }
 }elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {

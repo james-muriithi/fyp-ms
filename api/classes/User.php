@@ -276,7 +276,7 @@ class User implements UserInterface
         return $stmt->rowCount() > 0;
     }
 
-    public function updatePassword($newPass):bool
+    public function updatePassword(string $newPass):bool
     {
         $query = 'UPDATE user SET password = :newpass where username=:username';
 

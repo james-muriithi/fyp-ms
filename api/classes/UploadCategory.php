@@ -139,6 +139,51 @@ class UploadCategory
         return $today > $deadline;
     }
 
+    /**
+     * @param string $cid category id
+     * @param string $pid project id
+     * @return bool
+     */
+    public function hasUpload($pid, $cid) :bool
+    {
+        $query = 'SELECT 
+                    u.id
+                    FROM upload u
+                     WHERE u.project_id =:pid
+                     AND u.category =:cid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':pid',$pid);
+        $stmt->bindParam(':cid',$cid);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * @param string $cid category id
+     * @param string $pid project id
+     * @return array
+     */
+    public function getStudentCategoryUpload($cid, $pid):array
+    {
+        if (!$this->hasUpload($pid,$cid)){
+            return [];
+        }
+        $query = 'SELECT * FROM upload WHERE category = :cat_id AND project_id= :pid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':cat_id', $cid);
+        $stmt->bindParam(':pid', $pid);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
     /**
      * @return int

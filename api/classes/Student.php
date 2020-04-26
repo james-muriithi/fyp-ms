@@ -105,6 +105,20 @@ class Student extends User
         return $stmt->execute();
     }
 
+    public function updateImage($filename) :bool
+    {
+        $query = 'UPDATE student
+                  SET profile = :profile 
+                  WHERE reg_no= :reg_no';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':profile',$filename);
+        $stmt->bindParam(':reg_no', $this->username);
+
+        return $stmt->execute();
+    }
+
     public function deleteUser($reg_no):bool
     {
         $query = 'DELETE FROM student
