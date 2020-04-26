@@ -52,29 +52,29 @@ include_once 'head.php'; ?>
                                     <div class="form-group form-row">
                                         <div class="col-sm-6">
                                             <label for="empid">Employee Id: </label>
-                                            <input type="text" readonly class="form-control" id="empid" placeholder="Enter employee Id" name="empid" value="<?= $studentDetails['emp_id'] ?>">
+                                            <input type="text" readonly class="form-control" id="empid" placeholder="Enter employee Id" name="empid" value="<?= $lecDetails['emp_id'] ?>">
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="name">Full Name:</label>
-                                            <input type="text" class="form-control" id="name" placeholder="Enter full name" name="name" value="<?= $studentDetails['full_name'] ?>">
+                                            <input type="text" class="form-control" id="name" placeholder="Enter full name" name="name" value="<?= $lecDetails['full_name'] ?>">
                                         </div>
                                     </div>
 
                                     <div class="form-group form-row">
                                         <div class="col-sm-6">
                                             <label for="regno">Email: </label>
-                                            <input type="email" class="form-control" id="email" placeholder="john@doe.com" name="email" value="<?= $studentDetails['email'] ?>">
+                                            <input type="email" class="form-control" id="email" placeholder="john@doe.com" name="email" value="<?= $lecDetails['email'] ?>">
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="phone">Phone No:</label>
-                                            <input type="text" class="form-control" id="phone" placeholder="0712345678" name="phone" value="<?= $studentDetails['phone_no'] ?>">
+                                            <input type="text" class="form-control" id="phone" placeholder="0712345678" name="phone" value="<?= $lecDetails['phone_no'] ?>">
                                         </div>
                                     </div>
 
                                     <div class="form-group form-row">
                                         <div class="col-sm-6">
                                             <label for="expertise">Expertise:</label>
-                                            <input type="text" class="form-control" id="expertise" placeholder="Database Management" name="expertise" value="<?= $studentDetails['expertise'] ?>">
+                                            <input type="text" class="form-control" id="expertise" placeholder="Database Management" name="expertise" value="<?= $lecDetails['expertise'] ?>">
                                         </div>
                                     </div>
 
@@ -96,7 +96,7 @@ include_once 'head.php'; ?>
                                     <div class="profile-userpic w-100">
                                         <?php
                                         $uploadDir = 'assets/images/users/';
-                                        $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $studentDetails['profile'];
+                                        $image = empty($lecDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $lecDetails['profile'];
                                         if (!file_exists($image)){
                                             $image = $uploadDir.'avatar-lec.png';
                                         }

@@ -1,6 +1,6 @@
 <?php
 include_once 'head.php';
-$lecArray = $student->getAllUsers();
+$lecArray = $lec->getAllUsers();
 ?>
 <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/jquery-nice-select/css/nice-select.css">

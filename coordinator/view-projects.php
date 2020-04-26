@@ -4,7 +4,7 @@ include_once '../api/classes/Project.php';
 
 $project = new Project($conn);
 $projectArray = $project->viewAllProjects();
-$lecArray = $student->getAllUsers();
+$lecArray = $lec->getAllUsers();
 ?>
 
 

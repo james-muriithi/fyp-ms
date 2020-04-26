@@ -1,7 +1,7 @@
 <?php
 include_once 'head.php';
 include_once '../api/classes/Project.php';
-$lecArray = $student->getAllUsers();
+$lecArray = $lec->getAllUsers();
 ?>
 <!-- DataTables -->
 <link rel="stylesheet" type="text/css" href="../assets/libs/DataTables/datatables.min.css"/>
