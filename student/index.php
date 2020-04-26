@@ -10,8 +10,8 @@ $uc = new UploadCategory($conn);
 $ucArr = $uc->viewAllCategories();
 $deadlineArr = [];
 foreach ($ucArr as $cat){
-    $remainingDays = abs( strtotime(date('Y-m-d')) - strtotime($cat['deadline']))/60/60/24;
-    if ($remainingDays <= 3){
+    $remainingDays =  (strtotime($cat['deadline']) - strtotime(date('Y-m-d')) )/60/60/24;
+    if ($remainingDays <= 3 && $remainingDays >= 0){
         array_push($deadlineArr, $cat);
     }
 }

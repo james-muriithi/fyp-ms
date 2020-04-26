@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once '../api/config/database.php';
-include_once '../api/classes/Lecturer.php';
+include_once '../api/classes/Student.php';
 if (isset($_FILES['file']) && count($_FILES) === 1){
     $uploadDir = 'assets/images/users/';
     $file_name = $_FILES['file']['name'];
@@ -23,24 +23,31 @@ if (isset($_FILES['file']) && count($_FILES) === 1){
 
     if (!is_dir($uploadDir)){
         if (!mkdir($uploadDir, '0777', true) && !is_dir($uploadDir)) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadDir));
+            echo json_response(400, 'Directory '.$uploadDir.' was not created', true);
+            die();
+//            throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadDir));
         }
     }
 
-    $filename = bin2hex(random_bytes(5)). '.' .$file_ext;
+    try {
+        $filename = bin2hex(random_bytes(5)) . '.' . $file_ext;
+    } catch (Exception $e) {
+        echo json_response(400, 'Unable to crate a file name', true);
+        die();
+    }
     if (file_exists($uploadDir.$filename)){
         $filename = bin2hex(random_bytes(5)). '.' .$file_ext;
     }
     $conn = Database::getInstance();
-    $lec = new Lecturer($conn);
-    $lec->setUsername($_SESSION['username']);
-    $oldImage = $lec->getUser()['profile'];
-    move_uploaded_file($file_tmp,$uploadDir.$filename);
-    if ($lec->updateImage($filename)){
+    $student = new Student($conn);
+    $student->setUsername($_SESSION['username']);
+    $oldImage = $student->getUser()['profile'];
+
+    if (move_uploaded_file($file_tmp,$uploadDir.$filename) && $student->updateImage($filename)){
         echo json_response(200, 'Your image was uploaded successfully');
-        unlink($uploadDir.$oldImage);
+        @unlink($uploadDir.$oldImage);
     }else{
-        unlink($uploadDir.$filename);
+        @unlink($uploadDir.$filename);
         echo json_response(400, 'There was an error trying to upload your image. Please try again later.', true);
     }
 

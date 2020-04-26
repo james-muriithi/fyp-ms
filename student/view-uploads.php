@@ -6,6 +6,7 @@ require_once '../api/classes/Project.php';
 $upload = new Upload($conn);
 $project = new Project($conn);
 ?>
+<link rel="stylesheet" type="text/css" href="../assets/libs/dropzone/dropzone.min.css">
 <body data-sidebar="dark">
 <!-- Begin page -->
 <div id="layout-wrapper">
@@ -38,7 +39,7 @@ $project = new Project($conn);
                         <div class="card">
                             <div class="card-body">
 
-                                <h4 class="card-title">Student Uploads</h4>
+                                <h4 class="card-title">Your Uploads</h4>
                                 <div class="dropdown-divider"></div>
 
                                 <table id="datatable-buttons" class="table table-striped table-bordered dt-responsives nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -68,7 +69,7 @@ $project = new Project($conn);
                                             </td>
                                             <td><?= $upl['upload_time'] ?></td>
                                             <td><?= $upl['project'] ?></td>
-                                            <td><?= $upl['category'] ?></td>
+                                            <td data-cid="<?= $upl['category_id'] ?>"><?= $upl['category'] ?></td>
                                             <td><?= $upl['reg_no'] ?></td>
                                             <td><?= $upl['full_name'] ?></td>
                                             <td>
@@ -83,11 +84,20 @@ $project = new Project($conn);
                                                 ?>
                                             </td>
                                             <td>
-                                                <div class="text-center">
-                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" >
-                                                        <i class="mdi mdi-pencil"></i>
-                                                    </button>
-                                                </div>
+                                                <?php
+                                                if (strftime('%Y-%m-%d', strtotime($upl['deadline'])) > strftime('%Y-%m-%d', strtotime(date('Y-m-d')))){
+                                                    ?>
+                                                    <div class="text-center">
+                                                        <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal" >
+                                                            <i class="mdi mdi-pencil"></i>
+                                                        </button>
+                                                    </div>
+                                                <?php
+                                                }
+                                                ?>
                                             </td>
                                         </tr>
                                     <?php }
@@ -107,72 +117,31 @@ $project = new Project($conn);
 </div>
 <!-- END layout-wrapper -->
 
-<!-- reject modal -->
-<div id="rejectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--edit modal-->
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title mt-0" id="myModalLabel">
-                    Reject Upload
+                    Edit Upload
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-                <h5 class="text-danger">Are you sure you want to reject the upload?
-                </h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-danger waves-effect waves-light btn-reject2"><i class="fa fa-times"></i> Yes</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /. reject modal -->
-
-
-<!-- undo modal -->
-<div id="undoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mt-0" id="myModalLabel">
-                    Undo
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <h5 class="text-dark">Are you sure you want to return the upload to pending?
-                </h5>
+                <form class="dropzone edit-upload-form" id="single-file-upload">
+                    <div class="fallback">
+                        <input name="file" type="file" class="form-control" accept=".tar.gz, .docx, .pdf, .doc, .zip, .odf" />
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary waves-effect waves-light btn-undo2"><i class="fa fa-check"></i> Yes</button>
+                <button type="submit" class="btn btn-success waves-effect waves-light btn-save" form="single-file-upload">Edit</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div><!-- /. undo modal -->
+</div><!-- /.modal -->
 
-<!-- approve modal -->
-<div id="approveModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mt-0" id="myModalLabel">
-                    Approve Upload
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <h5 class="text-success">Are you sure you want to approve the upload?
-                </h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success waves-effect waves-light btn-approve2"><i class="fa fa-check"></i> Yes</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /. approve modal -->
 
 
 <!-- delete modal -->
@@ -216,11 +185,98 @@ $project = new Project($conn);
 
 <script type="text/javascript" src="../assets/libs/toastr/toastr.min.js"></script>
 
-
+<script type="text/javascript" src="../assets/libs/dropzone/dropzone.min.js"></script>
 <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>
 <script>
+//    edit-modal
+    let category_id = '';
+    $('.btn-edit').on('click', function (event) {
+        let tr = $(this).closest('tr');
+        category_id = tr.find('td:nth-child(4)').data('cid');
+    });
+    Dropzone.options.singleFileUpload = {
+    paramName: "file", // The name that will be used to transfer the file
+    url: 'test-upload.php',
+    maxFilesize: 15, // MB
+    maxFiles: 1,
+    autoProcessQueue: false,
+    acceptedFiles: '.tar.gz, .docx, .pdf, .doc, .zip, .odf',
+    // Language Strings
+    dictFileTooBig: "File is to big ({{filesize}}mb). Max allowed file size is {{maxFilesize}}mb",
+    dictInvalidFileType: "Invalid File Type",
+    dictCancelUpload: "Cancel",
+    dictResponseError: "Server responded with {{statusCode}} code.",
+    dictFallbackMessage: "hello",
+    init: function () {
+        let self = this;
+
+        $('.edit-upload-form').on('submit',function (e) {
+            e.preventDefault();
+            if (self.files[0] == null){
+                toastr.error(`Please Select a file to upload of less than ${self.options.maxFilesize}MB`,'Sorry!', {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                })
+            }else{
+                self.processQueue();
+            }
+        })
+        this.on('sending', function (file, xhr, formData) {
+            let student = '<?= $_SESSION['username'] ?>';
+            formData.append('edit', true);
+            formData.append('student', student)
+            formData.append('category', category_id)
+            console.log(category_id)
+        })
+        this.on("success", function(file,successMsg) {
+            console.log(successMsg)
+            let success = 'Your fle was uploaded successfully';
+            try{
+                success = successMsg.success.message;
+                this.removeAllFiles();
+            }catch (e) {
+                console.log(e)
+            }
+            toastr.success(success,'Bravoo!', {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut",
+                onHidden: function () {
+                    location.reload();
+                }
+            })
+        });
+
+
+        this.on("error", function(file,err) {
+            console.log(err)
+            let error = 'There was an error trying to upload your file. Please try again later.';
+            file.status = Dropzone.QUEUED
+            try{
+                error = err.error.message
+            }catch (e) {
+                console.log(e)
+            }
+            $(file.previewElement).find('.dz-error-message').text(error);
+            toastr.error(error,'Sorry!', {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut"
+            })
+        });
+
+
+        this.on("addedfile", function() {
+            if (this.files[1]!=null){
+                this.removeFile(this.files[0]);
+            }
+        });
+    }
+
+};
+
+
+
     //    delete modal
     let upload_id = '';
     $('.btn-delete').on('click', function (event) {
@@ -236,132 +292,6 @@ $project = new Project($conn);
             dataType: 'json',
             processData: false,
             contentType: 'application/json',
-            success: function (data) {
-                //havent removed conn->rollback()
-                toastr.success(`${data.success.message} doesn't delete though`, "Bravoo!", {
-                    showMethod: "slideDown",
-                    hideMethod: "fadeOut",
-                    onHidden: function () {
-                        location.reload();
-                    }
-                });
-            },
-            error: function (data) {
-                console.log(data)
-                let message = 'Some unexpected error occurred';
-                try{
-                    message = data['responseJSON']['error']['message'];
-                }catch (e) {
-                    console.error(e)
-                }
-                toastr.error(message, "Ooops!", {
-                    showMethod: "slideDown",
-                    hideMethod: "fadeOut"
-                });
-
-            }
-
-        });
-    });
-
-//    approve modal
-    $('.btn-approve').on('click', function (event) {
-        let tr = $(this).closest('tr');
-        upload_id = tr.data('id');
-    });
-
-    $('.btn-approve2').on('click', function (event) {
-        $.ajax({
-            url: '../api/upload/',
-            data: JSON.stringify({approve: {upload_id}}),
-            method: 'PATCH',
-            dataType: 'json',
-            processData: false,
-            contentType: 'application/merge-patch+json',
-            success: function (data) {
-                //havent removed conn->rollback()
-                toastr.success(`${data.success.message} doesn't delete though`, "Bravoo!", {
-                    showMethod: "slideDown",
-                    hideMethod: "fadeOut",
-                    onHidden: function () {
-                        location.reload();
-                    }
-                });
-            },
-            error: function (data) {
-                console.log(data)
-                let message = 'Some unexpected error occurred';
-                try{
-                    message = data['responseJSON']['error']['message'];
-                }catch (e) {
-                    console.error(e)
-                }
-                toastr.error(message, "Ooops!", {
-                    showMethod: "slideDown",
-                    hideMethod: "fadeOut"
-                });
-
-            }
-
-        });
-    });
-
-//    undo
-    $('.btn-undo').on('click', function (event) {
-        let tr = $(this).closest('tr');
-        upload_id = tr.data('id');
-    });
-
-    $('.btn-undo2').on('click', function (event) {
-        $.ajax({
-            url: '../api/upload/',
-            data: JSON.stringify({undo: {upload_id}}),
-            method: 'PATCH',
-            dataType: 'json',
-            processData: false,
-            contentType: 'application/merge-patch+json',
-            success: function (data) {
-                //havent removed conn->rollback()
-                toastr.success(`${data.success.message} doesn't delete though`, "Bravoo!", {
-                    showMethod: "slideDown",
-                    hideMethod: "fadeOut",
-                    onHidden: function () {
-                        location.reload();
-                    }
-                });
-            },
-            error: function (data) {
-                console.log(data)
-                let message = 'Some unexpected error occurred';
-                try{
-                    message = data['responseJSON']['error']['message'];
-                }catch (e) {
-                    console.error(e)
-                }
-                toastr.error(message, "Ooops!", {
-                    showMethod: "slideDown",
-                    hideMethod: "fadeOut"
-                });
-
-            }
-
-        });
-    });
-
-//    reject
-    $('.btn-reject').on('click', function (event) {
-        let tr = $(this).closest('tr');
-        upload_id = tr.data('id');
-    });
-
-    $('.btn-reject2').on('click', function (event) {
-        $.ajax({
-            url: '../api/upload/',
-            data: JSON.stringify({reject: {upload_id}}),
-            method: 'PATCH',
-            dataType: 'json',
-            processData: false,
-            contentType: 'application/merge-patch+json',
             success: function (data) {
                 //havent removed conn->rollback()
                 toastr.success(`${data.success.message} doesn't delete though`, "Bravoo!", {

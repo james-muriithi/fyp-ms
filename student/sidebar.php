@@ -49,11 +49,6 @@
                                 <span>Upload Categories</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <?php
-                                if($_SESSION['level'] === 1){ ?>
-                                    <li><a href="add-upload-category.php">Add Category</a></li>
-                                <?php }
-                                ?>
                                 <li><a href="view-upload-category.php">View Categories</a></li>
                             </ul>
                         </li>
@@ -64,6 +59,7 @@
                                 <span>My Uploads</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="add-upload.php">Add Upload</a></li>
                                 <li><a href="view-uploads.php">View Uploads</a></li>
                             </ul>
                         </li>
