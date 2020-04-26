@@ -12,15 +12,20 @@ $uc = new UploadCategory($conn);
 $up = new Upload($conn);
 $uc->setCatId(1);
 
-//echo json_encode($up->viewAllUploads());
+//echo json_encode($uc->hasUpload(1,2));
+echo json_encode($uc->getStudentCategoryUpload(2,1));
 
 $project = new Project($conn);
 $student = new Student($conn);
 //$lec = new Lecturer($conn);
 $student->setUsername('SB30/PU/41760/16');
+$student->setPassword('9641');
 //$lecDetails =  $lec->getUser();
 //echo $lecDetails['coordinator'];
-echo json_encode($project->viewProject(2));
+//echo (strtotime(date('Y-m-d')) - strtotime('2020-04-27'))/60/60/24;
+
+//mkdir('60/');
+//echo json_encode($student->verifyUser());
 //echo json_encode($project->viewAllProjects());
 //function extractIds($project){
 //    return $project['id'];
