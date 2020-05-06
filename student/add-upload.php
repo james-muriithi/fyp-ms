@@ -71,6 +71,7 @@ $ucArr = $uc->viewAllCategories();
                                         <div class="col-sm-12">
                                             <label for="u-cat">Upload Category:</label>
                                             <select id="u-cat" name="category" class="wide" required>
+                                                <option value="" disabled selected >--Select Category--</option>
                                                 <?php
                                                 foreach ($ucArr as $cat){
                                                     $remainingDays =  (strtotime($cat['deadline']) - strtotime(date('Y-m-d')) )/60/60/24;

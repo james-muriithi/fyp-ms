@@ -56,10 +56,18 @@ foreach ($ucArr as $cat){
                                         $project = new Project($conn);
                                         $allProjects = $project->viewAllProjects();
 
-                                        $uploadArr = $upload->viewAllUploads();
+                                        $allUploads = $upload->viewAllUploads();
+
+                                        $studentUploads = [];
+
+                                        foreach ($allUploads as $upl){
+                                            if ( (string)$_SESSION['username'] === (string)$upl['reg_no'] ){
+                                                array_push($studentUploads, $upl);
+                                            }
+                                        }
                                         ?>
                                         <h5 class="fs-16 text-uppercase mt-0 text-white-50">Uploads</h5>
-                                        <h4 class="font-weight-medium font-size-24" data-counter="counterup" data-value="<?= count($uploadArr) ?>">0</h4>
+                                        <h4 class="font-weight-medium font-size-24" data-counter="counterup" data-value="<?= count($studentUploads) ?>">0</h4>
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
