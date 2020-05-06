@@ -22,17 +22,34 @@ session_start();
         include_once 'api/config/database.php';
         include_once 'api/classes/User.php';
         include_once 'api/classes/Student.php';
+        include_once 'api/classes/Lecturer.php';
 
         $conn = Database::getInstance();
 
         $user = new User($conn);
         $user->setToken($token);
         $phone = '';
+
         if ($user->verifyToken()){
             if ($user->getLevel() == 3) {
                 $student = new Student($conn);
                 $student->setRegNo($user->getUsername());
+                $studentDetails = $student->getUser();
                 $phone = $student->getUser()['phone_no'];
+                $uploadDir = 'student/assets/images/users/';
+                $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-st.png': $uploadDir. $studentDetails['profile'];
+                if (!file_exists($image)){
+                    $image = $uploadDir.'avatar-st.png';
+                }
+            }else{
+                $lecturer = new Lecturer($conn);
+                $lecturer->setUsername($user->getUsername());
+                $lecDetails = $lecturer->getUser();
+                $uploadDir = 'coordinator/assets/images/users/';
+                $image = empty($lecDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $lecDetails['profile'];
+                if (!file_exists($image)){
+                    $image = $uploadDir.'avatar-lec.png';
+                }
             }
         }else{
             header('Location: confirm-username.php');
@@ -54,7 +71,7 @@ session_start();
                                 <h5 class="text-white font-size-20">Set Password</h5>
                                 <p class="text-white-50">Hello <?= $user->getUsername() ?>, enter your new password!</p>
                                 <a href="javascript:void(0)" class="logo logo-admin">
-                                    <img src="assets/images/users/user-6.jpg" class="rounded-circle" height="70" alt="logo">
+                                    <img src="<?= $image ?>" class="rounded-circle" height="70" alt="logo">
                                 </a>
                             </div>
                         </div>
