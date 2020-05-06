@@ -81,7 +81,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="javascript: void(0);" class=" waves-effect">
+                            <a href="past-deadline.php" class=" waves-effect">
                                 <i class="ti-time"></i>
                                 <span>Past Deadline</span>
                             </a>
@@ -98,15 +98,6 @@
                                 <li><a href="tables-datatable.html">View Notifications</a></li>
                             </ul>
                         </li>
-                        <li class="menu-title">Extras</li>
-                        <li>
-                            <a href="javascript: void(0);" class="waves-effect">
-                                <i class="ti-face-smile"></i>
-                                <span>Timeline</span>
-                            </a>
-                            
-                        </li>
-                        
                         <!-- <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="ti-more"></i>
