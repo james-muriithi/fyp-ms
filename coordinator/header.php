@@ -1,3 +1,22 @@
+<?php
+require_once 'notifications.php';
+
+$x = new Notification($conn, $lec);
+
+$notifications = $x->get($lec);
+$notArray = [];
+foreach ($notifications as $notification) {
+//    print_r($notification);
+    switch ($notification['notifications'][0]['type']) {
+        case 'upload.new':
+            $x1 = new NewUploadNotification($conn, $lec);
+            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            break;
+
+    }
+}
+?>
+
 <header id="page-topbar">
             <div class="navbar-header">
                 <div class="d-flex">
@@ -75,49 +94,53 @@
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="mdi mdi-bell-outline"></i>
-                            <span class="badge badge-danger badge-pill">3</span>
+                            <span class="badge badge-danger badge-pill"><?= count($notArray) ?></span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0 animated fadeInUp notification-show m-t-10" aria-labelledby="page-header-notifications-dropdown">
                             <div class="p-3">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h5 class="m-0 font-size-16"> Notifications (3) <span class="badge badge-danger badge-pill float-right p-b-5 p-t-3">New</span></h5>
+                                        <h5 class="m-0 font-size-16"> Notifications (<?= count($notArray) ?>) <span class="badge badge-danger badge-pill float-right p-b-5 p-t-3">New</span></h5>
                                     </div>
                                 </div>
                             </div>
                             <div data-simplebar style="max-height: 230px;">
-                                <a href="#" class="text-reset notification-item">
-                                    <div class="media">
-                                        <div class="avatar-xs mr-3">
-                                            <span class="avatar-title bg-success rounded-circle font-size-16">
-                                                <i class="mdi mdi-cart-outline"></i>
+                                <?php
+                                foreach ($notArray as $notification){
+                                    $classArray = [
+                                        'icon' => 'fa-info',
+                                        'color' => 'text-primary',
+                                        'bg' => 'bg-primary'
+                                    ];
+                                    if ($notification['level'] == 1){
+                                        $classArray['icon'] = 'fa-check';
+                                        $classArray['color'] = 'text-success';
+                                        $classArray['bg'] = 'bg-success';
+                                    }elseif ($notification['level'] == 3){
+                                        $classArray['icon'] = 'fa-warning';
+                                        $classArray['color'] = 'text-danger';
+                                        $classArray['bg'] = 'bg-danger';
+                                    }
+                                    ?>
+                                    <a href="#" class="text-reset notification-item">
+                                        <div class="media">
+                                            <div class="avatar-xs mr-3">
+                                            <span class="avatar-title <?= $classArray['bg'] ?> rounded-circle font-size-16">
+                                                <i class="fa <?= $classArray['icon'] ?>"></i>
                                             </span>
-                                        </div>
-                                        <div class="media-body">
-                                            <h6 class="mt-0 mb-1">Your order is placed</h6>
-                                            <div class="font-size-12 text-muted">
-                                                <p class="mb-1">Lorem ipsum dolor sit amet, consectetur dipisicing elit.</p>
-                                                <span class="notification-time">Yesterday, 22:30 hr</span>
+                                            </div>
+                                            <div class="media-body">
+                                                <h6 class="mt-0 mb-1 <?= $classArray['color'] ?>"><?= $notification['topic'] ?></h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1"><?= $notification['message'] ?></p>
+                                                    <span class="notification-time"><?= $notification['created_at'] ?></span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                                <a href="#" class="text-reset notification-item">
-                                    <div class="media">
-                                        <div class="avatar-xs mr-3">
-                                            <span class="avatar-title bg-warning rounded-circle font-size-16">
-                                                <i class="mdi mdi-message-text-outline"></i>
-                                            </span>
-                                        </div>
-                                        <div class="media-body">
-                                            <h6 class="mt-0 mb-1">New Message received</h6>
-                                            <div class="font-size-12 text-muted">
-                                                <p class="mb-1">You have 87 unread messages</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                    <?php
+                                }
+                                ?>
                             </div>
                             <div class="p-2 border-top">
                                 <a class="btn btn-sm btn-link font-size-14 btn-block text-center" href="javascript:void(0)">
