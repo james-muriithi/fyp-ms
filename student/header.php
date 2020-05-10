@@ -12,7 +12,20 @@ foreach ($notifications as $notification) {
             $x1 = new NewUploadNotification($conn, $student);
             $notArray[] = $x1->messageForNotifications($notification['notifications']);
             break;
-
+        case 'category.new':
+            $x1 = new NewCategoryNotification($conn, $student);
+            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            break;
+        case 'upload.status':
+            $x1 = new NewUpdateNotification($conn, $student);
+            print_r($notification['notifications']);
+            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            break;
+        case 'project.status':
+            $x1 = new ProjectUpdateNotification($conn, $student);
+            print_r($notification['notifications']);
+            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            break;
     }
 }
 ?>
@@ -90,7 +103,7 @@ foreach ($notifications as $notification) {
                                         $classArray['color'] = 'text-success';
                                         $classArray['bg'] = 'bg-success';
                                     }elseif ($notification['level'] == 3){
-                                        $classArray['icon'] = 'fa-warning';
+                                        $classArray['icon'] = 'fa-exclamation-circle';
                                         $classArray['color'] = 'text-danger';
                                         $classArray['bg'] = 'bg-danger';
                                     }

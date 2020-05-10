@@ -129,6 +129,8 @@ foreach ($ucArr as $cat){
     <?php include_once 'js.php'; ?>
     <script src="../assets/libs/moment/min/moment.min.js"></script>
     <script src="../assets/libs/fullcalendar/fullcalendar.min.js"></script>
+    <script src="assets/js/filesaver.js"></script>
+    <script src="assets/js/ics.min.js"></script>
 
     <!-- Calendar init -->
     <script src="../assets/js/pages/calendar.init.js"></script>
