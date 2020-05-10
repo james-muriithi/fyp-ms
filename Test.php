@@ -13,7 +13,7 @@ $up = new Upload($conn);
 $uc->setCatId(1);
 
 //echo json_encode($uc->hasUpload(1,2));
-echo json_encode($uc->getStudentCategoryUpload(2,1));
+//echo json_encode($uc->getStudentCategoryUpload(2,1));
 
 $project = new Project($conn);
 $student = new Student($conn);
@@ -23,7 +23,9 @@ $student->setPassword('9641');
 //$lecDetails =  $lec->getUser();
 //echo $lecDetails['coordinator'];
 //echo (strtotime(date('Y-m-d')) - strtotime('2020-04-27'))/60/60/24;
-
+var_dump($project->statusUpdate(1,0));
+$me = 0;
+var_dump(isset($me));
 //mkdir('60/');
 //echo json_encode($student->verifyUser());
 //echo json_encode($project->viewAllProjects());
