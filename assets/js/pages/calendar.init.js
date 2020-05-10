@@ -18,10 +18,31 @@ window.addEventListener('DOMContentLoaded', async function () {
                 return tempArr
             })
         let cal = $('#calendar').fullCalendar({
+            customButtons: {
+                myCustomButton: {
+                    text: 'Google Calendar',
+                    click: function() {
+                        if (categories.length > 0){
+                            let cal = ics();
+                            categories.forEach(category => {
+                                let temp = new Date(category['end'])
+                                let end = temp.setDate(temp.getDate()-1)
+                                cal.addEvent(category['title'], category['description'], 'Pwani University', category['start'], end);
+                            })
+                            cal.download('Project Uploads')
+                        }else{
+                            toastr.error('There are no events yet.', "Oops!", {
+                                showMethod: "slideDown",
+                                hideMethod: "fadeOut"
+                            });
+                        }
+                    }
+                }
+            },
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month'
+                right: 'myCustomButton'
             },
             defaultView: 'month',
             eventDurationEditable: false,
