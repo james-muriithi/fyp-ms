@@ -34,7 +34,7 @@ class NotificationAdapter extends Notification
     {
         $query = 'select *, count(*) as count from notifications
                     WHERE recipient_id =:recipient_id
-                    group by `type`, `recipient_id`
+                    group by `type`, `recipient_id`, `level`
                     order by created_at desc, unread desc
                     limit 20';
 

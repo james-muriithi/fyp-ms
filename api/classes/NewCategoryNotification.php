@@ -1,26 +1,26 @@
 <?php
+require_once 'UploadCategory.php';
 
-class NewUploadNotification extends Notification
+class NewCategoryNotification extends Notification
 {
+    /**
+     * @var UploadCategory
+    */
+    protected $uploadCategory;
     public function __construct($conn, User $user)
     {
         parent::__construct($conn, $user);
+        $this->uploadCategory = new UploadCategory($conn);
     }
 
     public function messageForNotification($notification)
     {
-        if ((int) $this->getUser()->getLevel() === 3){
-            return $this->studentMessage($this->time_elapsed_string($notification['created_at']));
-        }
-        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$notification['sender_id'] . ' made a new upload'];
-    }
-
-    public function studentMessage( $date = '')
-    {
-        return ['topic'=> 'Upload Success', 'level'=> 1, 'message'=>'Your upload(s) were made successfully',
-            'created_at' => $date
+        $n = $this->uploadCategory->viewCategory($notification['reference_id'])['name'];
+        return ['topic'=> 'New Category', 'level'=> 2, 'message'=>'A new upload Category <strong class="text-bold">'.$n.'</strong> has been added',
+            'created_at' => $this->time_elapsed_string($notification['created_at'])
         ];
     }
+
 
     public function messageForNotifications(array $notifications, int $realCount = 0)
     {
@@ -82,41 +82,33 @@ class NewUploadNotification extends Notification
 
     protected function messageForTwoNotifications(array $notifications)
     {
-        if ((int) $this->getUser()->getLevel() === 3){
-            return $this->studentMessage($this->time_elapsed_string($notifications[0]['created_at']));
-        }
         list($first, $second) = $notifications;
-        $names =  $first['sender_id']  . ' and ' . $second['sender_id'] ; // John and Jane
-        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$names . ' made a new upload', 'created_at' => $this->time_elapsed_string($first['created_at'])];
+        $names =  $this->uploadCategory->viewCategory($first['reference_id'])['name']  . ' and ' . $this->uploadCategory->viewCategory($second['reference_id'])['name'] ; // John and Jane
+        return ['topic'=> 'New Categories', 'level'=> 2, 'message'=>$names . ' were added.', 'created_at' => $this->time_elapsed_string($first['created_at'])];
     }
 
     protected function messageForManyNotifications(array $notifications)
     {
-        if ((int) $this->getUser()->getLevel() === 3){
-            return $this->studentMessage($this->time_elapsed_string($notifications[0]['created_at']));
-        }
 
         $last = array_pop($notifications);
         $names = '';
         foreach($notifications as $notification) {
-            $names .= $notification['sender_id']  . ', ';
+            $names .= $this->uploadCategory->viewCategory($notification['reference_id'])['name']  . ', ';
         }
 
         $names = substr($names, 0, -2) . ' and ' . $last['sender_id'] ; // Jane, Johnny, James and Jenny
-        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$names . ' made a new upload', 'created_at' => $this->time_elapsed_string($last['created_at'])];
+        return ['topic'=> 'New Categories', 'level'=> 2, 'message'=>$names . ' were added',
+            'created_at' => $this->time_elapsed_string($last['created_at'])];
 
     }
 
 
     protected function messageForManyManyNotifications(array $notifications, int $realCount)
     {
-        if ((int) $this->getUser()->getLevel() === 3){
-            return $this->studentMessage($this->time_elapsed_string($notifications[0]['created_at']));
-        }
-
         list($first, $second) = array_slice($notifications, 0, 2);
 
-        $names = $first['sender_id'] . ', ' . $second['sender_id']  . ' and ' .  $realCount . ' others'; // Jonny, James and 12 other
-        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$names . ' made a new upload', 'created_at' => $this->time_elapsed_string($first['created_at'])];
+        $names =  $this->uploadCategory->viewCategory($first['reference_id'])['name']  . ' and ' . $this->uploadCategory->viewCategory($second['reference_id'])['name']  . ' and ' .  $realCount . ' others'; // Jonny, James and 12 other
+        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$names . ' made a new upload',
+            'created_at' => $this->time_elapsed_string($first['created_at'])];
     }
 }

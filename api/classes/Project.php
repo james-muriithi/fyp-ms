@@ -151,6 +151,7 @@ class Project extends Student
                             WHEN p.status = 1 THEN "complete"
                             WHEN p.status = 0 THEN "rejected"
                         END AS status,
+                        p.status as status_code,
                         pc.name as category,
                         pc.id as cat_id,
                         s.full_name,
@@ -271,7 +272,7 @@ class Project extends Student
     public function editProject($pid, $category, $title , $description):bool
     {
         $query = 'UPDATE project SET 
-                        title = :title, category = :category, description = :description 
+                        title = :title, category = :category, description = :description
                     WHERE id = :pid';
 
         $stmt = $this->conn->prepare($query);
@@ -279,6 +280,20 @@ class Project extends Student
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':category', $category);
+        $stmt->bindParam(':pid', $pid);
+
+        return $stmt->execute();
+    }
+
+    public function statusUpdate($pid, $status):bool
+    {
+        $query = 'UPDATE project SET 
+                        status = :status
+                    WHERE id = :pid';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':status', $status);
         $stmt->bindParam(':pid', $pid);
 
         return $stmt->execute();

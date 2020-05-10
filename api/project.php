@@ -149,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $category = empty($data['category']) ? $projectDetails['cat_id'] :$data['category'];
                 $description = empty($data['description']) ? $projectDetails['description'] : $data['description'];
                 $empId = empty($data['supervisor']) ? $projectDetails['emp_id'] : $data['supervisor'];
+                $status = !isset($data['status']) ? $projectDetails['status_code'] : $data['status'];
 
                 if($title  != $projectDetails['title']){
                     if ($project->projectTitleExists($title, $category)){
@@ -163,6 +164,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $conn->beginTransaction();
 
                 if ($project->editProject($pid, $category,$title,$description)){
+
+                    if ((int)$status != (int)$projectDetails['status_code']){
+                        $project->statusUpdate($pid, $status);
+                    }
                     $conn->commit();
                     echo json_response(200, 'The project has been edited successfully.');
                     die();
