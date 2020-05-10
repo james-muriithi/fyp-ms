@@ -7,7 +7,7 @@ $projectArray = $project->viewAllProjects();
 $lecArray = $lec->getAllUsers();
 ?>
 
-
+<link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css"/>
 
 <body data-sidebar="dark">
@@ -166,7 +166,7 @@ $lecArray = $lec->getAllUsers();
                 <form id="edit-project-form">
                     <div class="form-group form-row">
                         <div class="col-sm-12">
-                            <label for="pid">Title: </label>
+                            <label for="pid">Project Id: </label>
                             <input type="text" class="form-control" id="pid" placeholder="" readonly name="pid">
                         </div>
                     </div>
@@ -206,7 +206,7 @@ $lecArray = $lec->getAllUsers();
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success waves-effect waves-light btn-save" form="edit-student-form">Edit</button>
+                <button type="submit" class="btn btn-success waves-effect waves-light btn-save" form="edit-project-form">Edit</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -281,7 +281,7 @@ include_once 'js.php';
 
 <!-- slimselect -->
 <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
-
+<script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 
 <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
@@ -337,7 +337,7 @@ include_once 'js.php';
             title = tr.find('td:nth-child(2)').text(),
             pid = tr.find('td:nth-child(1)').text(),
             category = tr.find('td:nth-child(3)').text().toLowerCase(),
-            status = tr.find('td:nth-child(8)').text().toLowerCase(),
+            status = tr.find('td:nth-child(8)').text().toLowerCase().trim(),
             description = tr.data('description').trim();
         if (category ==='web app'){
             category = 1;
@@ -348,12 +348,12 @@ include_once 'js.php';
             category = 3;
         }
 
-        if (status === 'in progress'){
+        if (status == 'in progress'){
             status = 0;
-        }else if (status === 'complete'){
+        }else if (status == 'complete'){
             status = 1;
         }
-        else if (status === 'rejected'){
+        else if (status == 'rejected'){
             status = 2;
         }
 
@@ -363,6 +363,108 @@ include_once 'js.php';
         $(`select#pcat option[value='${category}']`).prop('selected', true);
         $(`select#pstatus option[value='${status}']`).prop('selected', true);
     });
+
+    $('#edit-project-form').on('submit', function (event) {
+        event.preventDefault();
+    });
+    $('#edit-project-form').bootstrapValidator({
+        message: 'This value is not valid',
+        excluded:':disabled',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields:{
+            'project_title' : {
+                message: 'The title is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The title of the project is required and cannot be empty. '
+                    },
+                    stringLength: {
+                        min: 5,
+                        max: 40,
+                        message: 'The title must be more than 5 and less than 40 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9'\s]+$/,
+                        message: 'The title can only consist of alphabetical, numbers, underscores and hyphen'
+                    }
+                }
+            },
+            'description' : {
+                message: 'The description is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The description is required and cannot be empty'
+                    }
+                }
+            },
+            'student':{
+                message: 'The description is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'Please select a student'
+                    }
+                }
+            },
+            'category':{
+                message: 'The description is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'Please select a project category'
+                    }
+                }
+            }
+        },
+        onSuccess: function (e) {
+            $form = $(e.target);
+            let formData = {}
+            $form.serializeArray().map((v)=> formData[v.name] = v.value)
+
+            $.ajax({
+                url: '../api/project/',
+                data: JSON.stringify({...formData}),
+                method: 'PATCH',
+                dataType: 'json',
+                processData: false,
+                contentType: 'application/merge-patch+json',
+                success: function (data) {
+                    toastr.success(data.success.message, "Bravoo!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut",
+                        onHidden: function () {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    console.log(data)
+                    let message = 'Some unexpected error occurred';
+                    try{
+                        message = data['responseJSON']['error']['message'];
+                    }catch (e) {
+                        console.error(message)
+                    }
+                    toastr.error(message, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+
+                }
+
+            });
+
+
+            $form
+                .bootstrapValidator('disableSubmitButtons', false)
+                .bootstrapValidator('resetForm', true);
+        }
+    })
+        .on('status.field.bv', function(e, data) {
+            data.bv.disableSubmitButtons(false);
+        });
 
 
 //    assign modal
