@@ -3,7 +3,8 @@
 
 class ProjectUpdateNotification extends Notification
 {
-    private $statuses = [ 'approved','ongoing', 'rejected'];
+    private $statuses = [ '<b class="text-bold">approved</b>','<b class="text-bold">ongoing</b>',
+        '<b class="text-bold">rejected</b>'];
 
     public function __construct($conn, User $user)
     {

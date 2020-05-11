@@ -44,6 +44,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
             echo json_response(400,'The user does not exist.', true);
         }
     }
+}else if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
+    if (empty($_POST)) {
+        $_POST = json_decode(file_get_contents('php://input'), true) ? : [];
+    }
+
+    $data = $_POST;
+
+    if (isset($data['mark_as_read'])){
+        $data = $data['mark_as_read'];
+        if(isset($data['recipient'],$data['type'],$data['reference_id'])){
+            $user = new User($conn);
+            if ($user->userExists($data['recipient'])){
+                $user->setUsername($data['recipient']);//sb30/pu/41769/16
+                $x = new Notification($conn, $user);
+                $x->setRecipient($data['recipient']);
+                $x->setReferenceId($data['reference_id']);
+                $x->setType($data['type']);
+
+                if ($x->markRead($x)){
+                    echo json_response(200, 'The notification was marked as read');
+                }else{
+                    echo json_response(400,'There was an error marking the notification.', true);
+                }
+
+            }else{
+                echo json_response(400,'The recipient does not exist.', true);
+            }
+        }
+        elseif (isset($data['mark_all'],$data['recipient'])){
+            $user = new User($conn);
+            if ($user->userExists($data['recipient'])){
+                $user->setUsername($data['recipient']);//sb30/pu/41769/16
+                $x = new Notification($conn, $user);
+                $x->setRecipient($data['recipient']);
+
+                if ($x->markAllAsRead($x)){
+                    echo json_response(200, 'All your notifications were marked as read');
+                }else{
+                    echo json_response(400,'There was an error marking the notifications.', true);
+                }
+
+            }else{
+                echo json_response(400,'The recipient does not exist.', true);
+            }
+        }
+    }
 }
 
 

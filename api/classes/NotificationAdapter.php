@@ -19,9 +19,8 @@ class NotificationAdapter extends Notification
 
     public function isDuplicate(Notification $notification):bool
     {
-        $query = 'SELECT id FROM notifications WHERE recipient_id =:recipient_id AND sender_id=:sender_id AND type=:type AND reference_id=:reference_id';
+        $query = 'SELECT id FROM notifications WHERE recipient_id =:recipient_id AND type=:type AND reference_id=:reference_id';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':sender_id', $notification->sender);
         $stmt->bindParam(':recipient_id', $notification->recipient);
         $stmt->bindParam(':type', $notification->type);
         $stmt->bindParam(':reference_id', $notification->referenceId);
@@ -33,7 +32,7 @@ class NotificationAdapter extends Notification
     public function getNotifications(User $user, $limit = 20):array
     {
         $query = 'select *, count(*) as count from notifications
-                    WHERE recipient_id =:recipient_id
+                    WHERE recipient_id =:recipient_id AND unread = 1
                     group by `type`, `recipient_id`, `level`
                     order by created_at desc, unread desc
                     limit 20';
@@ -66,7 +65,7 @@ class NotificationAdapter extends Notification
     public function getAll($recipient_id, $type)
     {
         $query = 'select * from notifications
-                    WHERE recipient_id =:recipient_id AND type = :type
+                    WHERE recipient_id =:recipient_id AND type = :type AND unread = 1
                     order by created_at desc, unread desc
                     limit 5';
 
@@ -75,6 +74,38 @@ class NotificationAdapter extends Notification
         $stmt->bindParam(':recipient_id', $recipient_id);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function markAsRead($recipient, $reference_id, $type):bool
+    {
+        $query = 'UPDATE notifications SET unread=0 WHERE recipient_id = :recipient AND type = :type AND reference_id = :reference';
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':recipient', $recipient);
+        $stmt->bindParam(':reference', $reference_id);
+
+        return $stmt->execute();
+    }
+
+    public function markAsReadWithId($id):bool
+    {
+        $query = 'UPDATE notifications SET unread=0 WHERE id = :id';
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+    }
+
+    public function markAllAsRead($recipient):bool
+    {
+        $query = 'UPDATE notifications SET unread=0 WHERE recipient_id = :recipient';
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':recipient', $recipient);
+
+        return $stmt->execute();
     }
 
     /**
