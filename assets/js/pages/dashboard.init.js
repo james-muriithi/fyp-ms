@@ -1,4 +1,3 @@
-// new Chartist.Line("#chart-with-area",{labels:[1,2,3,4,5,6,7,8],series:[[5,9,7,8,5,3,5,4]]},{low:0,showArea:!0,plugins:[Chartist.plugins.tooltip()]});var chart=new Chartist.Pie("#ct-donut",{series:[54,28,17],labels:[1,2,3]},{donut:!0,showLabel:!1,plugins:[Chartist.plugins.tooltip()]});$(".peity-donut").each(function(){$(this).peity("donut",$(this).data())}),$(".peity-line").each(function(){$(this).peity("line",$(this).data())});
 !function(d) {
     "use strict";
 
@@ -106,3 +105,75 @@
         "use strict";
         window.jQuery.ChartJs.init()
     }();
+window.markAsRead =  (value) => {
+    const reference_id = $(value).data('reference'),
+        type = $(value).data('type'),
+        recipient = $(value).data('recipient');
+
+    $.ajax({
+        url: '../api/notifications/',
+        data: JSON.stringify({mark_as_read: {reference_id,recipient,type}}),
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (data) {
+            toastr.success(data.success.message, "Bravoo!", {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut",
+                onHidden: function () {
+                    location.reload();
+                }
+            });
+        },
+        error: function (data) {
+            console.log(data)
+            let message = 'Some unexpected error occurred';
+            try{
+                message = data['responseJSON']['error']['message'];
+            }catch (e) {
+                console.error(message)
+            }
+            toastr.error(message, "Ooops!", {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut"
+            });
+
+        }
+
+    });
+}
+window.markAllAsRead =  (value) => {
+    const recipient = $(value).data('recipient');
+
+    $.ajax({
+        url: '../api/notifications/',
+        data: JSON.stringify({mark_as_read: {mark_all: true, recipient}}),
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (data) {
+            toastr.success(data.success.message, "Bravoo!", {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut",
+                onHidden: function () {
+                    location.reload();
+                }
+            });
+        },
+        error: function (data) {
+            console.log(data)
+            let message = 'Some unexpected error occurred';
+            try{
+                message = data['responseJSON']['error']['message'];
+            }catch (e) {
+                console.error(message)
+            }
+            toastr.error(message, "Ooops!", {
+                showMethod: "slideDown",
+                hideMethod: "fadeOut"
+            });
+
+        }
+
+    });
+}
