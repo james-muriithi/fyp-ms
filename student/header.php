@@ -10,21 +10,35 @@ foreach ($notifications as $notification) {
     switch ($notification['notifications'][0]['type']) {
         case 'upload.new':
             $x1 = new NewUploadNotification($conn, $student);
-            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
             break;
         case 'category.new':
             $x1 = new NewCategoryNotification($conn, $student);
-            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
             break;
         case 'upload.status':
             $x1 = new NewUpdateNotification($conn, $student);
-            print_r($notification['notifications']);
-            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
             break;
         case 'project.status':
             $x1 = new ProjectUpdateNotification($conn, $student);
-            print_r($notification['notifications']);
-            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
             break;
     }
 }
@@ -108,7 +122,7 @@ foreach ($notifications as $notification) {
                                         $classArray['bg'] = 'bg-danger';
                                     }
                                     ?>
-                                    <a href="#" class="text-reset notification-item">
+                                    <div  class="text-reset notification-item" >
                                         <div class="media">
                                             <div class="avatar-xs mr-3">
                                             <span class="avatar-title <?= $classArray['bg'] ?> rounded-circle font-size-16">
@@ -117,22 +131,39 @@ foreach ($notifications as $notification) {
                                             </div>
                                             <div class="media-body">
                                                 <h6 class="mt-0 mb-1 <?= $classArray['color'] ?>"><?= $notification['topic'] ?></h6>
-                                                <div class="font-size-12 text-muted">
-                                                    <p class="mb-1"><?= $notification['message'] ?></p>
-                                                    <span class="notification-time"><?= $notification['created_at'] ?></span>
-                                                </div>
+                                               <div class="font-size-12 text-muted">
+                                                   <p class="mb-1"><?= $notification['message'] ?></p>
+                                                   <div class="row">
+                                                       <div class="col-9">
+                                                           <span class="notification-time"><?= $notification['created_at'] ?></span>
+                                                       </div>
+                                                       <div class="col-3 float-r" onclick="markAsRead(this)" data-recipient="<?= $notification['recipient'] ?>"
+                                                            data-reference="<?= $notification['reference_id'] ?>" data-type="<?= $notification['type'] ?>">
+                                                           <button class="btn btn-sm fs-11 btn-outline-primary">read</button>
+                                                       </div>
+                                                   </div>
+
+                                               </div>
+
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 <?php
                                 }
                                 ?>
 
                             </div>
-                            <div class="p-2 border-top">
-                                <a class="btn btn-sm btn-link font-size-14 btn-block text-center" href="javascript:void(0)">
-                                    View all
-                                </a>
+                            <div class="p-2 border-top row">
+                                <div class="col-6">
+                                    <a class="btn btn-sm btn-link font-size-14 btn-block btn-outline-secondary" href="javascript:void(0)">
+                                        View all
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-sm btn-link font-size-14 btn-block float-r btn-outline-secondary" data-recipient="<?= $_SESSION['username'] ?>" href="javascript:void(0)" onclick="markAllAsRead(this)">
+                                        Mark all read
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
