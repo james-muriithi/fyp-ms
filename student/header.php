@@ -167,6 +167,14 @@ foreach ($notifications as $notification) {
                             </div>
                         </div>
                     </div>
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="header-item noti-icon displayChatbox waves-effect">
+                            <i class="mdi mdi-message-outline"></i>
+                            <span class="badge badge-success badge-pill">3</span>
+                        </button>
+                    </div>
+
                     <?php
                     $uploadDir = 'assets/images/users/';
                     $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-st.png': $uploadDir. $studentDetails['profile'];
@@ -192,11 +200,7 @@ foreach ($notifications as $notification) {
                             <a class="dropdown-item text-danger" href="logout.php"><i class="bx bx-power-off font-size-17 align-middle mr-1 text-danger"></i> Logout</a>
                         </div>
                     </div>
-<!--                    <div class="dropdown d-inline-block">-->
-<!--                        <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">-->
-<!--                            <i class="mdi mdi-settings-outline"></i>-->
-<!--                        </button>-->
-<!--                    </div>-->
+
                 </div>
             </div>
         </header>
