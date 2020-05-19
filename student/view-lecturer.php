@@ -45,7 +45,7 @@ $lecArray = $lecturer->getAllUsers();
                                                 <thead>
                                                 <tr>
                                                     <th>Name</th>
-                                                    <th>Assigned Students</th>
+                                                    <th>Assigned Projects</th>
                                                     <th>Phone No</th>
                                                     <th>Email</th>
                                                     <th>Expertise</th>

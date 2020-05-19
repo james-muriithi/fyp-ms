@@ -40,6 +40,14 @@ foreach ($notifications as $notification) {
             $tempArr['type'] = $notification['notifications'][0]['type'];
             $notArray[] = $tempArr;
             break;
+        case 'message.new':
+            $x1 = new NewMessageNotification($conn, $student);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
+            break;
     }
 }
 ?>
@@ -171,7 +179,7 @@ foreach ($notifications as $notification) {
                     <div class="dropdown d-inline-block">
                         <button type="button" class="header-item noti-icon displayChatbox waves-effect">
                             <i class="mdi mdi-message-outline"></i>
-                            <span class="badge badge-success badge-pill">3</span>
+                            <span class="badge badge-success badge-pill"><?= count($unreadMessages) ?></span>
                         </button>
                     </div>
 

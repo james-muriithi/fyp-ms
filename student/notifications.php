@@ -13,3 +13,4 @@ require_once '../api/classes/User.php';
 require_once  '../api/classes/NewCategoryNotification.php';
 require_once  '../api/classes/NewUpdateNotification.php';
 require_once  '../api/classes/ProjectUpdateNotification.php';
+require_once  '../api/classes/NewMessageNotification.php';

@@ -4,6 +4,7 @@ include_once '../api/config/database.php';
 include_once '../api/classes/Lecturer.php';
 include_once '../api/classes/Student.php';
 include_once '../api/classes/User.php';
+include_once '../api/classes/Messages.php';
 
 $conn = Database::getInstance();
 
@@ -30,6 +31,10 @@ if (!$student->userExists($_SESSION['username'])){
     die();
 }
 $studentDetails = $student->getUser();
+
+$messages = new Messages($conn, $_SESSION['username']);
+
+$unreadMessages = $messages->getAllUnreadMessages();
 
 ?>
 <!DOCTYPE html>

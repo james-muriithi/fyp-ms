@@ -22,6 +22,30 @@
                     });</script>';
                 unset($_SESSION['success']);
             }
+            include_once '../api/classes/Project.php';
+            include_once '../api/classes/Lecturer.php';
+            $project1 = new Project($conn);
+            $chatList = [];
+            if ($project1->studentHasProject($_SESSION['username'])){
+                $pid = $project1->viewStudentProject($_SESSION['username'])['id'];
+                if ($project1->isAssigned($pid)){
+                    $emp_id = $project1->viewStudentProject($_SESSION['username'])['emp_id'];
+                    $lec = new Lecturer($conn);
+                    $lec->setUsername($emp_id);
+                    $temp['user'] = $lec->getUser();
+                    $temp['unread'] = count($messages->getSenderAllUnreadMessages($emp_id));
+                   $temp['status'] = 'offline';
+//                   profile image
+                    $uploadDir = '../coordinator/assets/images/users/';
+                    $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $studentDetails['profile'];
+                    if (!file_exists($image)){
+                        $image = $uploadDir.'avatar-lec.png';
+                    }
+                    $temp['user']['profile'] = $image;
+                    $chatList[] = $temp;
+                }
+            }
+
             ?>
             <div id="sidebar" class="users p-chat-user showChat">
                 <div class="had-container">
@@ -41,51 +65,32 @@
                                 </div>
                             </div>
                             <div class="main-friend-list">
-                                <div class="media userlist-box waves-effect waves-light" data-id="1" data-status="online" data-username="Josephin Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-radius img-radius" src="assets/images/users/avatar-st.png" alt="Generic placeholder image ">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="chat-header">Josephin Doe <span class="badge badge-success bo-cir">3</span></div>
+                                <?php
+                                $id = 1;
+                                foreach ($chatList as $friend){
+                                    $bg = $friend['status'] == 'offline' ? 'bg-default' : 'bg-success';
+                                    ?>
+                                    <div class="media userlist-box waves-effect waves-light" data-recipient="<?= $_SESSION['username'] ?>" data-profile="<?= $friend['user']['profile'] ?>"
+                                         data-username="<?= $friend['user']['full_name'] ?>" data-empid="<?= $friend['user']['emp_id']  ?>">
+                                        <a class="media-left" href="#!">
+                                            <img class="media-object img-radius img-radius" src="<?= $friend['user']['profile'] ?>" alt="Generic placeholder image ">
+                                            <div class="live-status <?= $bg ?>"></div>
+                                        </a>
+                                        <div class="media-body">
+                                            <div class="chat-header"><?= $friend['user']['full_name'] ?>
+                                                <?php
+                                                if ((int) $friend['unread'] > 0){ ?>
+                                                    <span class="badge badge-success bo-cir"><?= $friend['unread'] ?></span>
+                                               <?php }
+                                                ?>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="media userlist-box waves-effect waves-light" data-id="2" data-status="online" data-username="Lary Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-radius" src="assets/images/users/avatar-lec.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Lary Doe</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box waves-effect waves-light" data-id="3" data-status="online" data-username="Alice">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-radius" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Alice</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box waves-effect waves-light" data-id="4" data-status="offline" data-username="Alia">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-radius" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-default"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Alia<small class="d-block text-muted">10 min ago</small></div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box waves-effect waves-light" data-id="5" data-status="offline" data-username="Suzen">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-radius" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-default"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Suzen<small class="d-block text-muted">15 min ago</small></div>
-                                    </div>
-                                </div>
+
+                                    <?php
+                                    $id++;
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -94,107 +99,24 @@
 
 
             <div class="showChat_inner">
-                <div class="media chat-inner-header">
+                <div class="media chat-inner-header row align-items-start mb-0 pb-3 pl-0 ml-0">
                     <a class="back_chatBox">
-                        <i class="mdi mdi-chevron-right"></i> Josephin Doe
+                        <i class="mdi mdi-chevron-right"></i>
                     </a>
+                    <div class="w-100 row">
+                        <a class="media-left photo-table col-4 pr-0" href="#!">
+                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
+                        </a>
+                        <span class="col-8 user-name float-l row align-items-center text-bold text-white" style="text-transform: capitalize">
+
+                        </span>
+                    </div>
                 </div>
-                <div class="main-friend-chat mb-5">
-                    <div class="media chat-messages">
-                        <a class="media-left photo-table" href="#!">
-                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                        </a>
-                        <div class="media-body chat-menu-content">
-                            <div class="">
-                                <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                            </div>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media chat-messages">
-                        <div class="media-body chat-menu-reply">
-                            <div class="">
-                                <p class="chat-cont">Ohh! very nice</p>
-                            </div>
-                            <p class="chat-time">8:22 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media chat-messages">
-                        <a class="media-left photo-table" href="#!">
-                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                        </a>
-                        <div class="media-body chat-menu-content">
-                            <div class="">
-                                <p class="chat-cont">can you come with me?</p>
-                            </div>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
+                <div class="main-friend-chat mt-2 pb-3">
 
-                    <div class="media chat-messages">
-                        <a class="media-left photo-table" href="#!">
-                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                        </a>
-                        <div class="media-body chat-menu-content">
-                            <div class="">
-                                <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                            </div>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media chat-messages">
-                        <div class="media-body chat-menu-reply">
-                            <div class="">
-                                <p class="chat-cont">Ohh! very nice</p>
-                            </div>
-                            <p class="chat-time">8:22 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media chat-messages">
-                        <a class="media-left photo-table" href="#!">
-                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                        </a>
-                        <div class="media-body chat-menu-content">
-                            <div class="">
-                                <p class="chat-cont">can you come with me?</p>
-                            </div>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
-
-                    <div class="media chat-messages">
-                        <a class="media-left photo-table" href="#!">
-                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                        </a>
-                        <div class="media-body chat-menu-content">
-                            <div class="">
-                                <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                            </div>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media chat-messages">
-                        <div class="media-body chat-menu-reply">
-                            <div class="">
-                                <p class="chat-cont">Ohh! very nice</p>
-                            </div>
-                            <p class="chat-time">8:22 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media chat-messages">
-                        <a class="media-left photo-table" href="#!">
-                            <img class="media-object img-radius img-radius m-t-5" src="assets/images/users/avatar-st.png" alt="Generic placeholder image">
-                        </a>
-                        <div class="media-body chat-menu-content">
-                            <div class="">
-                                <p class="chat-cont">can you come with me?</p>
-                            </div>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
                 </div>
                 <div class="chat-reply-box pr-1">
-                    <form>
+                    <form id="chat-form">
                         <div class="right-icon-control">
                             <div class="row">
                                 <div class="col-9 px-0">
