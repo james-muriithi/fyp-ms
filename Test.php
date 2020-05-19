@@ -17,15 +17,90 @@ $uc->setCatId(1);
 
 $project = new Project($conn);
 $student = new Student($conn);
+function time_elapsed_string($datetime, $full = false) {
+    $now = new DateTime;
+    $ago = new DateTime($datetime);
+    $diff = $now->diff($ago);
+
+    $diff->w = floor($diff->d / 7);
+    $diff->d -= $diff->w * 7;
+
+    $string = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    foreach ($string as $k => &$v) {
+        if ($diff->$k) {
+            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+        } else {
+            unset($string[$k]);
+        }
+    }
+
+    if (!$full) $string = array_slice($string, 0, 1);
+    return $string ? implode(', ', $string) . ' ago' : 'just now';
+}
+
+//echo time_elapsed_string('2018-12-09 11:55:46');
+date_default_timezone_set('Africa/Nairobi');
+
+define( 'TIMEBEFORE_NOW',         'now' );
+define( 'TIMEBEFORE_MINUTE',      '{num} minute ago' );
+define( 'TIMEBEFORE_MINUTES',     '{num} minutes ago' );
+define( 'TIMEBEFORE_HOUR',        '{num} hour ago' );
+define( 'TIMEBEFORE_HOURS',       '{num} hours ago' );
+define( 'TIMEBEFORE_YESTERDAY',   'yesterday, {time}' );
+define( 'TIMEBEFORE_THISWEEK',   '%a, %H:%M' );
+define( 'TIMEBEFORE_FORMAT',      '%e %b, %H:%M' );
+define('MYTIMEBEFORE_FORMAT', '%H:%M');
+define( 'TIMEBEFORE_FORMAT_YEAR', '%D, %H:%M' );
+
+function time_ago( $time )
+{
+    $out    = ''; // what we will print out
+    $now    = time(); // current time
+    $diff   = $now - $time; // difference between the current and the provided dates
+
+    if( $diff < 60 ) // it happened now
+        return TIMEBEFORE_NOW;
+
+    elseif( $diff < 3600 ) // it happened X minutes ago
+        return strftime(MYTIMEBEFORE_FORMAT, $time);
+//        return str_replace( '{num}', ( $out = round( $diff / 60 ) ), $out == 1 ? TIMEBEFORE_MINUTE : TIMEBEFORE_MINUTES );
+
+    elseif( $diff < 3600 * 24 ) // it happened X hours ago
+        return strftime(MYTIMEBEFORE_FORMAT, $time);
+//        return str_replace( '{num}', ( $out = round( $diff / 3600 ) ), $out == 1 ? TIMEBEFORE_HOUR : TIMEBEFORE_HOURS );
+
+    elseif( $diff < 3600 * 24 * 2 ) // it happened yesterday
+        return str_replace( '{time}', strftime(MYTIMEBEFORE_FORMAT, $time), TIMEBEFORE_YESTERDAY );
+//        return TIMEBEFORE_YESTERDAY;
+    elseif( $diff < 3600 * 24 * 8 ) // it happened this week
+        return strftime( TIMEBEFORE_THISWEEK, $time );
+
+
+    else // falling back on a usual date format as it happened later than yesterday
+        return strftime( date( 'Y', $time ) == date( 'Y' ) ? TIMEBEFORE_FORMAT : TIMEBEFORE_FORMAT_YEAR, $time );
+}
+
+
+
+echo time_ago(strtotime('2020-05-12 13:43:46'));
+
 //$lec = new Lecturer($conn);
-$student->setUsername('SB30/PU/41760/16');
-$student->setPassword('9641');
+//$student->setUsername('SB30/PU/41760/16');
+//$student->setPassword('9641');
 //$lecDetails =  $lec->getUser();
 //echo $lecDetails['coordinator'];
 //echo (strtotime(date('Y-m-d')) - strtotime('2020-04-27'))/60/60/24;
-var_dump($project->statusUpdate(1,0));
-$me = 0;
-var_dump(isset($me));
+//var_dump($project->statusUpdate(1,0));
+//$me = 0;
+//var_dump(isset($me));
 //mkdir('60/');
 //echo json_encode($student->verifyUser());
 //echo json_encode($project->viewAllProjects());
