@@ -184,6 +184,7 @@ class Project extends Student
                         p.title,
                         p.description,
                         ifnull(lecturer.full_name, "") as supervisor,
+                        ifnull(lecturer.emp_id, "") as emp_id,
                         ifnull(nou.no_of_uploads, 0) as no_of_uploads,
                         CASE
                             WHEN p.status = 0 THEN "in progress"
