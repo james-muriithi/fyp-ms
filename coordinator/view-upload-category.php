@@ -236,9 +236,9 @@ $uc = new UploadCategory($conn);
 
 <script type="text/javascript" src="../assets/libs/toastr/toastr.min.js"></script>
 
+<?php include_once 'footer.php'; ?>
 
 <script type="text/javascript" src="assets/js/app.js"></script>
-<?php include_once 'footer.php'; ?>
 </body>
 </html>
 <script>

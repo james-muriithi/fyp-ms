@@ -250,7 +250,7 @@ $(document).ready(function() {
 
             $.ajax({
                 url: '../api/project/',
-                data: JSON.stringify({assign : {...formData}}),
+                data: JSON.stringify({assign : formData}),
                 method: 'PATCH',
                 dataType: 'json',
                 processData: false,
@@ -289,5 +289,229 @@ $(document).ready(function() {
             });
         }
     });
+
+    //search
+    $("#search-friends").on("keyup", function() {
+        var g = $(this).val().toLowerCase();
+        $(".userlist-box .media-body .chat-header").each(function() {
+            var s = $(this).text().toLowerCase();
+            $(this).closest('.userlist-box')[s.indexOf(g) !== -1 ? 'show' : 'hide']();
+        });
+    });
+
+    $('.displayChatbox').on('click', function() {
+        $('.showChat').removeClass('slideOutRight');
+        $('.showChat').addClass('animated slideInRight');
+        $('.showChat').css('display', 'block')
+    });
+
+    //close
+    $('.back_friendlist').on('click', function() {
+
+        $('.showChat').toggleClass('slideInRight');
+        $('.showChat').toggleClass('slideOutRight');
+    });
+
+    let sender,recipient, profile,username, myInterval = '';
+//    user on click
+    $('.userlist-box').on('click', function() {
+        username = $(this).data('username');
+        profile = $(this).data('profile');
+        sender = $(this).data('regno');
+        recipient = $(this).data('recipient');
+        $('.main-friend-chat').html('');
+        $('.showChat_inner .media-object').attr('src', profile);
+        $('.showChat_inner .user-name').text(username);
+
+        $.ajax({
+            url: '../api/message/',
+            method: 'GET',
+            cache: false,
+            data: {conversation: true, sender, recipient},
+            success: function (data) {
+                console.log(data)
+                try{
+                    const messages = data.success.message.messages;
+
+                    appendConvo(messages)
+                    markRead(sender, recipient)
+
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+
+        $('.showChat_inner').removeClass('slideOutRight');
+        $('.showChat_inner').addClass('animated slideInRight');
+        $('.showChat_inner').css('display', 'block');
+        scrollChat()
+        $('#chat-message').focus();
+        console.log(sender)
+        myInterval = setInterval(function () {
+            fetchNewMessages(sender, recipient)
+        },5000)
+    });
+//    chat close
+    $('.back_chatBox').on('click', function() {
+        $('.showChat_inner').toggleClass('slideInRight');
+        $('.showChat_inner').toggleClass('slideOutRight');
+        clearInterval(myInterval);
+    });
+    //text area autosize
+    $('#chat-message').on('keydown', function () {
+        $(this). css( 'height','0px');
+        let height = Math.min(20 * 5, $(this)[0].scrollHeight);
+        $(this). css('height',  height + 'px');
+    });
+
+    $('#chat-form').on('submit', function (event) {
+        event.preventDefault();
+        $('#chat-message').focus();
+        let newMessage = $('#chat-message').val().trim();
+        if (newMessage){
+            if (sendMessage(recipient, newMessage, sender)){
+                appendMessage(newMessage);
+            }
+            $('#chat-message').val('');
+        }
+    })
+
+    let a = $(window).height() - 80;
+    $(".main-friend-list").slimScroll({ height: a, allowPageScroll: false,
+        wheelStep: 8, color: '#5A5EB9', disableFadeOut: true });
+    a = $(window).height() - 155;
+    $(".main-friend-chat").slimScroll({
+        height: a, allowPageScroll: false, wheelStep: 8, start: 'bottom',
+        color: '#5A5EB9',  alwaysVisible: true
+    });
+
+    let appendConvo = (messages)=>{
+        messages.forEach(message =>{
+            let msg;
+            if (message.sender == recipient){
+                msg = `\
+                           <div class="media chat-messages">
+                        <div class="media-body chat-menu-reply">
+                            <div class="">
+                                <p class="chat-cont">${message.message}</p>
+                            </div>
+                            <p class="chat-time">${message.created_at}</p>
+                        </div>
+                    </div>
+                           `
+            } else{
+                msg = `\
+                       <div class="media chat-messages">
+                        <div class="media-body chat-menu-content pl-3">
+                            <div class="">
+                                <p class="chat-cont">${message.message}</p>
+                            </div>
+                            <p class="chat-time">${message.created_at}</p>
+                        </div>
+                    </div>
+                       `
+            }
+            $('.main-friend-chat').append(msg);
+            scrollChat();
+        })
+    }
+
+    let appendMessage = (message) => {
+        const d = new Date()
+        const hour = ("0" + d.getHours()).slice(-2)
+        const minute = ("0" + d.getMinutes()).slice(-2)
+        const time = `${hour}:${minute}`
+        const msg = `\
+                    <div class="media chat-messages">
+                        <div class="media-body chat-menu-reply">
+                            <div class="">
+                                <p class="chat-cont">${message}</p>
+                            </div>
+                            <p class="chat-time">${time}</p>
+                        </div>
+                    </div> `
+        $('.main-friend-chat').append(msg);
+        scrollChat();
+    }
+
+    let sendMessage = (sender,message,  recipient) =>{
+        return $.ajax({
+            url: '../api/message/',
+            method: 'POST',
+            data: {new_message:  {message, sender, recipient}},
+            success: function (data) {
+                try{
+                    const m = data.success.message;
+                    return true;
+                }catch (e) {
+                    let m = 'Some unexpected error occurred';
+                    console.log(e)
+                    toastr.error(m, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+                    return false;
+                }
+            },
+            error: function (error) {
+                let m = 'Some unexpected error occurred';
+                try{
+                    m = error['responseJSON']['error']['message'];
+                }catch (e) {
+                    console.error(m)
+                }
+                toastr.error(m, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+                return false;
+            }
+        })
+    }
+
+    let markRead = (sender, recipient) =>{
+        $.ajax({
+            url: '../api/message/',
+            method: 'POST',
+            data: {mark_as_read:  {sender, recipient}},
+            success: function (data) {
+
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    let fetchNewMessages = (sender, recipient) =>{
+        $.ajax({
+            url: '../api/message/',
+            method: 'GET',
+            cache: false,
+            data: {new_messages: true, sender, recipient},
+            success: function (data) {
+                try{
+                    const messages = data.success.message.messages;
+                    appendConvo(messages)
+                    markRead(sender, recipient)
+
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    let scrollChat = () => {
+        $(".main-friend-chat").animate({ scrollTop: $(".main-friend-chat")[0].scrollHeight}, 1000);
+    }
+
 
 });

@@ -10,3 +10,4 @@ require_once '../api/classes/Notification.php';
 require_once '../api/classes/NewUploadNotification.php';
 require_once '../api/classes/NotificationAdapter.php';
 require_once '../api/classes/User.php';
+require_once  '../api/classes/NewMessageNotification.php';

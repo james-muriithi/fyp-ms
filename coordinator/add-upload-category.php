@@ -140,6 +140,7 @@ if($_SESSION['level'] !== 1){
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 <script type="text/javascript" src="../assets/libs/daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="../assets/libs/daterangepicker/daterangepicker.js"></script>
+<script src="assets/js/app.js" type="text/javascript"></script>
 </body>
 
 </html>

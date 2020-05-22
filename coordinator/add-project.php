@@ -162,6 +162,7 @@ $studentArray = $student->getAllUsers();
 <?php include_once 'js.php'; ?>
 <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
+<script src="assets/js/app.js" type="text/javascript"></script>
 </body>
 
 </html>

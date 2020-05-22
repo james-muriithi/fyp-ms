@@ -249,8 +249,8 @@ $lecArray = $lec->getAllUsers();
 
     <script src="../assets/js/app.js" type="text/javascript" ></script>
 
-    <script type="text/javascript" src="assets/js/app.js"></script>
     <?php include_once 'footer.php'; ?>
+    <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>
 <script>

@@ -10,7 +10,19 @@ foreach ($notifications as $notification) {
     switch ($notification['notifications'][0]['type']) {
         case 'upload.new':
             $x1 = new NewUploadNotification($conn, $lec);
-            $notArray[] = $x1->messageForNotifications($notification['notifications']);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
+            break;
+        case 'message.new':
+            $x1 = new NewMessageNotification($conn, $lec);
+            $tempArr = $x1->messageForNotifications($notification['notifications']);
+            $tempArr['recipient'] = $notification['notifications'][0]['recipient_id'];
+            $tempArr['reference_id'] = $notification['notifications'][0]['reference_id'];
+            $tempArr['type'] = $notification['notifications'][0]['type'];
+            $notArray[] = $tempArr;
             break;
 
     }
@@ -42,50 +54,8 @@ foreach ($notifications as $notification) {
                     <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
                         <i class="mdi mdi-menu"></i>
                     </button>
-                    <!-- <div class="d-none">
-                            <div class="dropdown pt-3 d-inline-block">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Create <i class="mdi mdi-chevron-down"></i>
-                                    </a>
-
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Separated link</a>
-                                </div>
-                            </div>
-                        </div> -->
                 </div>
                 <div class="d-flex">
-                    <!-- App Search-->
-                     <!-- <form class="app-search d-none d-lg-block">
-                            <div class="position-relative">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="fa fa-search"></span>
-                            </div>
-                        </form>  -->
-                    <!-- <div class="dropdown d-inline-block d-lg-none ml-2">
-                            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="mdi mdi-magnify"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
-                                aria-labelledby="page-header-search-dropdown">
-                    
-                                <form class="p-3">
-                                    <div class="form-group m-0">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div> -->
                     <div class="dropdown d-none d-lg-inline-block">
                         <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
                             <i class="mdi mdi-fullscreen"></i>
@@ -135,6 +105,10 @@ foreach ($notifications as $notification) {
                                                     <p class="mb-1"><?= $notification['message'] ?></p>
                                                     <span class="notification-time"><?= $notification['created_at'] ?></span>
                                                 </div>
+                                                <div class="col-3 float-r" onclick="markAsRead(this)" data-recipient="<?= $notification['recipient'] ?>"
+                                                     data-reference="<?= $notification['reference_id'] ?>" data-type="<?= $notification['type'] ?>">
+                                                    <button class="btn btn-sm fs-11 btn-outline-primary">read</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </a>
@@ -142,13 +116,28 @@ foreach ($notifications as $notification) {
                                 }
                                 ?>
                             </div>
-                            <div class="p-2 border-top">
-                                <a class="btn btn-sm btn-link font-size-14 btn-block text-center" href="javascript:void(0)">
-                                    View all
-                                </a>
+                            <div class="p-2 border-top row">
+                                <div class="col-6">
+                                    <a class="btn btn-sm btn-link font-size-14 btn-block btn-outline-secondary" href="javascript:void(0)">
+                                        View all
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-sm btn-link font-size-14 btn-block float-r btn-outline-secondary" data-recipient="<?= $_SESSION['username'] ?>" href="javascript:void(0)" onclick="markAllAsRead(this)">
+                                        Mark all read
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="header-item noti-icon displayChatbox waves-effect">
+                            <i class="mdi mdi-message-outline"></i>
+                            <span class="badge badge-success badge-pill"><?= count($unreadMessages) ?></span>
+                        </button>
+                    </div>
+
                     <?php
                     $uploadDir = 'assets/images/users/';
                     $image = empty($lecDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $lecDetails['profile'];

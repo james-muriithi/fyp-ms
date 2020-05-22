@@ -273,6 +273,7 @@ $upload = new Upload($conn);
     <?php include_once 'js.php'; ?>
 
     <?php include_once 'footer.php'; ?>
+    <script src="assets/js/app.js" type="text/javascript"></script>
 </body>
 
 </html>

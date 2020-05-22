@@ -193,7 +193,8 @@ $studentArray = $student->getAllUsers();
     <!-- slimselect -->
     <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 
-    
+    <script src="../assets/js/pages/dashboard.init.js"></script>
+
     <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>

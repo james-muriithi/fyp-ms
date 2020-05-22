@@ -153,6 +153,7 @@ if($_SESSION['level'] !== 1){
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 <!-- slimselect -->
 <script type="text/javascript" src="../assets/libs/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+<script src="assets/js/app.js" type="text/javascript"></script>
 </body>
 
 </html>

@@ -7,6 +7,7 @@
     <script src="../assets/libs/peity/jquery.peity.min.js"></script>
     <!-- Sweet Alerts js -->
     <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="../assets/libs/jquery-slimscroll/js/jquery.slimscroll.js" type="text/javascript"></script>
     <!-- Plugin Js-->
     <script src="../assets/libs/counterup/jquery.waypoints.min.js"></script>
     <script src="../assets/libs/counterup/jquery.counterup.min.js"></script>

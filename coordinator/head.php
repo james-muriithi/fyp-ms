@@ -4,7 +4,7 @@ include_once '../api/config/database.php';
 include_once '../api/classes/Lecturer.php';
 include_once '../api/classes/Student.php';
 include_once '../api/classes/User.php';
-
+include_once '../api/classes/Messages.php';
 $conn = Database::getInstance();
 
 if (!isset($_SESSION['login'],$_SESSION['username'], $_SESSION['level'])) {
@@ -22,7 +22,9 @@ if (!$lec->userExists($_SESSION['username'])){
     die();
 }
 $lecDetails = $lec->getUser();
+$messages = new Messages($conn, $_SESSION['username']);
 
+$unreadMessages = $messages->getAllUnreadMessages();
 ?>
 <!DOCTYPE html>
 <html lang="en">
