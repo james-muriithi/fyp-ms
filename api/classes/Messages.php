@@ -81,6 +81,22 @@ class Messages extends User
         return  [];
     }
 
+    public function getLastMessage($sender)
+    {
+        $query = "SELECT message,created_at FROM messages 
+                   WHERE receiver=:receiver and sender=:sender or receiver=:sender and sender=:receiver ORDER BY created_at DESC LIMIT 1";
+
+        $stmt = $this->conn->prepare($query);
+
+        $username = $this->getUsername();
+
+        $stmt->bindParam(':receiver', $username);
+        $stmt->bindParam(':sender', $sender);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getSenderAllMessages($sender):array
     {
         $query = "SELECT * FROM messages 
