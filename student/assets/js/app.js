@@ -184,7 +184,7 @@ $(document).ready(function() {
 
             $.ajax({
                 url: '../api/project/',
-                data: JSON.stringify({assign : {...formData}}),
+                data: JSON.stringify({assign : formData}),
                 method: 'PATCH',
                 dataType: 'json',
                 processData: false,

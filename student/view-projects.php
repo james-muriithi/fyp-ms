@@ -66,7 +66,7 @@ $lecArray = $student->getAllUsers();
                                             <td><?= $proj['reg_no'] ?></td>
                                             <td><?= $proj['full_name'] ?></td>
                                             <td>
-                                                <?= empty($proj['supervisor']) ? '<button class="btn btn-sm btn-primary btn-assign" data-toggle="modal" data-target="#assign-modal">Assign</button>': ucwords($proj['supervisor']) ?>
+                                                <?= empty($proj['supervisor']) ? '': ucwords($proj['supervisor']) ?>
                                             </td>
                                             <td>
                                                 <?php

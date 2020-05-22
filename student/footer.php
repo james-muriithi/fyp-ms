@@ -37,7 +37,7 @@
                    $temp['status'] = 'offline';
 //                   profile image
                     $uploadDir = '../coordinator/assets/images/users/';
-                    $image = empty($studentDetails['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $studentDetails['profile'];
+                    $image = empty($temp['user']['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $temp['user']['profile'];
                     if (!file_exists($image)){
                         $image = $uploadDir.'avatar-lec.png';
                     }
