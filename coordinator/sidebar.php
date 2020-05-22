@@ -32,7 +32,7 @@
                         </li>
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="ti-user"></i>
+                                <i class="fa fa-chalkboard-teacher"></i>
                                 <span>Supervisors</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">

@@ -32,32 +32,72 @@
             $project1 = new Project($conn);
             $chatList = [];
             $lec = new Lecturer($conn);
+            $student = new Student($conn);
+            $studentArr = $student->getAllUsers();
 
-            $supervisorStudents = array_map('extractRegNo', $project1->getLecturerProjects($_SESSION['username']));
+            $usr = new User($conn);
+            $userArray = $usr->getAllUsers();
 
-            foreach ($supervisorStudents as $supervisorStudent) {
-                $student = new Student($conn);
-                $student->setUsername($supervisorStudent);
-                $temp['user'] = $student->getUser();
+            foreach ($userArray as $user) {
+                $temp = [];
+                if ($user['username'] == $_SESSION['username']){
+                    continue;
+                }
+//                lecturers
+                if ((int)$user['level'] !== 3){
+                    $lec = new Lecturer($conn);
+                    $uploadDir = '../coordinator/assets/images/users/';
 
-                $temp['unread'] = count($messages->getSenderAllUnreadMessages($supervisorStudent));
-                $temp['status'] = 'offline';
+                    $lec->setUsername($user['username']);
+                    $temp['user'] = $lec->getUser();
+                    $temp['unread'] = count($messages->getSenderAllUnreadMessages($user['username']));
+                    $temp['status'] = 'offline';
+//                   profile image
+                    $uploadDir = '../coordinator/assets/images/users/';
+                    $image = empty($temp['user']['profile']) ? $uploadDir.'avatar-lec.png': $uploadDir. $temp['user']['profile'];
+                    if (!file_exists($image)){
+                        $image = $uploadDir.'avatar-lec.png';
+                    }
+                    $temp['user']['profile'] = $image;
+                }
+                else{
+                    $student = new Student($conn);
+                    $student->setUsername($user['username']);
+                    $temp['user'] = $student->getUser();
+
+                    $temp['unread'] = count($messages->getSenderAllUnreadMessages($user['username']));
+                    $temp['status'] = 'offline';
+                    if ($project1->studentHasProject($user['username'])){
+                        $pid = $project1->viewStudentProject($user['username'])['id'];
+                        if ($project1->isAssignedToMe($pid, $_SESSION['username'])){
+                            $temp['is_my_student'] = true;
+                        }
+                    }
+
 
 //                profile image
-                $uploadDir = '../student/assets/images/users/';
-                $image = empty($temp['user']['profile']) ? $uploadDir.'avatar-st.png': $uploadDir. $temp['user']['profile'];
-                if (!file_exists($image)){
-                    $image = $uploadDir.'avatar-st.png';
-                }
-                $temp['user']['profile'] = $image;
-                $chatList[] = $temp;
+                    $uploadDir = '../student/assets/images/users/';
+                    $image = empty($temp['user']['profile']) ? $uploadDir.'avatar-st.png': $uploadDir. $temp['user']['profile'];
+                    if (!file_exists($image)){
+                        $image = $uploadDir.'avatar-st.png';
+                    }
+                    $temp['user']['profile'] = $image;
 
+                }
+                $temp['last_message'] = $messages->getLastMessage($user['username'])['message'];
+                $temp['last_message_time'] = $messages->getLastMessage($user['username'])['created_at'];
+                $chatList[] = $temp;
             }
+
+//            $supervisorStudents = array_map('extractRegNo', $project1->getLecturerProjects($_SESSION['username']));
+
+
             function cmp($a, $b){
-                if ($a['unread'] == $b['unread']) return 0;
-                return ($a['unread'] > $b['unread']) ? -1 : 1;
+                if ($a['last_message_time'] == $b['last_message_time']) return 0;
+                return ($a['last_message_time'] > $b['last_message_time']) ? -1 : 1;
             }
             usort($chatList, 'cmp');
+
             ?>
 
             <div id="sidebar" class="users p-chat-user showChat">
@@ -82,19 +122,40 @@
                                 $id = 1;
                                 foreach ($chatList as $friend){
                                     $bg = $friend['status'] == 'offline' ? 'bg-default' : 'bg-success';
+                                    $userName = $friend['user']['full_name'];
+                                    if (isset($friend['user']['coordinator']) && (int)$friend['user']['coordinator'] ===1){
+                                      $userName .= '<i class="mdi mdi-checkbox-marked-circle-outline text-warning pl-1"></i>';
+                                    }
                                     ?>
-                                    <div class="media userlist-box waves-effect waves-light" data-recipient="<?= $_SESSION['username'] ?>" data-profile="<?= $friend['user']['profile'] ?>"
-                                         data-username="<?= $friend['user']['full_name'] ?>" data-regno="<?= $friend['user']['reg_no']  ?>">
+                                    <div class="media userlist-box waves-effect waves-light" data-recipient="<?= $_SESSION['username'] ?>"
+                                         data-profile="<?= $friend['user']['profile'] ?>"
+                                         data-username='<?= $userName ?>'
+                                         data-regno="<?= isset($friend['user']['reg_no']) ? $friend['user']['reg_no'] : $friend['user']['emp_id']  ?>"
+                                         <?= isset($friend['is_my_student']) ? 'data-toggle="tooltip" data-title="You are supervising this student" data-placement="auto"' : '' ?> >
                                         <a class="media-left" href="#!">
                                             <img class="media-object img-radius img-radius" src="<?= $friend['user']['profile'] ?>" alt="Generic placeholder image ">
-                                            <div class="live-status <?= $bg ?>"></div>
+                                            <div class="live-status">
+                                                <?php
+                                                if (isset($friend['user']['emp_id'])){
+                                                    echo '<i class="fa fa-chalkboard-teacher"></i>';
+                                                }else{
+                                                    echo '<i class="fa fa-user-graduate"></i>';
+                                                }
+                                                ?>
+                                            </div>
                                         </a>
                                         <div class="media-body">
-                                            <div class="chat-header"><?= $friend['user']['full_name'] ?>
+                                            <div class="chat-header">
+                                                <span class="text-capitalize <?= isset($friend['is_my_student']) && $friend['is_my_student'] ? 'text-primary' : '' ?>">
+                                                    <?= $userName ?>
+                                                    <?php
+                                                    if ((int) $friend['unread'] > 0){ ?>
+                                                        <span class="badge badge-success bo-cir p-r-5"><?= $friend['unread'] ?></span>
+                                                    <?php }
+                                                    ?>
+                                                </span>
                                                 <?php
-                                                if ((int) $friend['unread'] > 0){ ?>
-                                                    <span class="badge badge-success bo-cir"><?= $friend['unread'] ?></span>
-                                                <?php }
+                                                echo '<small class="d-block text-muted" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">'.$friend['last_message'].'</small>';
                                                 ?>
                                             </div>
                                         </div>

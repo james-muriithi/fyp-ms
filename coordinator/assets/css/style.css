@@ -839,7 +839,7 @@ body[themebg-pattern=theme6]{
     top:20px;
     right:20px;
     border-radius:100%;
-    border:1px solid
+    border:none;
 }
 .showChat{
     display:none

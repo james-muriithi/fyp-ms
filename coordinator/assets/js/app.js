@@ -321,7 +321,9 @@ $(document).ready(function() {
         recipient = $(this).data('recipient');
         $('.main-friend-chat').html('');
         $('.showChat_inner .media-object').attr('src', profile);
-        $('.showChat_inner .user-name').text(username);
+        $('.showChat_inner .user-name').html(`\
+                <span class="user_name">${username}</span>
+                <i class="fa fa-info-circle text-white-50 ml-auto fs-20 user-info" data-user="sender"></i> `);
 
         $.ajax({
             url: '../api/message/',
