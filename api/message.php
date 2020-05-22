@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
             $messageArray['messages'] = [];
             $user->setUsername($user1);
 
-            if ($user->getLevel() === 3) {
+            if ((int)$user->getLevel() === 3) {
                 $student = new Student($conn);
                 $student->setUsername($user1);
                 $messageArray['sender'] = $student->getUser();
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
             $messageArray['messages'] = [];
             $user->setUsername($user1);
 
-            if ($user->getLevel() === 3) {
+            if ((int)$user->getLevel() === 3) {
                 $student = new Student($conn);
                 $student->setUsername($user1);
                 $messageArray['sender'] = $student->getUser();

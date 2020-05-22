@@ -12,7 +12,7 @@ class NewUploadNotification extends Notification
         if ((int) $this->getUser()->getLevel() === 3){
             return $this->studentMessage($this->time_elapsed_string($notification['created_at']));
         }
-        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$notification['sender_id'] . ' made a new upload'];
+        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$notification['sender_id'] . ' made a new upload', 'created_at' => $this->time_elapsed_string($notification['created_at'])];
     }
 
     public function studentMessage( $date = '')
@@ -86,6 +86,9 @@ class NewUploadNotification extends Notification
             return $this->studentMessage($this->time_elapsed_string($notifications[0]['created_at']));
         }
         list($first, $second) = $notifications;
+        if ($first['sender_id'] == $second['sender_id']){
+            return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$second['sender_id']. ' made 2 new uploads', 'created_at' => $this->time_elapsed_string($first['created_at'])];
+        }
         $names =  $first['sender_id']  . ' and ' . $second['sender_id'] ; // John and Jane
         return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=>$names . ' made a new upload', 'created_at' => $this->time_elapsed_string($first['created_at'])];
     }

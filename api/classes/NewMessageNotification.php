@@ -79,6 +79,6 @@ class NewMessageNotification extends Notification
     protected function messageForManyNotifications(array $notifications)
     {
         list($first, $second) = array_slice($notifications, 0, 2);
-        return ['topic'=> 'New Uploads', 'level'=> 2, 'message'=> 'You have '.count($notifications) . ' new messages', 'created_at' => $this->time_elapsed_string($first['created_at'])];
+        return ['topic'=> 'New Messages', 'level'=> 2, 'message'=> 'You have '.count($notifications) . ' new messages', 'created_at' => $this->time_elapsed_string($first['created_at'])];
     }
 }
