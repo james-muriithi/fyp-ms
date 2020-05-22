@@ -90,13 +90,14 @@ function time_ago( $time )
 
 
 
-echo time_ago(strtotime('2020-05-12 13:43:46'));
+//echo time_ago(strtotime('2020-05-12 13:43:46'));
 
-//$lec = new Lecturer($conn);
+$lec = new Lecturer($conn);
 //$student->setUsername('SB30/PU/41760/16');
 //$student->setPassword('9641');
-//$lecDetails =  $lec->getUser();
-//echo $lecDetails['coordinator'];
+$lec->setUsername('12345');
+$lecDetails =  $lec->getUser();
+//echo json_encode($lecDetails);
 //echo (strtotime(date('Y-m-d')) - strtotime('2020-04-27'))/60/60/24;
 //var_dump($project->statusUpdate(1,0));
 //$me = 0;
@@ -104,11 +105,11 @@ echo time_ago(strtotime('2020-05-12 13:43:46'));
 //mkdir('60/');
 //echo json_encode($student->verifyUser());
 //echo json_encode($project->viewAllProjects());
-//function extractIds($project){
-//    return $project['id'];
-//}
-//$assignedArrIds = array_map('extractIds', $project->getLecurerProjects('12345'));
-//echo json_encode($assignedArrIds);
+function extractIds($project){
+    return $project['id'];
+}
+$assignedArrIds = array_map('extractIds', $project->getLecturerProjects('12345'));
+echo json_encode($project->getLecturerProjects('12345'));
 //$removedProjects = array_diff($assignedArrIds,['1','3', '5']);
 //echo json_encode($removedProjects);
 //$student->setUsername('SB30/PU/41760/16');
