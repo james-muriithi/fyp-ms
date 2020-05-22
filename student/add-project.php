@@ -138,6 +138,7 @@ $studentArray = $student->getAllUsers();
 <div class="rightbar-overlay"></div>
 <!-- JAVASCRIPT -->
 <?php include_once 'js.php'; ?>
+<script type="text/javascript" src="assets/js/app.js"></script>
 <script type="text/javascript" src="../assets/libs/slimselect/slimselect.min.js"></script>
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 </body>

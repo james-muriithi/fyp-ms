@@ -134,9 +134,9 @@ foreach ($ucArr as $cat){
 
     <!-- Calendar init -->
     <script src="../assets/js/pages/calendar.init.js"></script>
-    <script type="text/javascript" src="assets/js/app.js"></script>
 
     <?php include_once 'footer.php'; ?>
+    <script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 
 </html>

@@ -123,6 +123,7 @@ $ucArr = $uc->viewAllCategories();
 <script type="text/javascript" src="../assets/libs/jquery-nice-select/js/jquery.nice-select.min.js"></script>
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 <script type="text/javascript" src="../assets/libs/dropzone/dropzone.min.js"></script>
+<script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 
 </html>

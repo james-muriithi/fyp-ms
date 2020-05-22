@@ -170,6 +170,7 @@ include_once 'head.php'; ?>
 <?php include_once 'js.php'; ?>
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 <script type="text/javascript" src="../assets/libs/dropzone/dropzone.min.js"></script>
+<script type="text/javascript" src="assets/js/app.js"></script>
 </body>
 </html>
 <script type="text/javascript">
