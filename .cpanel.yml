@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/oyaacoke/fypms.oyaa.co.ke/
+    - /bin/cp -r * $DEPLOYPATH
