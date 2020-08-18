@@ -11,7 +11,7 @@ $upload = new Upload($conn);
 $project = new Project($conn);
 define('UPLOAD_DIR', 'uploads/');
 if(!is_dir(UPLOAD_DIR)){
-    if (!mkdir(UPLOAD_DIR, '0777', true) && !is_dir(UPLOAD_DIR)) {
+    if (!mkdir(UPLOAD_DIR, '0755', true) && !is_dir(UPLOAD_DIR)) {
         echo json_response(400, 'There was an error creating a directory', true);
         die();
     }
@@ -48,7 +48,7 @@ function uploadFIle($file, $reg_no, $cat_id){
 
 
     if (!in_array($file_ext, $extensions, false)){
-        echo json_response(400, 'Please provide only an image of types '. implode(', ', $extensions), true);
+        echo json_response(400, 'Please provide only a file of types '. implode(', ', $extensions), true);
         die();
     }
 
@@ -58,7 +58,7 @@ function uploadFIle($file, $reg_no, $cat_id){
     }
 
     if (!is_dir($uploadDir)){
-        if (!mkdir($uploadDir, '0777', true) && !is_dir($uploadDir)) {
+        if (!mkdir($uploadDir, '0755', true) && !is_dir($uploadDir)) {
             echo json_response(400, 'Directory '.$uploadDir.' was not created', true);
             die();
         }

@@ -69,6 +69,16 @@
 
                     </div>
 
+                    <div class="mt-2">
+                        <p class="text-bold">Student Credentials</p>
+                        <span>username: <i>SB30/pu/41760/16</i></span><br>
+                        <span>password: <i>9641</i></span>
+
+                        <p class="text-bold mt-1">Supervisor Credentials</p>
+                        username: <i>m3456</i><br>
+                        password: <i>0000</i>
+                    </div>
+
                     <div class="m-t-5 text-center">
                         <p>Don't have an account ? <a href="confirm-username.php" class="font-weight-medium text-primary"> Signup now </a> </p>
                         <p class="mb-0 text-success">© <script>document.write(new Date().getFullYear())</script> FYPMS.
