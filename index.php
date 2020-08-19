@@ -56,6 +56,16 @@
                                         </div>
                                     </div>
 
+                                    <div class="mt-2">
+                                        <p class="text-bold">Student Credentials</p>
+                                        <span>username: <i>SB30/pu/41760/16</i></span><br>
+                                        <span>password: <i>9641</i></span>
+
+                                        <p class="text-bold mt-1">Supervisor Credentials</p>
+                                        username: <i>m3456</i><br>
+                                        password: <i>0000</i>
+                                    </div>
+
                                     <div class="form-group mt-2 mb-0 row">
                                         <div class="col-12 mt-4">
                                             <a href="confirm-username.php"><i class="mdi mdi-lock"></i> Forgot your password?</a>
@@ -67,16 +77,6 @@
                             </div>
                         </div>
 
-                    </div>
-
-                    <div class="mt-2">
-                        <p class="text-bold">Student Credentials</p>
-                        <span>username: <i>SB30/pu/41760/16</i></span><br>
-                        <span>password: <i>9641</i></span>
-
-                        <p class="text-bold mt-1">Supervisor Credentials</p>
-                        username: <i>m3456</i><br>
-                        password: <i>0000</i>
                     </div>
 
                     <div class="m-t-5 text-center">
