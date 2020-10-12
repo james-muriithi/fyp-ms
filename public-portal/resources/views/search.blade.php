@@ -6,7 +6,7 @@
                 <img id="searchbarimage" src="{{asset('images/logo.png')}}" />
                 <form method="GET" action="{{route('search')}}" >
                     <div id="searchbar" type="text">
-                        <input id="searchbartext" type="text" name="q" />
+                        <input id="searchbartext" type="text" name="q" value="{{$query ?? ''}}" />
                         <button id="searchbarbutton">
                             <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path

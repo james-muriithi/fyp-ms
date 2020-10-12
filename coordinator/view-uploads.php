@@ -61,10 +61,12 @@ $project = new Project($conn);
                                         if ($_SESSION['level'] !== 1 && !$project->isAssignedToMe($upl['pid'], $_SESSION['username'])){
                                             continue;
                                         }
+                                        $uploadDir = str_replace('/','', $upl['reg_no']).'/'.$upl['category_id'].'/';
+                                        $file = '../student/uploads/'.$uploadDir.$upl['name']
                                         ?>
                                         <tr data-id="<?= $upl['id'] ?>">
                                             <td>
-                                                <a href="#" class="text-underline"><?= $upl['name'] ?></a>
+                                                <a href="<?= $file ?>" download class="text-underline"><?= $upl['name'] ?></a>
                                             </td>
                                             <td><?= $upl['upload_time'] ?></td>
                                             <td><?= $upl['project'] ?></td>

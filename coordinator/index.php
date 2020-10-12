@@ -211,11 +211,13 @@ $upload = new Upload($conn);
                                                 if ($i > 10){
                                                     break;
                                                 }
+                                                $uploadDir = str_replace('/','', $upl['reg_no']).'/'.$upl['category_id'].'/';
+                                                $file = '../student/uploads/'.$uploadDir.$upl['name']
                                                 ?>
 
                                                 <tr data-id="<?= $upl['id'] ?>">
                                                     <td>
-                                                        <a href="#" class="text-underline"><?= $upl['name'] ?></a>
+                                                        <a href="<?= $file ?>" download class="text-underline"><?= $upl['name'] ?></a>
                                                     </td>
                                                     <td><?= $upl['upload_time'] ?></td>
                                                     <td><?= $upl['project'] ?></td>
