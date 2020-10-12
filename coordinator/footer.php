@@ -84,8 +84,8 @@
                     $temp['user']['profile'] = $image;
 
                 }
-                $temp['last_message'] = $messages->getLastMessage($user['username'])['message'];
-                $temp['last_message_time'] = $messages->getLastMessage($user['username'])['created_at'];
+                $temp['last_message'] = $messages->getLastMessage($user['username'])['message'] ?? '';
+                $temp['last_message_time'] = $messages->getLastMessage($user['username'])['created_at'] ?? '';
                 $chatList[] = $temp;
             }
 
