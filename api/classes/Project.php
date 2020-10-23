@@ -288,8 +288,12 @@ class Project extends Student
 
     public function statusUpdate($pid, $status):bool
     {
+        $completeDate = '';
+        if ($status == 1){
+            $completeDate = ', complete_date=CURRENT_TIMESTAMP ';
+        }
         $query = 'UPDATE project SET 
-                        status = :status
+                        status = :status'.$completeDate.'
                     WHERE id = :pid';
 
         $stmt = $this->conn->prepare($query);

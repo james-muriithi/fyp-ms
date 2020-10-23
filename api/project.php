@@ -44,14 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ){
         }elseif ($projectCat->categoryExists($category)){
             echo json_response(409,' That category ('.$category.') does not exist.',true);
             die();
-        }elseif (!empty($empId)){
-            $lec = new Lecturer($conn);
-            if (!$lec->userExists($empId)){
-                echo json_response(409,' The provided employee id number does not exist.
-             Please choose a different one.',true);
-                die();
+        }else{
+            if (!empty($empId)){
+                $lec = new Lecturer($conn);
+                if (!$lec->userExists($empId)){
+                    echo json_response(409,' The provided employee id number does not exist.
+                Please choose a different one.',true);
+                    die();
+                }
             }
-        } else{
             $conn->beginTransaction();
             if ($project->addProject($title,$description,$category,'',$empId)){
                 $conn->commit();

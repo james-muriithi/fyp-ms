@@ -17,7 +17,7 @@
                     </div>
                 </form>
 
-                <a href="#">
+                <a href="../../">
                     <img id="profileimage"  src="{{asset('images/avatar.png')}}" />
                 </a>
             </div>
@@ -41,7 +41,7 @@
                         <p>{{$project->description}}</p>
                         <p class="row">
                             <span class="col-6">
-                                Finish Date: {{strftime('%m/%d/%Y', strtotime($project->complete_date))}}
+                                Finish Date: {{strftime('%d-%m-%Y', strtotime($project->complete_date))}}
                             </span>
                             <span class="col-6">
                                 Student: {{ucwords($project->projectStudent->full_name)}}
@@ -62,6 +62,16 @@
                                 <!-- Modal body -->
                                 <div class="modal-body">
                                     <table class="table table-borderless">
+                                        @if(count($project->uploads) == 0)
+                                            <div class="card" style="margin-bottom: 30px;border: 0;">
+                                                <div class="card-body" style="background: transparent; overflow-x: hidden;">
+                                                    <div class="col-sm-12 empty-cart-cls text-center">
+                                                        <img src="https://cdn.dribbble.com/users/1100163/screenshots/10895523/media/8e5293525956a48b3686977fa836a560.jpg" width="180" class="img-fluid mb-1 mr-3 empty">
+                                                        <h5 class="mt-4"><strong>Project had no uploads</strong></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                         @foreach($project->uploads as $upload)
                                             @php($uploadDir = str_replace('/','', $project->projectStudent->reg_no).'/'.$upload->category.'/')
                                             @php($file = '../student/uploads/'.$uploadDir.$upload->name)

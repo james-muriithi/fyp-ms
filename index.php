@@ -24,6 +24,9 @@
                             <div class="text-primary text-center p-4">
                                 <h5 class="text-white font-size-20">Welcome Back !</h5>
                                 <p class="text-white-50">Sign in to continue.</p>
+                                <a href="public-portal/public/" class="text-white text-underline" style="float: right!important;;">
+                                    public portal
+                                </a>
                                 <a href="Javascript:void(0)" class="logo logo-admin">
                                     <img src="assets/images/logo-sm.png" height="60" alt="logo">
                                 </a>

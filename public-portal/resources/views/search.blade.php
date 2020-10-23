@@ -17,7 +17,7 @@
                     </div>
                 </form>
 
-                <a href="#">
+                <a href="../../">
                     <img id="profileimage"  src="{{asset('images/avatar.png')}}" />
                 </a>
             </div>
@@ -99,6 +99,16 @@
                     </div>
 
                 @endforeach
+                @else
+                <div class="card" style="margin-bottom: 30px;border: 0;">
+                    <div class="card-body" style="background: #f8fafc; overflow-x: hidden;">
+                        <div class="col-sm-12 empty-cart-cls text-center">
+                            <img src="{{asset('images/not-found.svg')}}"  style="height: 300px" class="img-fluid mb-1 mr-3 empty">
+                            <h5 class="mt-4"><strong>No results found :-(</strong></h5>
+                            <p>Please try different keywords.</p>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             <div class="row">
