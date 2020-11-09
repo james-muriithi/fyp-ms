@@ -61,7 +61,7 @@ foreach ($ucArr as $cat){
                                         $studentUploads = [];
 
                                         foreach ($allUploads as $upl){
-                                            if ( (string)$_SESSION['username'] === (string)$upl['reg_no'] ){
+                                            if ( (string)strtolower($_SESSION['username'])=== (string)strtolower($upl['reg_no']) ){
                                                 array_push($studentUploads, $upl);
                                             }
                                         }

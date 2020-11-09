@@ -10,6 +10,131 @@ $(document).ready(function() {
             time: 1000
         });
     };
+
+    let appendConvo = (messages)=>{
+        messages.forEach(message =>{
+            let msg;
+            if (message.sender == recipient){
+                msg = `\
+                           <div class="media chat-messages">
+                        <div class="media-body chat-menu-reply">
+                            <div class="">
+                                <p class="chat-cont">${message.message}</p>
+                            </div>
+                            <p class="chat-time">${message.created_at}</p>
+                        </div>
+                    </div>
+                           `
+            } else{
+                msg = `\
+                       <div class="media chat-messages">
+                        <div class="media-body chat-menu-content pl-3">
+                            <div class="">
+                                <p class="chat-cont">${message.message}</p>
+                            </div>
+                            <p class="chat-time">${message.created_at}</p>
+                        </div>
+                    </div>
+                       `
+            }
+            $('.main-friend-chat').append(msg);
+            scrollChat();
+        })
+    }
+
+    let appendMessage = (message) => {
+        const d = new Date()
+        const hour = ("0" + d.getHours()).slice(-2)
+        const minute = ("0" + d.getMinutes()).slice(-2)
+        const time = `${hour}:${minute}`
+        const msg = `\
+                    <div class="media chat-messages">
+                        <div class="media-body chat-menu-reply">
+                            <div class="">
+                                <p class="chat-cont">${message}</p>
+                            </div>
+                            <p class="chat-time">${time}</p>
+                        </div>
+                    </div> `
+        $('.main-friend-chat').append(msg);
+        scrollChat();
+    }
+
+    let sendMessage = (sender,message,  recipient) =>{
+        return $.ajax({
+            url: '../api/message/',
+            method: 'POST',
+            data: {new_message:  {message, sender, recipient}},
+            success: function (data) {
+                try{
+                    const m = data.success.message;
+                    return true;
+                }catch (e) {
+                    let m = 'Some unexpected error occurred';
+                    console.log(e)
+                    toastr.error(m, "Ooops!", {
+                        showMethod: "slideDown",
+                        hideMethod: "fadeOut"
+                    });
+                    return false;
+                }
+            },
+            error: function (error) {
+                let m = 'Some unexpected error occurred';
+                try{
+                    m = error['responseJSON']['error']['message'];
+                }catch (e) {
+                    console.error(m)
+                }
+                toastr.error(m, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+                return false;
+            }
+        })
+    }
+
+    let markRead = (sender, recipient) =>{
+        $.ajax({
+            url: '../api/message/',
+            method: 'POST',
+            data: {mark_as_read:  {sender, recipient}},
+            success: function (data) {
+
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    let fetchNewMessages = (sender, recipient) =>{
+        $.ajax({
+            url: '../api/message/',
+            method: 'GET',
+            cache: false,
+            data: {new_messages: true, sender, recipient},
+            success: function (data) {
+                try{
+                    const messages = data.success.message.messages;
+                    appendConvo(messages)
+                    markRead(sender, recipient)
+
+                }catch (e) {
+                    console.log(e)
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    let scrollChat = () => {
+        $(".main-friend-chat").animate({ scrollTop: $(".main-friend-chat")[0].scrollHeight}, 1000);
+    }
+
     handleCounterup()
 
     $('.btn-view').on('click', function(event){
@@ -324,128 +449,77 @@ $(document).ready(function() {
         color: '#5A5EB9',  alwaysVisible: true
     });
 
-    let appendConvo = (messages)=>{
-        messages.forEach(message =>{
-            let msg;
-            if (message.sender == recipient){
-                msg = `\
-                           <div class="media chat-messages">
-                        <div class="media-body chat-menu-reply">
-                            <div class="">
-                                <p class="chat-cont">${message.message}</p>
-                            </div>
-                            <p class="chat-time">${message.created_at}</p>
-                        </div>
-                    </div>
-                           `
-            } else{
-                msg = `\
-                       <div class="media chat-messages">
-                        <div class="media-body chat-menu-content pl-3">
-                            <div class="">
-                                <p class="chat-cont">${message.message}</p>
-                            </div>
-                            <p class="chat-time">${message.created_at}</p>
-                        </div>
-                    </div>
-                       `
-            }
-            $('.main-friend-chat').append(msg);
-            scrollChat();
-        })
-    }
+    let markAsRead =  (value) => {
+        const reference_id = $(value).data('reference'),
+            type = $(value).data('type'),
+            recipient = $(value).data('recipient');
 
-    let appendMessage = (message) => {
-        const d = new Date()
-        const hour = ("0" + d.getHours()).slice(-2)
-        const minute = ("0" + d.getMinutes()).slice(-2)
-        const time = `${hour}:${minute}`
-        const msg = `\
-                    <div class="media chat-messages">
-                        <div class="media-body chat-menu-reply">
-                            <div class="">
-                                <p class="chat-cont">${message}</p>
-                            </div>
-                            <p class="chat-time">${time}</p>
-                        </div>
-                    </div> `
-        $('.main-friend-chat').append(msg);
-        scrollChat();
-    }
-
-    let sendMessage = (sender,message,  recipient) =>{
-        return $.ajax({
-            url: '../api/message/',
+        $.ajax({
+            url: '../api/notifications/',
+            data: JSON.stringify({mark_as_read: {reference_id,recipient,type}}),
             method: 'POST',
-            data: {new_message:  {message, sender, recipient}},
+            dataType: 'json',
+            contentType: 'application/json',
             success: function (data) {
-                try{
-                    const m = data.success.message;
-                    return true;
-                }catch (e) {
-                    let m = 'Some unexpected error occurred';
-                    console.log(e)
-                    toastr.error(m, "Ooops!", {
-                        showMethod: "slideDown",
-                        hideMethod: "fadeOut"
-                    });
-                    return false;
-                }
+                toastr.success(data.success.message, "Bravoo!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut",
+                    onHidden: function () {
+                        location.reload();
+                    }
+                });
             },
-            error: function (error) {
-                let m = 'Some unexpected error occurred';
+            error: function (data) {
+                console.log(data)
+                let message = 'Some unexpected error occurred';
                 try{
-                    m = error['responseJSON']['error']['message'];
+                    message = data['responseJSON']['error']['message'];
                 }catch (e) {
-                    console.error(m)
+                    console.error(message)
                 }
-                toastr.error(m, "Ooops!", {
+                toastr.error(message, "Ooops!", {
                     showMethod: "slideDown",
                     hideMethod: "fadeOut"
                 });
-                return false;
-            }
-        })
-    }
 
-    let markRead = (sender, recipient) =>{
+            }
+
+        });
+    }
+    window.markAllAsRead =  (value) => {
+        const recipient = $(value).data('recipient');
+
         $.ajax({
-            url: '../api/message/',
+            url: '../api/notifications/',
+            data: JSON.stringify({mark_as_read: {mark_all: true, recipient}}),
             method: 'POST',
-            data: {mark_as_read:  {sender, recipient}},
+            dataType: 'json',
+            contentType: 'application/json',
             success: function (data) {
-
+                toastr.success(data.success.message, "Bravoo!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut",
+                    onHidden: function () {
+                        location.reload();
+                    }
+                });
             },
-            error: function (error) {
-                console.log(error)
-            }
-        })
-    }
-
-    let fetchNewMessages = (sender, recipient) =>{
-        $.ajax({
-            url: '../api/message/',
-            method: 'GET',
-            cache: false,
-            data: {new_messages: true, sender, recipient},
-            success: function (data) {
+            error: function (data) {
+                console.log(data)
+                let message = 'Some unexpected error occurred';
                 try{
-                    const messages = data.success.message.messages;
-                    appendConvo(messages)
-                    markRead(sender, recipient)
-
+                    message = data['responseJSON']['error']['message'];
                 }catch (e) {
-                    console.log(e)
+                    console.error(message)
                 }
-            },
-            error: function (error) {
-                console.log(error)
-            }
-        })
-    }
+                toastr.error(message, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
 
-    let scrollChat = () => {
-        $(".main-friend-chat").animate({ scrollTop: $(".main-friend-chat")[0].scrollHeight}, 1000);
+            }
+
+        });
     }
 
 });

@@ -59,7 +59,7 @@ $project = new Project($conn);
                                     <?php
                                     $uploadArr = $upload->viewAllUploads();
                                     foreach ($uploadArr as $upl){
-                                        if ( $_SESSION['username'] !== $upl['reg_no'] ){
+                                        if ( strtolower($_SESSION['username']) !== strtolower($upl['reg_no']) ){
                                             continue;
                                         }
                                         ?>
@@ -111,7 +111,6 @@ $project = new Project($conn);
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-        <?php include_once 'footer.php'; ?>
     </div>
     <!-- end main content-->
 </div>
@@ -187,6 +186,7 @@ $project = new Project($conn);
 
 <script type="text/javascript" src="../assets/libs/dropzone/dropzone.min.js"></script>
 <script type="text/javascript" src="assets/js/app.js"></script>
+<?php include_once 'footer.php'; ?>
 </body>
 </html>
 <script>

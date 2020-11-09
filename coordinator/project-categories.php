@@ -1,8 +1,8 @@
 <?php
 include_once 'head.php';
-require_once '../api/classes/UploadCategory.php';
+include_once '../api/classes/ProjectCategory.php';
 
-$uc = new UploadCategory($conn);
+$pc = new ProjectCategory($conn);
 ?>
 <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/daterangepicker/daterangepicker.css">
@@ -27,38 +27,52 @@ $uc = new UploadCategory($conn);
                             <li class="breadcrumb-item">
                                 <a href="index.php"><i class="mdi mdi-home"></i></a>
                             </li>
-                            <li class="breadcrumb-item"><a href="#!"><i class="fa fa-cloud-upload-alt"></i> Milestones</a> </li>
-                            <li class="breadcrumb-item"><a href="#!">View Milestones</a> </li>
+                            <li class="breadcrumb-item"><a href="#!"><i class="fa fa-cloud-upload-alt"></i> Project</a> </li>
+                            <li class="breadcrumb-item"><a href="#!">Project Categories</a> </li>
                         </ul>
                     </div>
                 </div>
                 <!-- end page title -->
                 <!-- start row -->
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-md-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Project Category</h4>
+                                <div class="dropdown-divider"></div>
+
+                                <form class="add-category-form">
+                                    <div class="form-group form-row">
+                                        <div class="col-sm-12">
+                                            <label for="category_name">Name: </label>
+                                            <input type="text" class="form-control" id="category_name" placeholder="e.g. Android App, Web App " name="category_name">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center my-5">
+                                        <button type="submit" class="btn btn-primary p-t-8 p-b-8 p-l-20 p-r-20">
+                                            Save <i class="fa fa-save"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
                         <div class="card">
                             <div class="card-body">
 
-                                <h4 class="card-title">Project Milestones</h4>
+                                <h4 class="card-title">Project Categories</h4>
                                 <div class="dropdown-divider"></div>
 
                                 <table id="datatable-buttons" class="table table-striped table-bordered dt-responsives nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th>Milestone</th>
-                                        <th>Start Date</th>
-                                        <th>Deadline</th>
+                                        <th>#</th>
+                                        <th>Name</th>
                                         <?php
                                         if ($_SESSION['level'] === 1){
-                                        ?>
-                                            <th>No. of Uploads</th>
-                                            <?php
-                                        }
-                                        ?>
-                                        <th>Description</th>
-                                        <?php
-                                        if ($_SESSION['level'] === 1){
-                                        ?>
+                                            ?>
                                             <th>Action</th>
                                             <?php
                                         }
@@ -66,42 +80,31 @@ $uc = new UploadCategory($conn);
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $catArray = $uc->viewAllCategories();
-                                        foreach ($catArray as $cat){  ?>
-                                            <tr data-id="<?= $cat['id'] ?>">
-                                                <td><?= $cat['name'] ?></td>
-                                                <td><?= $cat['start_date'] ?></td>
-                                                <td><?= $cat['deadline'] ?></td>
+                                    <?php
+                                    $categories = $pc->viewAllCategories();
+                                    foreach ($categories as $i => $category) { ?>
+                                        <tr data-id="<?= $category['id'] ?>">
+                                            <td><?= $i + 1 ?></td>
+                                            <td><?= $category['name'] ?></td>
+                                            <td>
                                                 <?php
                                                 if ($_SESSION['level'] === 1){
                                                 ?>
-                                                <td><?= $cat['no_of_uploads'] ?>
-                                                    <a href="#" class="text-underline btn-view-uploads" data-toggle="modal" data-target="#viewModal"> view</a>
-                                                </td>
-                                                    <?php
-                                                }
-                                                ?>
-                                                <td><?= $cat['description'] ?></td>
-                                                <?php
-                                                if ($_SESSION['level'] === 1){
-                                                ?>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal">
-                                                                <i class="mdi mdi-pencil"></i>
-                                                            </button>
-                                                            <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </tr>
-                                        <?php }
-                                        ?>
+                                                <div class="text-center">
+                                                    <button class="btn btn-sm btn-success btn-edit" data-toggle="modal" data-target="#editModal">
+                                                        <i class="mdi mdi-pencil"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#deleteModal" >
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            <?php
+                                            }
+                                            ?>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -123,7 +126,7 @@ $uc = new UploadCategory($conn);
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title mt-0" id="myModalLabel">
-                    Edit Lecturer Details
+                    Edit category
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -132,21 +135,7 @@ $uc = new UploadCategory($conn);
                     <div class="form-group form-row">
                         <div class="col-sm-12">
                             <label for="category_name">Name: </label>
-                            <input type="text" class="form-control" id="category_name" placeholder="e.g. Concept Paper, Chapter 1 " name="category_name">
-                        </div>
-                    </div>
-
-                    <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <label for="period">Duration:</label>
-                            <input type="text" class="form-control" readonly id="period" placeholder="Pick a range with dates" name="period">
-                        </div>
-                    </div>
-
-                    <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <label for="description">Description:</label>
-                            <textarea name="description" id="description" cols="30" rows="6" class="form-control"></textarea>
+                            <input type="text" class="form-control" id="category_name" placeholder="e.g. Web App, Android App " name="category_name">
                         </div>
                     </div>
                 </form>
@@ -171,7 +160,6 @@ $uc = new UploadCategory($conn);
             </div>
             <div class="modal-body">
                 <h5 class="text-danger">Are you sure you want to delete <span class="student_name"></span>?
-                    <br><br><span class="fs-14">P.S. This action is will delete all uploaded materials.</span>
                 </h5>
             </div>
             <div class="modal-footer">
@@ -181,40 +169,7 @@ $uc = new UploadCategory($conn);
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /. deletemodal -->
-<!--    view modal-->
-<div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mt-0" id="myModalLabel">
-                    <span class="lec-name"></span> uploads
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body" style="overflow-x: auto;">
-                <table class="table table-striped table-bordered dt-responsives mb-0 view-table">
-                    <thead>
-                    <tr>
-                        <th scope="col">File Name</th>
-                        <th scope="col">Upload Time</th>
-                        <th scope="col">Reg No.</th>
-                        <th scope="col">Student</th>
-                        <th scope="col">Status</th>
-<!--                        <th scope="col">Action</th>-->
-                    </tr>
-                    </thead>
-                    <tbody>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!-- end view modal-->
 
 
 <!-- JAVASCRIPT -->
@@ -242,18 +197,82 @@ $uc = new UploadCategory($conn);
 </body>
 </html>
 <script>
+    $('.add-category-form').on('submit', function(event) {
+        event.preventDefault();
+    });
+
+    $('.add-category-form').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields:{
+            'category_name' : {
+                message: 'The name is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The name of the upload is required and cannot be empty e.g. Chapter 1 '
+                    },
+                    stringLength: {
+                        min: 5,
+                        max: 40,
+                        message: 'The name must be more than 5 and less than 40 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9-_\s]+$/,
+                        message: 'The name can only consist of alphabetical, numbers, underscores and hyphen'
+                    }
+                }
+            }
+        },
+        onSuccess: function (e) {
+            $form = $(e.target);
+            let formData = {}
+            $form.serializeArray().map((v)=> formData[v.name] = v.value)
+
+            $.post('../api/project-category/',{...formData},(data)=>{
+                toastr.success(data.success.message, "Bravoo!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+            }).fail((data)=>{
+                let message = 'Some unexpected error occurred';
+                try{
+                    message = data['responseJSON']['error']['message'];
+                }catch (e) {
+                    console.error(message)
+                }
+                toastr.error(message, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+            });
+
+
+            $form
+                .bootstrapValidator('disableSubmitButtons', false)
+                .bootstrapValidator('resetForm', true);
+        }
+    }).on('status.field.bv', function(e, data) {
+        data.bv.disableSubmitButtons(false);
+    });
+
+
     //    delete modal
     let deleteCategory = '';
     $('.btn-delete').on('click', function (event) {
         let tr = $(this).closest('tr'),
-            c_name = tr.find('td:nth-child(1)').text();
+            c_name = tr.find('td:nth-child(2)').text();
         deleteCategory = tr.data('id');
         $('span.student_name').text(c_name);
+        console.log(deleteCategory)
     });
 
     $('.btn-del').on('click', function (event) {
         $.ajax({
-            url: '../api/upload-category/',
+            url: '../api/project-category/',
             data: JSON.stringify({category : deleteCategory}),
             method: 'DELETE',
             dataType: 'json',
@@ -299,17 +318,10 @@ $uc = new UploadCategory($conn);
 
     $('.btn-edit').on('click', function (event) {
         let tr = $(this).closest('tr'),
-            c_name = tr.find('td:nth-child(1)').text(),
-            startDate = tr.find('td:nth-child(2)').text(),
-            deadLine = tr.find('td:nth-child(3)').text(),
-            description = tr.find('td:nth-child(5)').text()
+            c_name = tr.find('td:nth-child(2)').text();
         deleteCategory = tr.data('id');
 
         $('input#category_name').val(c_name)
-        $('textarea#description').val(description)
-
-        $('#period').data('daterangepicker').setStartDate(startDate)
-        $('#period').data('daterangepicker').setEndDate(deadLine);
     });
 
     $('#edit-category-form').on('submit', (e) => e.preventDefault())
@@ -358,18 +370,13 @@ $uc = new UploadCategory($conn);
 
         },
         onSuccess: function (e) {
-            let startDate = $('#period').data('daterangepicker').startDate.format('YYYY-MM-DD')
-            let endDate = $('#period').data('daterangepicker').endDate.format('YYYY-MM-DD')
-
             $form = $(e.target);
             let formData = {}
             $form.serializeArray().map((v)=> formData[v.name] = v.value)
             formData['category'] = deleteCategory;
-            formData['startDate'] = startDate;
-            formData['endDate'] = endDate;
 
             $.ajax({
-                url: '../api/upload-category/',
+                url: '../api/project-category/',
                 data: JSON.stringify({...formData}),
                 method: 'PATCH',
                 dataType: 'json',

@@ -227,6 +227,7 @@ class Project extends Student
                             WHEN p.status = 1 THEN "complete"
                             WHEN p.status = 2 THEN "rejected"
                         END AS status,
+                        pc.id as category_id,
                         pc.name as category,
                         s.full_name,
                         s.course,

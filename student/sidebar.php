@@ -46,10 +46,10 @@
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="ti-vector"></i>
-                                <span>Upload Categories</span>
+                                <span>Project Milestones</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="view-upload-category.php">View Categories</a></li>
+                                <li><a href="view-upload-category.php">View Milestones</a></li>
                             </ul>
                         </li>
                         <li>
@@ -60,7 +60,7 @@
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
                                 <li><a href="add-upload.php">Add Upload</a></li>
-                                <li><a href="view-uploads.php">View Uploads</a></li>
+                                <li><a href="view-uploads.php">View My Uploads</a></li>
                             </ul>
                         </li>
                         <li>
@@ -70,17 +70,7 @@
                             </a>
                         </li>
 
-                        <li class="menu-title">Manage Notification</li>
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="ti-bell"></i>
-                                <span>Notifications</span>
-                            </a>
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="tables-basic.html">Send Notifications</a></li>
-                                <li><a href="tables-datatable.html">View Notifications</a></li>
-                            </ul>
-                        </li>
+
                         <!-- <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="ti-more"></i>

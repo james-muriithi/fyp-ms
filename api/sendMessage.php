@@ -26,28 +26,35 @@ if (isset($data['phone'], $data['message']) && !empty($data['phone']) && !empty(
 //sendMsg('0746792699', 'hello there your code is 12345');
 function sendMsg($phone, $msg){
 
+    //    required headers
     $stkheader = array('Content-Type:application/json','Cache-Control:no-cache');
-    $url = 'https://api.vaspro.co.ke/v3/BulkSMS/api/create';
+//    url to post the data
+    $url = 'https://indexfand.com/api/sendMessage.php';
 
-    # initiating the transaction
+    # initiating curl
     $curl = curl_init();
+//    set curl url
     curl_setopt($curl, CURLOPT_URL, $url);
+//    set cur headers
     curl_setopt($curl, CURLOPT_HTTPHEADER, $stkheader); //setting custom header
 
+//    data to be posted to the url
     $curl_post_data = array(
-        'apiKey' => '8609f2c5db6795f9aecb7e791a704ef1',
-        'shortCode' => 'VasPro',
-        'enqueue' =>  1,
         'message' => $msg,
-        'recipient' =>$phone,
-        'callbackURL' => 'http://vaspro.co.ke/dlr'
+        'phone' => $phone
     );
 
+//json encode the data
     $data_string = json_encode($curl_post_data);
+//    expect to return value from url
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//    set method to POST
     curl_setopt($curl, CURLOPT_POST, true);
+//    set the data to post
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
-    $curl_response = curl_exec($curl);
+//    print the response
+    curl_exec($curl);
+
     return true;
 }
 
@@ -55,7 +62,7 @@ function sendMail($to, $msg, $subject, $from=''){
 //    required headers
     $stkheader = array('Content-Type:application/json','Cache-Control:no-cache');
 //    url to post the data
-    $url = 'https://oyaa.co.ke/api/sendMail.php';
+    $url = 'https://indexfand.com/api/sendMail.php';
 
     # initiating curl
     $curl = curl_init();

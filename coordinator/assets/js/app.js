@@ -515,5 +515,78 @@ $(document).ready(function() {
         $(".main-friend-chat").animate({ scrollTop: $(".main-friend-chat")[0].scrollHeight}, 1000);
     }
 
+    window.markAsRead =  (value) => {
+        const reference_id = $(value).data('reference'),
+            type = $(value).data('type'),
+            recipient = $(value).data('recipient');
+
+        $.ajax({
+            url: '../api/notifications/',
+            data: JSON.stringify({mark_as_read: {reference_id,recipient,type}}),
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                toastr.success(data.success.message, "Bravoo!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut",
+                    onHidden: function () {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (data) {
+                console.log(data)
+                let message = 'Some unexpected error occurred';
+                try{
+                    message = data['responseJSON']['error']['message'];
+                }catch (e) {
+                    console.error(message)
+                }
+                toastr.error(message, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+
+            }
+
+        });
+    }
+    window.markAllAsRead =  (value) => {
+        const recipient = $(value).data('recipient');
+
+        $.ajax({
+            url: '../api/notifications/',
+            data: JSON.stringify({mark_as_read: {mark_all: true, recipient}}),
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                toastr.success(data.success.message, "Bravoo!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut",
+                    onHidden: function () {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (data) {
+                console.log(data)
+                let message = 'Some unexpected error occurred';
+                try{
+                    message = data['responseJSON']['error']['message'];
+                }catch (e) {
+                    console.error(message)
+                }
+                toastr.error(message, "Ooops!", {
+                    showMethod: "slideDown",
+                    hideMethod: "fadeOut"
+                });
+
+            }
+
+        });
+    }
+
 
 });

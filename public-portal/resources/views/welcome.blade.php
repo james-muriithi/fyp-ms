@@ -109,6 +109,15 @@
                     </div>
 
                 @endforeach
+                @else
+                <div class="card" style="margin-bottom: 30px;border: 0;">
+                    <div class="card-body" style="background: #f8fafc; overflow-x: hidden;">
+                        <div class="col-sm-12 empty-cart-cls text-center">
+                            <img src="{{asset('images/not-found.svg')}}"  style="height: 300px" class="img-fluid mb-1 mr-3 empty">
+                            <h5 class="mt-4"><strong>No projects were found :-(</strong></h5>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             <div class="row">

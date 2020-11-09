@@ -132,7 +132,6 @@ $studentArray = $student->getAllUsers();
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
 
-            <?php include_once 'footer.php'; ?>
         </div>
         <!-- end main content-->
     </div>
@@ -183,6 +182,9 @@ $studentArray = $student->getAllUsers();
 
     
     <script type="text/javascript" src="assets/js/app.js"></script>
+
+    <?php include_once 'footer.php'; ?>
+
 </body>
 </html>
 <script>

@@ -73,9 +73,11 @@ class ProjectCategory
 
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam('cat_id', $catId);
+        $stmt->bindParam(':cat_id', $catId);
 
-        return @$stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function categoryExists($catId = ''):bool
@@ -90,6 +92,19 @@ class ProjectCategory
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':cat_id', $this->catId);
+
+        $stmt->execute();
+
+        return $stmt->rowCount()>0;
+    }
+
+    public function categoryNameExists($name)
+    {
+        $query = 'SELECT name FROM project_categories WHERE name = :name ';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':name', $name);
 
         $stmt->execute();
 

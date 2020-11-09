@@ -1,6 +1,9 @@
 <?php
 include_once 'head.php';
 include_once '../api/classes/Project.php';
+include_once '../api/classes/ProjectCategory.php';
+
+$pc = new ProjectCategory($conn);
 
 $project = new Project($conn);
 $projectArray = $project->viewAllProjects();
@@ -69,7 +72,7 @@ $lecArray = $lec->getAllUsers();
                                         <tr data-description="<?= $proj['description'] ?>">
                                             <td><?= $proj['id'] ?></td>
                                             <td><?= $proj['title'] ?></td>
-                                            <td><?= $proj['category'] ?></td>
+                                            <td data-category="<?= $proj['category_id'] ?>"><?= $proj['category'] ?></td>
                                             <td><?= $proj['no_of_uploads'] ?>
                                                 <a href="#" class="text-underline p-l-3 btn-view-p-uploads" data-toggle="modal" data-target="#viewModal"> view</a>
                                             </td>
@@ -82,7 +85,7 @@ $lecArray = $lec->getAllUsers();
                                                 <?php
                                                 if ($proj['status'] == 'in progress'){ ?>
                                                     <button class="btn btn-sm btn-warning"><?= $proj['status'] ?></button>
-                                               <?php }elseif ($proj['status'] == 'complete'){ ?>
+                                                <?php }elseif ($proj['status'] == 'complete'){ ?>
                                                     <button class="btn btn-sm btn-success"><?= $proj['status'] ?></button>
                                                 <?php }else{ ?>
                                                     <button class="btn btn-sm btn-danger"><?= $proj['status'] ?></button>
@@ -190,9 +193,12 @@ $lecArray = $lec->getAllUsers();
                         <div class="col-sm-6">
                             <label for="pcat">Project Category:</label>
                             <select id="pcat" name="category" class="form-control">
-                                <option value="1">Web App</option>
-                                <option value="2">Android App</option>
-                                <option value="3">Desktop App</option>
+                                <?php
+                                $categories = $pc->viewAllCategories();
+                                foreach ($categories as $category) { ?>
+                                    <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                                <?php }
+                                ?>
                             </select>
                         </div>
                     </div>
@@ -331,22 +337,16 @@ include_once 'js.php';
         });
     })
 
-//    edit modal
+    //    edit modal
     $('.btn-edit').on('click', function (event) {
         let tr = $(this).closest('tr'),
             title = tr.find('td:nth-child(2)').text(),
             pid = tr.find('td:nth-child(1)').text(),
-            category = tr.find('td:nth-child(3)').text().toLowerCase(),
+            category = tr.find('td:nth-child(3)').data('category'),
             status = tr.find('td:nth-child(8)').text().toLowerCase().trim(),
             description = tr.data('description').trim();
-        if (category ==='web app'){
-            category = 1;
-        }else if (category === 'android app'){
-            category = 2;
-        }
-        else if (category === 'desktop app'){
-            category = 3;
-        }
+
+        console.log(category)
 
         if (status == 'in progress'){
             status = 0;
@@ -467,7 +467,7 @@ include_once 'js.php';
         });
 
 
-//    assign modal
+    //    assign modal
     let select = new SlimSelect({
         select: '#lecturers',
         allowDeselect: true,

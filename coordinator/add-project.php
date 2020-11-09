@@ -1,8 +1,12 @@
 <?php
 include_once 'head.php';
+include_once '../api/classes/ProjectCategory.php';
+
 $lecArray = $lec->getAllUsers();
 $student = new Student($conn);
 $studentArray = $student->getAllUsers();
+$pc = new ProjectCategory($conn);
+
 ?>
 <link rel="stylesheet" type="text/css" href="../assets/libs/slimselect/slimselect.min.css">
 <link rel="stylesheet" type="text/css" href="../assets/libs/bootstrap-validator/css/bootstrapValidator.css">
@@ -98,9 +102,12 @@ $studentArray = $student->getAllUsers();
                                         <div class="col-sm-6">
                                             <label for="p-cat">Project Category:</label>
                                             <select id="p-cat" name="category">
-                                                <option value="1">Web App</option>
-                                                <option value="2">Android App</option>
-                                                <option value="3">Desktop App</option>
+                                                <?php
+                                                $categories = $pc->viewAllCategories();
+                                                foreach ($categories as $category) { ?>
+                                                    <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                                                <?php }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
@@ -154,12 +161,14 @@ $studentArray = $student->getAllUsers();
 
         let select2 = new SlimSelect({
             select: '#supervisor',
-            closeOnSelect: true
+            closeOnSelect: true,
+            allowDeselect: true
         });
 
         let select3 = new SlimSelect({
             select: '#p-cat',
-            closeOnSelect: true
+            closeOnSelect: true,
+            allowDeselect: true
         });
 
         $('.add-project-form').on('submit', function(event) {

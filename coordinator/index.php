@@ -56,39 +56,44 @@ $upload = new Upload($conn);
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
-                                            <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                            <a href="view-lecturer.php" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
                                         </div>
                                         <p class="text-white-50 mb-0 mt-1">See more</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card mini-stat bg-primary text-white">
-                                <div class="card-body">
-                                    <div class="mb-4">
-                                        <div class="float-left mr-3">
-                                            <img src="assets/images/services-icon/student.svg" alt="student" width="70">
+                        <?php
+                        if ($_SESSION['level'] === 1){ ?>
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card mini-stat bg-primary text-white">
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <div class="float-left mr-3">
+                                                <img src="assets/images/services-icon/student.svg" alt="student" width="70">
+                                            </div>
+                                            <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Students</h5>
+                                            <h4 class="font-weight-medium font-size-24">
+                                                <?php
+                                                $student = new Student($conn);
+                                                $students = $student->getAllUsers();
+                                                $totalStudents = count($students);
+                                                ?>
+                                                <span class="people_in info-box-number" data-counter="counterup" data-value="<?= $totalStudents ?>">0</span>
+                                            </h4>
                                         </div>
-                                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Students</h5>
-                                        <h4 class="font-weight-medium font-size-24">
-                                            <?php
-                                            $student = new Student($conn);
-                                            $students = $student->getAllUsers();
-                                            $totalStudents = count($students);
-                                            ?>
-                                            <span class="people_in info-box-number" data-counter="counterup" data-value="<?= $totalStudents ?>">0</span>
-                                        </h4>
-                                    </div>
-                                    <div class="pt-2">
-                                        <div class="float-right">
-                                            <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                        <div class="pt-2">
+                                            <div class="float-right">
+                                                <a href="view-students.php" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                            </div>
+                                            <p class="text-white-50 mb-0 mt-1">See more</p>
                                         </div>
-                                        <p class="text-white-50 mb-0 mt-1">See more</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php
+                        }
+                        ?>
 
                         <div class="col-xl-3 col-md-6">
                             <div class="card mini-stat bg-warning text-white">
@@ -99,7 +104,12 @@ $upload = new Upload($conn);
                                         </div>
                                         <?php
                                         $project = new Project($conn);
-                                        $allProjects = $project->viewAllProjects();
+                                        if ($_SESSION['level'] === 1){
+                                            $allProjects = $project->viewAllProjects();
+                                        }else{
+                                            $allProjects = $project->getLecturerProjects($_SESSION['username']);
+                                        }
+
                                         $totalProjects = count($allProjects);
                                         ?>
                                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Projects</h5>
@@ -107,7 +117,7 @@ $upload = new Upload($conn);
                                     </div>
                                     <div class="pt-2">
                                         <div class="float-right">
-                                            <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                            <a href="view-projects.php" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
                                         </div>
                                         <p class="text-white-50 mb-0 mt-1">See more</p>
                                     </div>
@@ -123,7 +133,10 @@ $upload = new Upload($conn);
                                             <img src="assets/images/services-icon/assigned.svg" alt="assigned students" width="70">
                                         </div>
                                         <?php
-                                        $uploadArr = $upload->viewAllUploads();
+                                        $uploadArr = [];
+                                        foreach ($allProjects as $oneProject) {
+                                            array_push($uploadArr, $project->viewProjectUploads($oneProject['reg_no']));
+                                        }
                                         ?>
                                         <h5 class="fs-16 text-uppercase mt-0 text-white-50">Uploads</h5>
                                         <h4 class="font-weight-medium font-size-24" data-counter="counterup" data-value="<?= count($uploadArr) ?>">0</h4>

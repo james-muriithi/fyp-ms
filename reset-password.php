@@ -160,7 +160,7 @@ session_start();
                 position: 'top right',
                 // delayIndicator: false,
                 icon: 'fa fa-check',
-                msg: 'Your code was successfully sent to <?php echo $phone ?>'
+                msg: 'Your code was successfully sent to your phone number and email'
             });
         }, 1800);
     }

@@ -67,6 +67,10 @@
                                         <p class="text-bold mt-1">Supervisor Credentials</p>
                                         username: <i>m3456</i><br>
                                         password: <i>0000</i>
+
+                                        <p class="text-bold mt-1">Coordinator Credentials</p>
+                                        username: <i>12345</i><br>
+                                        password: <i>0000</i>
                                     </div>
 
                                     <div class="form-group mt-2 mb-0 row">

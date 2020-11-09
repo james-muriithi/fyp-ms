@@ -127,7 +127,6 @@ include_once 'head.php'; ?>
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-        <?php include_once 'footer.php'; ?>
     </div>
     <!-- end main content-->
 </div>
@@ -171,6 +170,7 @@ include_once 'head.php'; ?>
 <script type="text/javascript" src="../assets/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
 <script type="text/javascript" src="../assets/libs/dropzone/dropzone.min.js"></script>
 <script type="text/javascript" src="assets/js/app.js"></script>
+<?php include_once 'footer.php'; ?>
 </body>
 </html>
 <script type="text/javascript">
