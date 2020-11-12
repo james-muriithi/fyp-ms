@@ -80,10 +80,12 @@ function uploadFIle($file, $reg_no, $cat_id){
     $uc = new UploadCategory($conn);
 
     if ($uc->hasUpload($pid, $cat_id)){
-        $oldUpload = $uc->getStudentCategoryUpload($cat_id, $pid)['name'];
-        if (!$upload->deleteUpload($uc->getStudentCategoryUpload($cat_id, $pid)['id'])){
+        if (move_uploaded_file($file_tmp,$uploadDir.$filename) && $upload->editUpload($filename, $uc->getStudentCategoryUpload($cat_id, $pid)['id'], $pid, $cat_id)){
+            echo json_response(200, 'Your file was uploaded successfully');
+            @unlink($uploadDir.$oldUpload);
+        }else{
+            @unlink($uploadDir.$filename);
             echo json_response(400, 'There was an error trying to upload your file. Please try again later.', true);
-            die();
         }
     }
 

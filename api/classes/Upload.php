@@ -54,12 +54,13 @@ class Upload
      * @param string $cat_id new category id
      * @return bool
      */
-    public function editUpload($uid, $pid, $cat_id):bool
+    public function editUpload($name, $uid, $pid, $cat_id):bool
     {
-        $query = 'UPDATE upload SET project_id=:pid, category=:cid WHERE id=:uid';
+        $query = 'UPDATE upload SET name=:name, project_id=:pid, category=:cid WHERE id=:uid';
 
         $stmt = $this->conn->prepare($query);
 
+        $stmt->bindParam(':name',$name);
         $stmt->bindParam(':uid',$uid);
         $stmt->bindParam(':pid',$pid);
         $stmt->bindParam(':cid',$cat_id);

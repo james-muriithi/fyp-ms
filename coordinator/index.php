@@ -134,8 +134,11 @@ $upload = new Upload($conn);
                                         </div>
                                         <?php
                                         $uploadArr = [];
-                                        foreach ($allProjects as $oneProject) {
-                                            array_push($uploadArr, $project->viewProjectUploads($oneProject['reg_no']));
+                                        $allUploads = $upload->viewAllUploads();
+                                        foreach ($allUploads as $oneUpload) {
+                                            if ($project->isAssignedToMe($oneUpload['pid'], $_SESSION['username'])){
+                                                array_push($uploadArr, $oneUpload);
+                                            }
                                         }
                                         ?>
                                         <h5 class="fs-16 text-uppercase mt-0 text-white-50">Uploads</h5>

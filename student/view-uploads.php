@@ -228,7 +228,7 @@ $project = new Project($conn);
             formData.append('edit', true);
             formData.append('student', student)
             formData.append('category', category_id)
-            console.log(category_id)
+            console.log(student)
         })
         this.on("success", function(file,successMsg) {
             console.log(successMsg)
@@ -250,7 +250,7 @@ $project = new Project($conn);
 
 
         this.on("error", function(file,err) {
-            console.log(err)
+            console.log(file)
             let error = 'There was an error trying to upload your file. Please try again later.';
             file.status = Dropzone.QUEUED
             try{
